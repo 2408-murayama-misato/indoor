@@ -2,4 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.AccountMapper">
+    <select id="findByAccount" resultType="com.example.indoor.entity.Account">
+        select *
+        from accounts
+        where account = #{account}
+    </select>
 </mapper>
