@@ -7,4 +7,9 @@
         from accounts
         where account = #{account}
     </select>
+    <!-- レコード追加 -->
+    <insert id="save">
+        insert into accounts(account, password, name, address, credit, role, isStopped)
+        values (#{account}, #{password}, #{name}, #{address}, #{credit}, #{role}, #{isStopped})
+    </insert>
 </mapper>

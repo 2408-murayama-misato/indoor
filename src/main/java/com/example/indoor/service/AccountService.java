@@ -25,4 +25,23 @@ public class AccountService implements UserDetailsService {
         Account account = accountMapper.findByAccount(username);
         return account;
     }
+
+    /*
+     * レコード追加
+     */
+    public void saveAccount(AccountForm reqAccount) {
+        Account saveAccount = setAccountEntity(reqAccount);
+        // パスワード暗号化処理追記
+
+        accountMapper.save(saveAccount);
+    }
+
+    /*
+     * リクエストから取得した情報をentityに設定
+     */
+    private Account setAccountEntity(AccountForm reqAccount) {
+        Account account = new Account();
+        BeanUtils.copyProperties(reqAccount, account);
+        return account;
+    }
 }

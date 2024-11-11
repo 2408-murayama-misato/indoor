@@ -18,4 +18,7 @@ public class AccountForm {
     private int isStopped;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+
+    // ユーザー登録用に追記
+    private String passwordRetype;
 }
