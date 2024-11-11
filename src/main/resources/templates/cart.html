@@ -9,6 +9,29 @@
     </head>
     <body>
         <h2>カート</h2>
-        
+        <table class="table carts">
+            <thead class="table-light">
+                <tr class="cartsTableTitle">
+                    <th>写真</th>
+                    <th>商品名</th>
+                    <th>価格</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div th:each="cart : ${cartForms}">
+                    <tr>
+                        <td>
+                            <p><image src="${cart.productsImage.pass}"/></p>
+                        </td>
+                        <td>
+                            <p th:text="${cart.product.name}"/>
+                        </td>
+                        <td>
+                            <p th:text="${cart.product.value}"/>
+                        </td>
+                    </tr>
+                </div>
+            </tbody>
+        </table>
     </body>
 </html>
