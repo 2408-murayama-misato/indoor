@@ -8,20 +8,25 @@
     <title>Top</title>
 </head>
 <body>
-<h2>みんなが見られるtopページ</h2>
-<div th:if="${errorMessage != null}">
-    <p th:text="${errorMessage}" />
-</div>
-<div sec:authorize="isAuthenticated()">
-    ログインしています
-    <form th:action="@{/logout}" method="post">
-        <button>ログアウト</button>
-    </form>
-</div>
-<div sec:authorize="!isAuthenticated()">ログアウトしています
-    <form th:action="@{/login}" method="get">
-        <button>ログイン</button>
-    </form>
-</div>
+    <h2>みんなが見られるtopページ</h2>
+    <div th:if="${errorMessage != null}">
+        <p th:text="${errorMessage}" />
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        ログインしています
+        <form th:action="@{/logout}" method="post">
+            <button>ログアウト</button>
+        </form>
+    </div>
+    <div sec:authorize="!isAuthenticated()">ログアウトしています
+        <form th:action="@{/login}" method="get">
+            <button>ログイン</button>
+        </form>
+    </div>
+    <div class="top">
+        <img th:src="@{/img/top-image.jpg}">
+        <p>Indoor</p>
+    </div>
+
 </body>
 </html>

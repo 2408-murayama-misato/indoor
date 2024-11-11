@@ -1,0 +1,15 @@
+.top {
+    position: relative;
+}
+
+.top p{
+    margin: 0;
+    position: absolute; /*画像に重ねたい文字(子要素)をabsolute*/
+    font-size: 100px;
+    top: 100px;
+    left: 30px;
+}
+.top img {
+    width: 100%;
+    height: auto;
+}
