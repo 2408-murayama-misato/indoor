@@ -8,6 +8,33 @@
     <title>ログイン</title>
 </head>
 <body>
-
+<div class="container w-25">
+    <main class="form-signin">
+        <form th:action="@{/login}" th:method="post" th:object="${accountForm}" class="my-5">
+            <i class="bi bi-person-circle" style="font-size: 3rem;"></i>
+            <h1 class="h3 mb-3 fw-normal">ログイン</h1>
+            <!-- エラー表示 -->
+            <div th:if="${param.error}">
+                <p>アカウントまたはパスワードが違います</p>
+            </div>
+            <div th:if="${errorMessage}">
+                <p th:text="${errorMessage}" />
+            </div>
+            <!-- ログインフィルターのエラーメッセージ表示 -->
+            <div th:if="${param.loginFilter}">
+                <p>ログインしてください</p>
+            </div>
+            <div class="form-floating">
+                <input th:field="*{account}" class="form-control" id="floatingInput">
+                <label for="floatingInput">アカウント</label>
+            </div>
+            <div class="form-floating">
+                <input th:field="*{password}" type="password" class="form-control" id="floatingPassword">
+                <label for="floatingPassword">パスワード</label>
+            </div>
+            <button class="btn btn-primary w-100 py-2 my-2" type="submit">ログイン</button>
+        </form>
+    </main>
+</div>
 </body>
 </html>

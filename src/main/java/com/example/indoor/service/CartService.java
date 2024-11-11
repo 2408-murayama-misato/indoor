@@ -13,14 +13,9 @@ import java.util.List;
 
 @Service
 public class CartService {
-    @Autowired
-    private CartMapper cartMapper;
 
-    public List<CartForm> findCart(AccountForm loginAccount) {
-        List<Cart> results = cartMapper.findCart(loginAccount.getId());
-        List<CartForm> cartForms = setCartsForm(results);
-        return cartForms;
-    }
+    @Autowired
+    CartMapper cartMapper;
 
     private List<CartForm> setCartsForm(List<Cart> results) {
         List<CartForm> cartForms = new ArrayList<>();
@@ -32,8 +27,16 @@ public class CartService {
             cartForm.setNumber(cart.getNumber());
             cartForm.setCreatedDate(cart.getCreatedDate());
             cartForm.setUpdatedDate(cart.getUpdatedDate());
+            cartForm.setProduct(cart.getProduct());
+            cartForm.setProductsImage(cart.getProductsImage());
             cartForms.add(cartForm);
         }
         return cartForms;
+    }
+
+    public List<CartForm> findCart(int i) {
+        List<Cart> results = cartMapper.findCart(i);
+        List<CartForm> cart = setCartsForm(results);
+        return cart;
     }
 }

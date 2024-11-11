@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -8,6 +8,11 @@
     <title>管理者Top</title>
 </head>
 <body>
-
+<div sec:authorize="isAuthenticated()">
+    管理者のtopページです　ログインしています
+    <form th:action="@{/logout}" method="post">
+        <button>ログアウト</button>
+    </form>
+</div>
 </body>
 </html>

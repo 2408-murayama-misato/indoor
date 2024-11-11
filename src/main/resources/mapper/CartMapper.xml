@@ -2,28 +2,50 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.CartMapper">
-<!--    ログインアカウントカート取得-->
-<!--    カートマスタマッピング-->
-    <resultMap id="Cart" type="com.example.indoor.repository.entity.Cart">
+    <select id="findCart" resultMap="Cart">
+        select *
+        from carts
+        INNER JOIN products
+        ON carts.product_id = products.id
+        INNER JOIN  product_images
+        ON carts.product_id = product_images.product_id
+        where carts.acccount_id = ${id}
+    </select>
+<!--    カートマッピング-->
+    <resultMap id="Cart" type="com.example.indoor.entity.Cart">
         <result column="id" property="id"/>
         <result column="product_id" property="productId"/>
-        <result column="account_id" property="accountId"/>
+        <result column="acccount_id" property="accountId"/>
         <result column="number" property="number"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
-        <collection property="product" resultMap="product"/>
+        <collection property="product" resultMap="product"></collection>
+        <collection property="productsImage" resultMap="productsImage"></collection>
     </resultMap>
-<!--    商品マスタマッピング-->
 
-    <select id="findCart" resultMap="Cart">
-        SELECT *
-        FROM carts
-        INNER JOIN products
-        ON carts.product_id = product.id
-        INNER JOIN product_image
-        ON carts.product_id = product_image.product_id
-        INNER JOIN (SELECT product_id as product_id,AVG(score) from review GROUP BY product_id)
-        ON review.product.id = carts.product_id
-    </select>
+    <resultMap id="product" type="com.example.indoor.entity.Product">
+        <result column="id" property="id"/>
+        <result column="account_id" property="accountId"/>
+        <result column="name" property="name"/>
+        <result column="value" property="value"/>
+        <result column="category" property="category"/>
+        <result column="stock" property="stock"/>
+        <result column="isStopped" property="isStopped"/>
+        <result column="description" property="description"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
+<!--    商品画像マスタのmap-->
+    <resultMap id="productsImage" type="com.example.indoor.entity.ProductImage">
+        <result column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="pass" property="pass"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
 
+    <delete id="deleteCart" parameterType="int">
+        delete from tasks
+        where id = #{id}
+    </delete>
 </mapper>
