@@ -14,4 +14,6 @@ public class Cart {
     private int number;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    private Product product;
+    private ProductImage productImage;
 }
