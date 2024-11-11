@@ -5,9 +5,31 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/main.js}"></script>
     <title>商品詳細</title>
 </head>
 <body>
-
+<div class="header-contents"></div>
+<div class="main-contents">
+    <div class="product-information">
+        <div class="product-image">
+            <img th:src="@{/img/sample.jpg}">
+        </div>
+        <div class="product-overview" th:object="${product}">
+            <span th:text ="*{accountId}"/><br/>
+            <span th:text ="*{category}"/><br/>
+            <span th:text ="*{name}"/><br/>
+            <span th:text ="*{price}"/><br/>
+            <span th:text ="*{isStopped}"/><br/>
+            <span th:text ="*{stock}"/><br/>
+            <form th:method="put" th:action="@{/add-to-cart/{id}(id=*{id})}">
+                <input class="add-to-cart" type="submit" value="カートに入れる"/>
+            </form>
+        </div>
+    </div>
+    <div class="product-description"></div>
+    <div class="product-reviews"></div>
+    <div class="product-inquiry"></div>
+</div>
 </body>
 </html>

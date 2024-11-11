@@ -11,7 +11,7 @@ public class Product {
     private int id;
     private int accountId;
     private String name;
-    private int value;
+    private int price;
     private String category;
     private int stock;
     private boolean isStopped;
