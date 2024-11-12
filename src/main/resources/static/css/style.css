@@ -1,3 +1,18 @@
+.top {
+    position: relative;
+}
+.top p{
+    margin: 0;
+    position: absolute; /*画像に重ねたい文字(子要素)をabsolute*/
+    font-size: 100px;
+    top: 100px;
+    left: 30px;
+}
+/*トップ画面のカテゴリーボタン*/
+.category-button img {
+    width: 200px;
+    height: auto;
+}
 .product-information {
     display: flex;
 }
