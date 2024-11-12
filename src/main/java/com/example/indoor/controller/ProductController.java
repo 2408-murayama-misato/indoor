@@ -94,4 +94,5 @@ public class ProductController {
         mav.setViewName("redirect:/productDetail");
         return mav;
     }
+
 }
