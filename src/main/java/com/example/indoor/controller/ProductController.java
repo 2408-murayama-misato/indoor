@@ -72,4 +72,26 @@ public class ProductController {
         mav.setViewName("redirect:/productDetail");
         return mav;
     }
+
+    @GetMapping("/reviewEdit/{id}")
+    public ModelAndView reviewEdit(@PathVariable String id) {
+        ModelAndView mav = new ModelAndView();
+        ReviewForm review = reviewService.findReview(Integer.parseInt(id));
+        mav.addObject("reviewForm", review);
+        mav.setViewName("/reviewEdit");
+        return mav;
+    }
+
+    @PutMapping("/updateReview")
+    public ModelAndView updateReview(@AuthenticationPrincipal Account account,
+                                     @ModelAttribute("reviewForm") ReviewForm reviewForm) {
+        ModelAndView mav = new ModelAndView();
+
+        reviewForm.setAccountId(account.getId());
+        reviewService.updateReview(reviewForm);
+
+        mav.addObject("id", reviewForm.getProductId());
+        mav.setViewName("redirect:/productDetail");
+        return mav;
+    }
 }

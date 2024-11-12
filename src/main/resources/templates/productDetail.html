@@ -30,7 +30,7 @@
             </th:block>
             在庫数: <span th:text ="*{stock}"/><br/>
             <form th:method="put" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
-                数量: <input type="number" th:name="number" min="1"/>
+                数量: <input type="number" th:name="number" min="1" th:max="*{stock}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>
@@ -49,8 +49,8 @@
                 点数 : <span th:text="${review.score}"/><br/>
                 コメント : <span th:text="${review.comment}"/>
             </div>
-            <div class="edit-button">
-                <a>
+            <div>
+                <a th:href="@{/reviewEdit/{id}(id=${review.id})}">
                     <input type="button" value="編集">
                 </a>
             </div>

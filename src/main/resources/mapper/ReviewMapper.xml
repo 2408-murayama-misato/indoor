@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.ReviewMapper">
+    <resultMap id="review" type="com.example.indoor.entity.Review">
+        <result column="id" property="id" />
+        <result column="product_id" property="productId" />
+        <result column="account_id" property="accountId" />
+        <result column="score" property="score" />
+        <result column="comment" property="comment" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_date" property="updatedDate" />
+    </resultMap>
+    <select id="findReview" resultMap="review">
+        SELECT * FROM reviews WHERE id = #{id}
+    </select>
     <insert id="insert" parameterType="com.example.indoor.entity.Review">
         INSERT INTO reviews (
             product_id,
@@ -19,6 +31,9 @@
             DEFAULT
         )
     </insert>
+    <update id="update" parameterType="com.example.indoor.entity.Review">
+        UPDATE reviews SET score = #{score}, comment = #{comment}, updated_date = DEFAULT WHERE id = #{id}
+    </update>
     <delete id="delete" parameterType="int">
         DELETE FROM reviews WHERE id = #{id}
     </delete>

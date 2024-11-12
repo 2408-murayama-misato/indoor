@@ -13,6 +13,7 @@
     width: 200px;
     height: auto;
 }
+/* 商品詳細画面、レビュー投稿画面レイアウト */
 .product-information {
     display: flex;
 }

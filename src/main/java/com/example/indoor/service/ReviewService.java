@@ -19,6 +19,15 @@ public class ReviewService {
     ReviewMapper reviewMapper;
 
     /*
+     * 主キー指定でレコードを取得
+     */
+    public ReviewForm findReview(int id) {
+        List<Review> results = new ArrayList<>();
+        results.add(reviewMapper.findReview(id));
+        List<ReviewForm> reviews = setForm(results);
+        return reviews.get(0);
+    }
+    /*
      * レビューを全件取得
      */
     public List<ReviewForm> findUserReviews() {
@@ -46,6 +55,14 @@ public class ReviewService {
     public void insertReview(ReviewForm reviewForm) {
         Review saveReview = setEntity(reviewForm);
         reviewMapper.insert(saveReview);
+    }
+
+    /*
+     * レコード更新
+     */
+    public void updateReview(ReviewForm reviewForm) {
+        Review saveReview = setEntity(reviewForm);
+        reviewMapper.update(saveReview);
     }
 
     /*
