@@ -17,26 +17,26 @@ public class ProductService {
     ProductMapper productMapper;
     
     /*
-     * 商品ID指定で商品レコードを取得
+     * 主キー指定で商品レコードを取得
      */
     public ProductForm findProduct(int id) {
         List<Product> results = new ArrayList<>();
-        results.add(productMapper.find(id));
-        List<ProductForm> products = setProductForm(results);
+        results.add(productMapper.findProduct(id));
+        List<ProductForm> products = setForm(results);
 
         return products.get(0);
     }
     /*
-     * DBから取得したデータをFormに設定
+     * EntityをFormにコピー
      */
-    private List<ProductForm> setProductForm(List<Product> results) {
-        List<ProductForm> products = new ArrayList<>();
+    private List<ProductForm> setForm(List<Product> entities) {
+        List<ProductForm> forms = new ArrayList<>();
 
-        for (Product result : results) {
-            ProductForm product = new ProductForm();
-            BeanUtils.copyProperties(result, product);
-            products.add(product);
+        for (Product entity : entities) {
+            ProductForm form = new ProductForm();
+            BeanUtils.copyProperties(entity, form);
+            forms.add(form);
         }
-        return products;
+        return forms;
     }
 }

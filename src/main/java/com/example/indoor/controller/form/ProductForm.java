@@ -18,4 +18,7 @@ public class ProductForm {
     private String description;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    // 内部結合用に追加
+    private String accountName;
+    private String imagePass;
 }
