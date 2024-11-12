@@ -1,7 +1,6 @@
 .top {
     position: relative;
 }
-
 .top p{
     margin: 0;
     position: absolute; /*画像に重ねたい文字(子要素)をabsolute*/
@@ -9,7 +8,8 @@
     top: 100px;
     left: 30px;
 }
-.top img {
-    width: 100%;
+/*トップ画面のカテゴリーボタン*/
+.category-button img {
+    width: 200px;
     height: auto;
 }
