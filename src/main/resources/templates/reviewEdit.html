@@ -8,6 +8,7 @@
     <title>レビュー編集</title>
 </head>
 <body>
+<div class="d-flex flex-fill justify-content-center align-items-center vh-100">
   <form th:action="@{/updateReview}" th:object="${reviewForm}" th:method="put">
     <div class="form-content">
       <label>点数</label>:
@@ -15,11 +16,12 @@
     </div>
     <div class="form-content">
       <label>本文</label><br/>
-      <textarea class="tweet-box-text" th:text="*{comment}" th:name="comment" th:value="*{comment}" size="50" maxlength="1500" /></textarea><br/>
+      <textarea class="span9" th:text="*{comment}" th:name="comment" th:value="*{comment}" size="50" maxlength="1500" /></textarea><br/>
     </div>
     <input type="hidden" th:name="productId" th:value="*{productId}">
     <input type="hidden" th:name="id" th:value="*{id}">
-    <input type="submit" value="投稿" />
+    <input class="btn btn-outline-secondary" type="submit" value="投稿" />
   </form>
+</div>
 </body>
 </html>
