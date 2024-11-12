@@ -6,14 +6,12 @@ import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
 import com.example.indoor.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 public class ProductController {
@@ -29,8 +27,10 @@ public class ProductController {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
-
         mav.addObject("product", product);
+
+        List<ReviewForm> reviews = reviewService.findUserReviews();
+        mav.addObject("reviews", reviews);
 
         mav.setViewName("/productDetail");
         return mav;
@@ -59,6 +59,16 @@ public class ProductController {
         reviewService.insertReview(reviewForm);
 
         mav.addObject("id", reviewForm.getProductId());
+        mav.setViewName("redirect:/productDetail");
+        return mav;
+    }
+
+    @DeleteMapping("/deleteReview/{id}-{productId}")
+    public ModelAndView delete(@PathVariable int id,
+                               @PathVariable int productId) {
+        ModelAndView mav = new ModelAndView();
+        reviewService.deleteReview(id);
+        mav.addObject("id", productId);
         mav.setViewName("redirect:/productDetail");
         return mav;
     }

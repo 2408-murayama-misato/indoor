@@ -9,7 +9,7 @@
     <title>商品詳細</title>
 </head>
 <body>
-<div class="header-contents"></div>
+<div th:include="header"></div>
 <div class="main-contents mt-2">
     <div class="product-information">
         <div class="product-image">
@@ -39,7 +39,28 @@
         商品説明<br/>
         <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
     </div>
-    <div class="product-reviews"></div>
+    商品レビュー<br/>
+    <div class="product-reviews" th:each="review : ${reviews}">
+        <div th:if="${review.productId} == ${product.id}">
+            <div>
+                投稿者 : <span th:text="${review.accountName}"/>
+                投稿日時 : <span th:text="${review.createdDate}"/>
+                更新日時 : <span th:text="${review.updatedDate}"/><br/>
+                点数 : <span th:text="${review.score}"/><br/>
+                コメント : <span th:text="${review.comment}"/>
+            </div>
+            <div class="edit-button">
+                <a>
+                    <input type="button" value="編集">
+                </a>
+            </div>
+            <div>
+                <form th:method="delete" th:action="@{/deleteReview/{id}-{productId}(id=${review.id}, productId=${product.id})}">
+                    <input type="submit" value="削除" />
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

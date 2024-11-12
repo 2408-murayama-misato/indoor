@@ -19,4 +19,32 @@
             DEFAULT
         )
     </insert>
+    <delete id="delete" parameterType="int">
+        DELETE FROM reviews WHERE id = #{id}
+    </delete>
+    <!-- 内部結合 -->
+    <resultMap id="userReview" type="com.example.indoor.entity.Review">
+        <result column="id" property="id" />
+        <result column="account_id" property="accountId" />
+        <result column="account_name" property="accountName" />
+        <result column="product_id" property="productId" />
+        <result column="score" property="score" />
+        <result column="comment" property="comment" />
+        <result column="created_date" property="createdDate" />
+        <result column="updated_date" property="updatedDate" />
+    </resultMap>
+    <select id="findUserReviews" resultMap="userReview">
+        SELECT
+            reviews.id AS id,
+            reviews.account_id AS account_id,
+            accounts.name AS account_name,
+            reviews.product_id AS product_id,
+            reviews.score AS score,
+            reviews.comment AS comment,
+            reviews.created_date AS created_date,
+            reviews.updated_date AS updated_date
+        FROM reviews
+        INNER JOIN accounts
+        ON accounts.id = reviews.account_id
+    </select>
 </mapper>
