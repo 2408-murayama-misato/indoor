@@ -9,13 +9,13 @@
         ON carts.product_id = products.id
         INNER JOIN  product_images
         ON carts.product_id = product_images.product_id
-        where carts.acccount_id = ${id}
+        where carts.account_id = ${id}
     </select>
 <!--    カートマッピング-->
     <resultMap id="Cart" type="com.example.indoor.entity.Cart">
         <result column="id" property="id"/>
         <result column="product_id" property="productId"/>
-        <result column="acccount_id" property="accountId"/>
+        <result column="account_id" property="accountId"/>
         <result column="number" property="number"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
@@ -48,4 +48,16 @@
         delete from tasks
         where id = #{id}
     </delete>
+<!--    カートの追加-->
+    <insert id="addCart">
+        INSERT INTO carts(
+        product_id,
+        account_id,
+        number
+        ) VALUES (
+        ${productId},
+        ${id},
+        ${number}
+        )
+    </insert>
 </mapper>

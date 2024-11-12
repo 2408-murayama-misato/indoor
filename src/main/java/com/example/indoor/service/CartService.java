@@ -39,4 +39,8 @@ public class CartService {
         List<CartForm> cart = setCartsForm(results);
         return cart;
     }
+
+    public void addCart(int number, int productId, int id) {
+        cartMapper.addCart(number, productId, id);
+    }
 }

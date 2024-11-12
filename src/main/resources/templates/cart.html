@@ -9,12 +9,18 @@
     </head>
     <body>
         <h2>カート</h2>
+
+        <div class="resultMessage" th:if="${resultMessages != null}">
+                <li th:text="${resultMessage}"/>
+            <br/>
+        </div>
         <table class="table carts">
             <thead class="table-light">
                 <tr class="cartsTableTitle">
                     <th>写真</th>
                     <th>商品名</th>
                     <th>価格</th>
+                    <th>個数</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +34,14 @@
                         </td>
                         <td>
                             <p th:text="${cart.product.value}"/>
+                        </td>
+                        <td>
+                            <p th:text="${cart.number}"/>
+                        </td>
+                        <td>
+                            <form th:action="@{/addCart/{productId}/{number}(number = 1,productId = 1}" method="post">
+                                <input type="submit" value="check">
+                            </form>
                         </td>
                     </tr>
                 </div>
