@@ -1,6 +1,11 @@
 package com.example.indoor.mapper;
 
 
-@org.apache.ibatis.annotations.Mapper
+import com.example.indoor.entity.Product;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
 public interface ProductMapper {
+    public Product find(int id);
+    public Product findProduct(int id);
 }

@@ -27,9 +27,25 @@ public class ProductController {
     ProductService productService;
 
     /*
+     * 商品への問い合わせ登録処理
+     */
+    @GetMapping("/productDetail")
+    public ModelAndView productDetail(@ModelAttribute("id") String id) {
+        ModelAndView mav = new ModelAndView();
+
+        ProductForm product = productService.findProduct(Integer.parseInt(id));
+        ProductsNoticeForm productsNoticeForm = new ProductsNoticeForm();
+        mav.addObject("product", product);
+        mav.addObject("productsNoticeForm", productsNoticeForm);
+
+        mav.setViewName("/productDetail");
+
+        return mav;
+    }
+    /*
      * 商品問い合わせ登録処理
      */
-    @PostMapping("/productDetail/{id}")
+    @PostMapping("/productDetail")
     public ModelAndView addProductContact(@ModelAttribute("productNotice") @Validated ProductsNoticeForm productsNoticeForm,
                                           @PathVariable int productId, @AuthenticationPrincipal Account account, BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView();
