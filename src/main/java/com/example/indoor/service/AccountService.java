@@ -5,6 +5,7 @@ import com.example.indoor.entity.Account;
 import com.example.indoor.mapper.AccountMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,10 @@ public class AccountService implements UserDetailsService {
     @Autowired
     private AccountMapper accountMapper;
 
+    @Autowired
+    @Lazy
+    PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountMapper.findByAccount(username);
@@ -27,12 +32,14 @@ public class AccountService implements UserDetailsService {
     }
 
     /*
-     * レコード追加
+     * アカウント情報追加
      */
     public void saveAccount(AccountForm reqAccount) {
-        Account saveAccount = setAccountEntity(reqAccount);
-        // パスワード暗号化処理追記
+        // パスワード暗号化処理
+        String hashingPassword = passwordEncoder.encode(reqAccount.getPassword());
+        reqAccount.setPassword(hashingPassword);
 
+        Account saveAccount = setAccountEntity(reqAccount);
         accountMapper.save(saveAccount);
     }
 
@@ -43,5 +50,42 @@ public class AccountService implements UserDetailsService {
         Account account = new Account();
         BeanUtils.copyProperties(reqAccount, account);
         return account;
+    }
+
+    /*
+     * アカウント情報取得
+     */
+    public AccountForm findById(Integer id) {
+        Account result = accountMapper.findById(id);
+        AccountForm accountForm = setAccountForm(result);
+        return accountForm;
+    }
+
+    /*
+     * DBから取得したデータをFormに設定
+     */
+    private AccountForm setAccountForm(Account result) {
+        AccountForm accountForm = new AccountForm();
+        BeanUtils.copyProperties(result, accountForm);
+        return  accountForm;
+    }
+
+    /*
+     * アカウント情報更新
+     */
+    public void updateAccount(AccountForm reqAccount) {
+        // パスワード暗号化処理
+        String hashingPassword = passwordEncoder.encode(reqAccount.getPassword());
+        reqAccount.setPassword(hashingPassword);
+
+        Account updateAccount = setAccountEntity(reqAccount);
+        accountMapper.update(updateAccount);
+    }
+
+    /*
+     * アカウント削除
+     */
+    public void deleteAccount(Integer id) {
+        accountMapper.deleteById(id);
     }
 }

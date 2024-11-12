@@ -74,4 +74,12 @@ public class CartService {
     public void deleteCart(int id) {
         cartMapper.deleteCart(id);
     }
+
+    //購入画面用のカート情報取得
+    public void List<CartForm> findCartPurchase {
+        List<Cart> results = cartMapper.findCartPurchases;
+        List<CartForm> cart = setCartsForm(results);
+        return cart;
+
+    }
 }

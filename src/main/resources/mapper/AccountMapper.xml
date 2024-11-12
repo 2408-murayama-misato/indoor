@@ -7,9 +7,48 @@
         from accounts
         where account = #{account}
     </select>
-    <!-- レコード追加 -->
+    <!-- アカウント情報追加 -->
     <insert id="save">
-        insert into accounts(account, password, name, address, credit, role, isStopped)
+        insert into accounts(account, password, name, address, credit, role, is_stopped)
         values (#{account}, #{password}, #{name}, #{address}, #{credit}, #{role}, #{isStopped})
     </insert>
+    <!-- アカウント情報取得 -->
+    <select id="findById" resultType="com.example.indoor.entity.Account">
+        select *
+        from accounts
+        where id = #{id}
+    </select>
+    <!-- アカウント情報追加 -->
+    <update id="update">
+        update accounts
+        <set>
+            <if test="account != null">
+                account = #{account},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="credit != null">
+                credit = #{credit},
+            </if>
+            <if test="role != null">
+                role = #{role},
+            </if>
+            <if test="isStopped != null">
+                is_stopped = #{isStopped},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!-- アカウント削除 -->
+    <delete id="deleteById">
+        delete from accounts
+        where id = #{id}
+    </delete>
 </mapper>

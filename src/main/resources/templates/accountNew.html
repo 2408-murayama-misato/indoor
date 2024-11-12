@@ -11,6 +11,16 @@
 <div class="header-contents">
   <h1>新規会員登録</h1>
 </div>
+
+<!-- エラーメッセージの表示 -->
+<div class="error-messages">
+  <ul>
+    <div th:if="${accountErrorList}" th:each="error : ${accountErrorList}">
+      <li><div th:text="${error}"></div></li>
+    </div>
+  </ul>
+</div>
+
 <div class="main-contents">
   <form class="form-area" th:method="post" th:action="@{/signup}" th:object="${accountForm}">
     <div class="form-content">
@@ -31,15 +41,15 @@
     </div>
     <div class="form-content">
       <label>住所</label><br/>
-      <input type="text" th:name="name" th:value="*{address}"/><br/>
+      <input type="text" th:name="address" th:value="*{address}"/><br/>
     </div>
     <div class="form-content">
       <label>クレジットカード番号</label><br/>
-      <input type="text" th:name="name" th:value="*{credit}"/><br/>
+      <input type="text" th:name="credit" th:value="*{credit}"/><br/>
     </div>
     <div class="form-content">
       <label>種類</label>
-      <select th:name="role">
+      <select th:name="role" th:value="*{role}">
         <option value="user">利用者</option>
         <option value="seller">販売者</option>
       </select>
