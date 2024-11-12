@@ -5,9 +5,41 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/main.js}"></script>
     <title>商品詳細</title>
 </head>
 <body>
-
+<div class="header-contents"></div>
+<div class="main-contents mt-2">
+    <div class="product-information">
+        <div class="product-image">
+            <img th:src="@{/img/sample.jpg}">
+        </div>
+        <div class="product-overview" th:object="${product}">
+            出品者: <span th:text ="*{accountName}"/><br/>
+            カテゴリー: <span th:text ="*{category}"/><br/>
+            商品名: <span th:text ="*{name}"/><br/>
+            ￥<span th:text ="*{price}"/><br/>
+            <th:block th:switch="*{isStopped}">
+                <span th:case="true">
+                        出品停止中
+                </span>
+                <span th:case="false">
+                        出品中
+                </span>
+            </th:block>
+            在庫数: <span th:text ="*{stock}"/><br/>
+            <form th:method="put" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
+                数量: <input type="number" th:name="number" min="1"/>
+                <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
+            </form>
+        </div>
+    </div>
+    <div class="product-description">
+        商品説明<br/>
+        <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
+    </div>
+    <div class="product-reviews"></div>
+</div>
 </body>
 </html>

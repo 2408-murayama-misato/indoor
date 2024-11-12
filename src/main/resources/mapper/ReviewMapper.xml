@@ -2,4 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.ReviewMapper">
+    <insert id="insert" parameterType="com.example.indoor.entity.Review">
+        INSERT INTO reviews (
+            product_id,
+            account_id,
+            score,
+            comment,
+            created_date,
+            updated_date
+        ) VALUES (
+            #{productId},
+            #{accountId},
+            #{score},
+            #{comment},
+            DEFAULT,
+            DEFAULT
+        )
+    </insert>
 </mapper>

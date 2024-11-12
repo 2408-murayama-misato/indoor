@@ -13,3 +13,6 @@
     width: 200px;
     height: auto;
 }
+.product-information {
+    display: flex;
+}

@@ -2,6 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.ProductMapper">
+    <select id="find" resultType="com.example.indoor.entity.Product">
+        SELECT * FROM products WHERE id = #{id}
+    </select>
+    <!-- 内部結合 -->
+    <resultMap id="productDetail" type="com.example.indoor.entity.Product">
+        <result column="id" property="id" />
+        <result column="account_name" property="accountName" />
+        <result column="product_name" property="name" />
+        <result column="price" property="price" />
+        <result column="category" property="category" />
+        <result column="stock" property="stock" />
+        <result column="is_stopped" property="isStopped" />
+        <result column="description" property="description" />
+    </resultMap>
+    <select id="findProduct" resultMap="productDetail">
+        SELECT
+            products.id AS id,
+            accounts.name AS account_name,
+            products.name AS product_name,
+            products.price AS price,
+            products.category AS category,
+            products.stock AS stock,
+            products.is_stopped AS is_stopped,
+            products.description AS description
+        FROM products
+        INNER JOIN accounts
+        ON accounts.id = products.account_id
+        WHERE products.id = #{id}
+    </select>
     <select id="findById" resultMap="Product">
         SELECT *
         FROM products
@@ -19,5 +48,22 @@
         <result column="description" property="description"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
+        <collection property="productsImage" resultMap="productsImage"></collection>
     </resultMap>
+
+    <!--    リレーション用商品画像マスタのマッピング-->
+    <resultMap id="productsImage" type="com.example.indoor.entity.ProductImage">
+        <result column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="pass" property="pass"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
+<!--    商品検索-->
+    <select id="findAll" resultMap="Product">
+        SELECT *  FROM products
+        INNER JOIN  product_images
+        ON products.id = product_images.product_id
+        WHERE category LIKE % ${keyWord} %　OR　name LIKE % ${keyWord} % ORDER BY createdDate DESC
+    </select>
 </mapper>
