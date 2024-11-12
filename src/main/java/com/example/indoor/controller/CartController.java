@@ -16,9 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -54,7 +52,7 @@ public class CartController {
        return mav;
    }
 
-   @PostMapping("/addCart/{productId}/{number}")
+   @PostMapping("/addCart/{productId}x{number}")
    public  ModelAndView addCart(@PathVariable String productId,
                                 @PathVariable String number,
                                 @AuthenticationPrincipal Account loginAccount,
@@ -75,16 +73,40 @@ public class CartController {
 
       if (errorMessages.size() > 0) {
          redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-/*        柏さんの確認後修正
          redirectAttributes.addFlashAttribute("product",product);
-         
- */
          mav.setViewName("redirect:/productDetail");
       } else {
          cartService.addCart(Integer.parseInt(number), (Integer.parseInt(productId)), loginAccount.getId());
          redirectAttributes.addFlashAttribute("resultMessage", product.getName() + "がカートに追加されました");
          mav.setViewName("redirect:/cart");
       }
+      return mav;
+   }
+
+//   カート注文数マイナス
+   @PutMapping("/countDownCart/{id}/{number}")
+   public ModelAndView countDownCart (@ModelAttribute CartForm cartForm) {
+      ModelAndView mav = new ModelAndView();
+      cartService.countDownCart(cartForm);
+      mav.setViewName("redirect:/cart");
+      return mav;
+   }
+
+//   カートの注文数プラス
+   @PutMapping("/countUpCart/{id}/{number}")
+   public ModelAndView countUpCart (@ModelAttribute CartForm cartForm) {
+      ModelAndView mav = new ModelAndView();
+      cartService.countUpCart(cartForm);
+      mav.setViewName("redirect:/cart");
+      return mav;
+   }
+
+//   カートの削除
+   @DeleteMapping("/deleteCart/{id}")
+   public ModelAndView deleteCart (@PathVariable int id) {
+      ModelAndView mav = new ModelAndView();
+      cartService.deleteCart(id);
+      mav.setViewName("redirect:/cart");
       return mav;
    }
 }

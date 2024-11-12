@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.CartMapper">
-    <select id="findCart" resultMap="Cart">
+<!--    カート情報取得-->
+    <select id="findCarts" resultMap="Cart">
         select *
         from carts
         INNER JOIN products
@@ -22,7 +23,7 @@
         <collection property="product" resultMap="product"></collection>
         <collection property="productsImage" resultMap="productsImage"></collection>
     </resultMap>
-
+<!--リレーション用商品マスタマッピング-->
     <resultMap id="product" type="com.example.indoor.entity.Product">
         <result column="id" property="id"/>
         <result column="account_id" property="accountId"/>
@@ -35,7 +36,7 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>
-<!--    商品画像マスタのmap-->
+<!--    リレーション用商品画像マスタのマッピング-->
     <resultMap id="productsImage" type="com.example.indoor.entity.ProductImage">
         <result column="id" property="id"/>
         <result column="product_id" property="productId"/>
@@ -43,11 +44,6 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>
-
-    <delete id="deleteCart" parameterType="int">
-        delete from tasks
-        where id = #{id}
-    </delete>
 <!--    カートの追加-->
     <insert id="addCart">
         INSERT INTO carts(
@@ -60,4 +56,35 @@
         ${number}
         )
     </insert>
+
+<!--    カート注文数マイナス-->
+    <update id="countDownCart">
+        UPDATE carts SET
+        number = ${cart.number - 1}
+        WHERE
+        id = ${cart.id}
+    </update>
+<!--    カート注文数プラス-->
+    <update id="countUpCart">
+        UPDATE carts SET
+        number = ${cart.number + 1}
+        WHERE
+        id = ${cart.id}
+    </update>
+
+<!--    カートの削除-->
+    <delete id="deleteCart">
+        DELETE
+        FROM carts
+        WHERE id = ${id}
+    </delete>
+    
+<!--    カート内重複検索-->
+    <select id="findCart" resultMap="Cart">
+        select *
+        from carts
+        where carts.account_id = ${id}
+        AND carts.product_id = ${productId}
+    </select>
+
 </mapper>

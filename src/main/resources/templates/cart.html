@@ -3,6 +3,7 @@
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <meta charset="UTF-8">
         <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
         <title>カート</title>
@@ -36,16 +37,37 @@
                             <p th:text="${cart.product.value}"/>
                         </td>
                         <td>
+                            <div class=" d-flex  align-items-center gap-3">
+                            <div th:if="${cart.number == 1}">
+                                <form th:action="@{/deleteCart/{id}(id = ${cart.id})}" th:method="delete">
+                                    <button type="submit" class="btn">
+                                        <span class="bi bi-trash"/>
+                                    </button>
+                                </form>
+                            </div>
+                            <div th:if="${cart.number > 1}">
+                                <form th:action="@{/countDownCart/{id}/{number}(id = ${cart.id}, number = ${cart.number})}" th:method="put">
+                                    <button type="submit" class="btn">
+                                        <span class="bi bi-dash-circle"/>
+                                    </button>
+                                </form>
+                            </div>
                             <p th:text="${cart.number}"/>
-                        </td>
-                        <td>
-                            <form th:action="@{/addCart/{productId}/{number}(number = 1,productId = 1}" method="post">
-                                <input type="submit" value="check">
+                            <form th:action="@{/countUpCart/{id}/{number}(id = ${cart.id}, number = ${cart.number})}"  th:method="put">
+                                <button type="submit" class="btn">
+                                    <span class="bi bi-plus-circle"/>
+                                </button>
                             </form>
+                            </div>
                         </td>
                     </tr>
                 </div>
             </tbody>
         </table>
+        <a th:href="@{/top}">
+            <input type="button" value="戻る" class="btn btn-outline-secondary">
+        </a>
+        <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+        <script th:src="@{/js/main.js}"></script>
     </body>
 </html>

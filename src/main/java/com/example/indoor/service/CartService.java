@@ -33,14 +33,45 @@ public class CartService {
         }
         return cartForms;
     }
+    private CartForm setCartForm(Cart result) {
+            CartForm cartForm = new CartForm();
+            cartForm.setId(result.getId());
+            cartForm.setProductId(result.getProductId());
+            cartForm.setAccountId(result.getAccountId());
+            cartForm.setNumber(result.getNumber());
+            cartForm.setCreatedDate(result.getCreatedDate());
+            cartForm.setUpdatedDate(result.getUpdatedDate());
+            cartForm.setProduct(result.getProduct());
+            cartForm.setProductsImage(result.getProductsImage());
+        return cartForm;
+    }
 
     public List<CartForm> findCart(int i) {
-        List<Cart> results = cartMapper.findCart(i);
+        List<Cart> results = cartMapper.findCarts(i);
         List<CartForm> cart = setCartsForm(results);
         return cart;
     }
 
     public void addCart(int number, int productId, int id) {
-        cartMapper.addCart(number, productId, id);
+         Cart cart = cartMapper.findCart(productId,id);
+         if (cart == null) {
+             cartMapper.addCart(number, productId, id);
+         } else {
+             countUpCart(setCartForm(cart));
+         }
+    }
+
+    //   カート注文数マイナス
+    public void countDownCart(CartForm cartForm) {
+        cartMapper.countDownCart(cartForm);
+    }
+
+    //   カート注文数プラス
+    public void countUpCart(CartForm cartForm) {
+        cartMapper.countUpCart(cartForm);
+    }
+
+    public void deleteCart(int id) {
+        cartMapper.deleteCart(id);
     }
 }
