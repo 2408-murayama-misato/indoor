@@ -9,59 +9,65 @@
     <title>アカウント編集・削除</title>
 </head>
 <body>
-<div class="header-contents">
-    <h1>アカウント編集・削除</h1>
-</div>
-
-<!-- エラーメッセージの表示 -->
-<div class="error-messages">
-    <ul>
-        <div th:if="${accountEditErrorList}" th:each="error : ${accountEditErrorList}">
-            <li><div th:text="${error}"></div></li>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <!-- エラーメッセージの表示 -->
+            <div class="text-danger">
+                <ul>
+                    <div th:if="${accountEditErrorList}" th:each="error : ${accountEditErrorList}">
+                        <li><div th:text="${error}"></div></li>
+                    </div>
+                </ul>
+            </div>
+            <h1 class="text-center mb-4">アカウント編集</h1>
+            <form th:method="put" th:action="@{/edit}" th:object="${accountForm}" onSubmit="return CheckChange()">
+                <div class="mb-3">
+                    <label class="form-label">アカウント</label><br/>
+                    <input type="text" th:name="account" th:value="*{account}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">パスワード</label><br/>
+                    <input type="password" th:name="password" th:value="*{password}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">パスワード確認用</label><br/>
+                    <input type="password" th:name="passwordRetype" th:value="*{passwordRetype}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">氏名</label><br/>
+                    <input type="text" th:name="name" th:value="*{name}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">住所</label><br/>
+                    <input type="text" th:name="address" th:value="*{address}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">クレジットカード番号</label><br/>
+                    <input type="text" th:name="credit" th:value="*{credit}" class="form-control"/><br/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">種類</label>
+                    <select th:name="role" th:value="*{role}" class="form-control">
+                        <option value="user">利用者</option>
+                        <option value="seller">販売者</option>
+                    </select>
+                </div>
+                <br/>
+                <div class="d-grid">
+                    <input type="submit" value="編集" class="btn btn-primary"/><br/>
+                </div>
+            </form>
+            <!-- 削除ボタン -->
+            <form th:method="delete" th:action="@{/deleteAccount}" onSubmit="return CheckDelete()">
+                <input type="submit" value="アカウント削除" class="btn btn-danger">
+            </form>
+            <br/>
+            <a th:href="@{/top}">
+                <input type="button" value="戻る" class="btn btn-outline-secondary">
+            </a>
         </div>
-    </ul>
-</div>
-
-<div class="main-contents">
-    <form class="form-area" th:method="post" th:action="@{/edit}" th:object="${accountForm}">
-        <div class="form-content">
-            <label>アカウント</label><br/>
-            <input type="text" th:name="account" th:value="*{account}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>パスワード</label><br/>
-            <input type="password" th:name="password" th:value="*{password}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>パスワード確認用</label><br/>
-            <input type="password" th:name="passwordRetype" th:value="*{passwordRetype}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>氏名</label><br/>
-            <input type="text" th:name="name" th:value="*{name}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>住所</label><br/>
-            <input type="text" th:name="address" th:value="*{address}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>クレジットカード番号</label><br/>
-            <input type="text" th:name="credit" th:value="*{credit}"/><br/>
-        </div>
-        <div class="form-content">
-            <label>種類</label>
-            <select th:name="role" th:value="*{role}">
-                <option value="user">利用者</option>
-                <option value="seller">販売者</option>
-            </select>
-        </div>
-        <input type="submit" value="登録" /><br/>
-    </form>
-
-    <!-- 削除ボタン -->
-    <form th:method="post" th:action="@{/deleteAccount}" onSubmit="return CheckDelete()">
-        <input type="submit" value="アカウント削除">
-    </form>
+    </div>
 </div>
 </body>
 </html>

@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpSession;
 import com.example.indoor.controller.form.AccountForm;
 import com.example.indoor.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +66,7 @@ public class AccountController {
                 accountErrorList.add(error.getDefaultMessage());
             }
 
+            //アカウント重複バリデーション
             Account account = new Account();
             account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
             if (account != null) {
@@ -79,8 +81,8 @@ public class AccountController {
         }
 
         accountService.saveAccount(accountForm);
-        // ログイン画面へリダイレクトするように修正
-        mav.setViewName("redirect:/accountNew");
+        // ログイン画面へリダイレクト
+        mav.setViewName("redirect:/login");
         return mav;
     }
 
@@ -88,10 +90,10 @@ public class AccountController {
      * アカウント編集画面表示
      */
     @GetMapping("/accountEdit")
-    public ModelAndView accountEdit() {
+    public ModelAndView accountEdit(@AuthenticationPrincipal Account loginAccount) {
         ModelAndView mav = new ModelAndView();
         AccountForm accountForm = new AccountForm();
-        accountForm = accountService.findById(5);
+        accountForm = accountService.findById(loginAccount.getId());
         //編集画面でパスワードは表示させない
         accountForm.setPassword("");
         mav.addObject("accountForm", accountForm);
@@ -102,8 +104,8 @@ public class AccountController {
     /*
      * アカウント編集処理
      */
-    @PostMapping("/edit")
-    public ModelAndView accountEdit(@Validated(AccountForm.UpdateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, RedirectAttributes redirectAttributes) {
+    @PutMapping("/edit")
+    public ModelAndView accountEdit(@Validated(AccountForm.UpdateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, @AuthenticationPrincipal Account loginAccount, RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         // バリデーション
         List<String> accountEditErrorList = new ArrayList<String>();
@@ -125,8 +127,7 @@ public class AccountController {
             return mav;
         }
 
-        //idは渡ってくるようにする
-        accountForm.setId(5);
+        accountForm.setId(loginAccount.getId());
         accountService.updateAccount(accountForm);
         mav.setViewName("redirect:/accountEdit");
         return mav;
@@ -135,9 +136,9 @@ public class AccountController {
     /*
      * アカウント削除処理
      */
-    @PostMapping("/deleteAccount")
-    public ModelAndView deleteAccount() {
-        accountService.deleteAccount(11);
+    @DeleteMapping("/deleteAccount")
+    public ModelAndView deleteAccount(@AuthenticationPrincipal Account loginAccount) {
+        accountService.deleteAccount(loginAccount.getId());
         return new ModelAndView("redirect:/accountNew");
     }
 

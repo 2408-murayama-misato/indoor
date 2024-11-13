@@ -8,6 +8,16 @@
     <title>購入画面</title>
 </head>
 <body>
-
+<div th:each="cart : ${cartForms}">
+    <p th:text="${cart.product.name}"></p>
+    <p th:text="${cart.productsImage.pass}"></p>
+    <p th:text="${cart.product.value}"></p>
+    <p th:text="${cart.number}"></p>
+    <!--
+    <p th:text="${cart.account.name}"></p>
+    <p th:text="${cart.account.address}"></p>
+    <p th:text="${cart.account.credit}"></p>
+    -->
+</div>
 </body>
 </html>
