@@ -1,14 +1,31 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.AccountForm;
+import com.example.indoor.service.AccountService;
 import jakarta.servlet.http.HttpSession;
+import com.example.indoor.controller.form.AccountForm;
+import com.example.indoor.entity.Account;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class AccountController {
-    
+
+    @Autowired
+    AccountService accountService;
+
     @GetMapping("/login")
     public ModelAndView login(HttpSession session){
         ModelAndView mav = new ModelAndView();
@@ -23,4 +40,106 @@ public class AccountController {
         }
         return mav;
     }
+
+    /*
+     * 会員登録画面表示
+     */
+    @GetMapping("/accountNew")
+    public ModelAndView addAccount() {
+        ModelAndView mav = new ModelAndView();
+        AccountForm accountForm = new AccountForm();
+        mav.setViewName("/accountNew");
+        mav.addObject("accountForm", accountForm);
+        return mav;
+    }
+
+    /*
+     * 会員登録処理
+     */
+    @PostMapping("/signup")
+    public ModelAndView signup(@Validated(AccountForm.CreateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+        // バリデーション
+        List<String> accountErrorList = new ArrayList<String>();
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+                accountErrorList.add(error.getDefaultMessage());
+            }
+
+            //アカウント重複バリデーション
+            Account account = new Account();
+            account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
+            if (account != null) {
+                accountErrorList.add("アカウントが重複しています");
+            }
+
+            redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
+            //エラーの際に入力情報が保持されるように
+//            mav.addObject("accountForm", accountForm);
+            mav.setViewName("redirect:/accountNew");
+            return mav;
+        }
+
+        accountService.saveAccount(accountForm);
+        // ログイン画面へリダイレクト
+        mav.setViewName("redirect:/login");
+        return mav;
+    }
+
+    /*
+     * アカウント編集画面表示
+     */
+    @GetMapping("/accountEdit")
+    public ModelAndView accountEdit(@AuthenticationPrincipal Account loginAccount) {
+        ModelAndView mav = new ModelAndView();
+        AccountForm accountForm = new AccountForm();
+        accountForm = accountService.findById(loginAccount.getId());
+        //編集画面でパスワードは表示させない
+        accountForm.setPassword("");
+        mav.addObject("accountForm", accountForm);
+        mav.setViewName("/accountEdit");
+        return mav;
+    }
+
+    /*
+     * アカウント編集処理
+     */
+    @PutMapping("/edit")
+    public ModelAndView accountEdit(@Validated(AccountForm.UpdateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, @AuthenticationPrincipal Account loginAccount, RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+        // バリデーション
+        List<String> accountEditErrorList = new ArrayList<String>();
+        if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()) {
+                accountEditErrorList.add(error.getDefaultMessage());
+            }
+
+            Account account = new Account();
+            account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
+            if (account != null) {
+                accountEditErrorList.add("アカウントが重複しています");
+            }
+
+            redirectAttributes.addFlashAttribute("accountEditErrorList", accountEditErrorList);
+            //エラーの際に入力情報が保持されるように
+//            mav.addObject("accountForm", accountForm);
+            mav.setViewName("redirect:/accountEdit");
+            return mav;
+        }
+
+        accountForm.setId(loginAccount.getId());
+        accountService.updateAccount(accountForm);
+        mav.setViewName("redirect:/accountEdit");
+        return mav;
+    }
+
+    /*
+     * アカウント削除処理
+     */
+    @DeleteMapping("/deleteAccount")
+    public ModelAndView deleteAccount(@AuthenticationPrincipal Account loginAccount) {
+        accountService.deleteAccount(loginAccount.getId());
+        return new ModelAndView("redirect:/accountNew");
+    }
+
 }
