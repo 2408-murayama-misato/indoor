@@ -27,7 +27,7 @@ public class ProductForm {
     private Timestamp updatedDate;
     // 内部結合用に追加
     private String accountName;
-    // 商品イメージファイル
+    // 商品イメージファイルアップロード用
     private List<MultipartFile> imageFile;
     // カテゴリー管理用に追加
     private int categoryId;

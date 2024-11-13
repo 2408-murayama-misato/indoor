@@ -55,6 +55,7 @@
         <result column="stock" property="stock" />
         <result column="is_stopped" property="isStopped" />
         <result column="description" property="description" />
+        <result column="image_pass" property="imagePass" />
     </resultMap>
     <select id="findProductDetail" resultMap="productDetail">
         SELECT
@@ -66,7 +67,8 @@
             products.category AS category,
             products.stock AS stock,
             products.is_stopped AS is_stopped,
-            products.description AS description
+            products.description AS description,
+            products.image_pass AS image_pass
         FROM products
         INNER JOIN accounts
         ON accounts.id = products.account_id

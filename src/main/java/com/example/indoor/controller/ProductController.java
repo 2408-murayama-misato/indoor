@@ -217,7 +217,7 @@ public class ProductController {
                 String fileName = getUploadFileName(file.getOriginalFilename());
                 saveFile(file, fileName);
                 // ファイルパスを保存
-                productForm.setImagePass(PRODUCT_IMAGE_PATH + fileName);
+                productForm.setImagePass(fileName);
             } catch (IOException e) {
                 // エラー処理は省略
             }

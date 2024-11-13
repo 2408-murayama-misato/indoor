@@ -13,7 +13,7 @@
 <div class="main-contents mt-2">
     <div class="product-information">
         <div class="product-image">
-            <img th:src="@{/img/no-image.png}">
+            <img th:src="${product.imagePass}">
         </div>
         <div class="product-overview" th:object="${product}">
             出品者: <span th:text ="*{accountName}"/><br/>

@@ -18,6 +18,8 @@ public class ProductService {
     @Autowired
     ProductMapper productMapper;
 
+    final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
+
     /*
      * 主キー指定で商品レコードを取得
      */
@@ -37,6 +39,12 @@ public class ProductService {
         for (Product entity : entities) {
             ProductForm form = new ProductForm();
             BeanUtils.copyProperties(entity, form);
+            // ファイルパスを修正
+            if (form.getImagePass().isBlank()) {
+                form.setImagePass(NO_IMAGE_FILE_PATH);
+            } else {
+                form.setImagePass("/img/product/" + form.getImagePass());
+            }
             forms.add(form);
         }
         return forms;
