@@ -2,4 +2,52 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.ProductsNoticesMapper">
+    <!--商品問い合わせ新規作成用-->
+    <resultMap id="ProductNotice" type="com.example.indoor.entity.ProductsNotice">
+        <result column="id" property="id"/>
+        <result column="text" property="text"/>
+        <result column="from_id" property="fromId"/>
+        <result column="product_id" property="productId"/>
+        <result column="to_id" property="toId"/>
+        <result column="is_read" property="isRead"/>
+        <result column="is_shipped_info" property="isShippedInfo"/>
+    </resultMap>
+
+    <!--商品問い合わせ取得用-->
+    <resultMap id="ProductContacts" type="com.example.indoor.entity.ProductsNotice">
+        <result column="id" property="id"/>
+        <result column="from_name" property="fromName" />
+        <result column="text" property="text"/>
+        <result column="from_id" property="fromId"/>
+        <result column="product_id" property="productId"/>
+        <result column="to_id" property="toId"/>
+        <result column="is_read" property="isRead"/>
+        <result column="is_shipped_info" property="isShippedInfo"/>
+        <result column="created_date" property="createdDate" />
+    </resultMap>
+
+    <select id="insertProductContact" resultMap="ProductNotice">
+        insert into products_notices(
+            text, from_id, product_id, to_id, is_read, is_shipped_info
+        ) values (
+            #{text}, #{fromId}, #{productId}, #{toId}, #{isRead}, #{isShippedInfo}
+        )
+    </select>
+    <select id="findProductContacts" resultMap="ProductContacts">
+        select
+            products_notices.id,
+            accounts.name AS from_name,
+            products_notices.text,
+            products_notices.from_id,
+            products_notices.product_id,
+            products_notices.to_id,
+            products_notices.is_read,
+            products_notices.is_shipped_info,
+            products_notices.created_date
+        from products_notices
+        inner join accounts
+        on accounts.id = products_notices.from_id
+        where products_notices.product_id = #{productId}
+        order by products_notices.created_date
+    </select>
 </mapper>

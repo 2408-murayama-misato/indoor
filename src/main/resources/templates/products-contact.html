@@ -1,0 +1,34 @@
+<!-- このHTMLは後で消します！！！！臨時で使わせてください-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <meta charset="UTF-8">
+  <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <title>コンタクト返信→商品問い合わせ画面(仮)</title>
+</head>
+<body>
+<!-- 表示部分 -->
+  <div class="message-icon" th:each="message : ${productContacts}">
+    <div class="account">
+      氏名：<span th:text="${message.accountName}" />
+    </div>
+    <div class="text">
+      本文：<pre><span th:text="${message.text}"></span></pre>
+    </div>
+    <div class="created-date">
+      投稿日時：<span th:text="${#dates.format(message.createdDate, 'yyyy/MM/dd HH:mm')}" />
+    </div>
+  </div>
+  <!-- 記入部分 -->
+  <div class="reply-form">
+    <form th:method="post" th:action="@{/productDetail/{id}(id=${product.id})}" th:object="${productNotice}">
+      <textarea th:field="${productsNotice.text}" rows="5" cols="30"></textarea><br>
+      <input type="hidden" th:value="${product.accountId}" th:field="${productNotice.toId}">
+      <input type="hidden" th:value="${product.id}" th:field="${productNotice.productId}">
+      <input type="submit" value="送信" />
+    </form>
+  </div>
+</body>
+</html>

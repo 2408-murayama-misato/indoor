@@ -13,7 +13,7 @@
 <div class="main-contents mt-2">
     <div class="product-information">
         <div class="product-image">
-            <img th:src="@{/img/product/sample.jpg}">
+            <img th:src="@{/img/no-image.png}">
         </div>
         <div class="product-overview" th:object="${product}">
             出品者: <span th:text ="*{accountName}"/><br/>
@@ -55,11 +55,31 @@
                 </a>
             </div>
             <div>
-                <form th:method="delete" th:action="@{/deleteReview/{id}-{productId}(id=${review.id}, productId=${product.id})}">
+                <form th:method="delete" th:action="@{/deleteReview/{id}-{productId}(id=${review.id}, productId=${product.id})}" onSubmit="return CheckDelete()">
                     <input type="submit" value="削除" />
                 </form>
             </div>
         </div>
+    </div>
+    <div class="product-contacts overflow-auto" th:each="contact : ${productContacts}">
+        <div class="account">
+            氏名：<span th:text="${contact.fromName}" />
+        </div>
+        <div class="text">
+            本文：<pre><span th:text="${contact.text}"/></pre>
+        </div>
+        <div class="created-date">
+            投稿日時：<span th:text="${#dates.format(contact.createdDate, 'yyyy/MM/dd HH:mm')}" />
+        </div>
+    </div>
+    <!-- 記入部分 -->
+    <div class="reply-form">
+        <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
+            <textarea th:field="*{text}" rows="5" cols="30"></textarea><br>
+            <input type="hidden" th:value="${product.accountId}" th:name="toId">
+            <input type="hidden" th:value="${product.Id}" th:name="productId">
+            <input type="submit" value="送信" />
+        </form>
     </div>
 </div>
 </body>

@@ -5,8 +5,6 @@ import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.ProductMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.example.indoor.entity.Product;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.List;
 
 @Service
 public class ProductService {
-
 
     @Autowired
     ProductMapper productMapper;

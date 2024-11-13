@@ -12,7 +12,7 @@
 <div class="main-contents mt-2">
     <div class="product-information">
         <div class="product-image">
-            <img th:src="@{/img/product/sample.jpg}">
+            <img th:src="@{/img/no-image.png}">
         </div>
         <div class="product-overview" th:object="${product}">
             出品者: <span th:text ="*{accountName}"/><br/>
@@ -31,20 +31,21 @@
                 商品説明<br/>
                 <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
             </div>
+            <form class="form-area" th:method="put" th:action="@{/addReview}" th:object="${reviewForm}">
+                <div class="form-content">
+                    <label>点数</label>:
+                    <input type="number" th:field="*{score}" min="0" max="5"/>/5 点<br/>
+                </div>
+                <div class="form-content">
+                    <label>レビュー本文</label><br/>
+                    <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span><br/>
+                    <textarea class="tweet-box-text" th:field="*{comment}" size="50" maxlength="1500" /></textarea><br/>
+                </div>
+                <input type="hidden" th:field="*{productId}">
+                <input type="submit" value="投稿" class="btn btn-outline-secondary"/>
+            </form>
         </div>
     </div>
-    <form class="form-area" th:method="put" th:action="@{/addReview}" th:object="${reviewForm}">
-        <div class="form-content">
-            <label>点数</label>:
-            <input type="number" th:field="*{score}" min="0" max="5"/>/5 点<br/>
-        </div>
-        <div class="form-content">
-            <label>レビュー本文</label><br/>
-            <textarea class="tweet-box-text" th:field="*{comment}" size="50" maxlength="1500" /></textarea><br/>
-        </div>
-        <input type="hidden" th:name="productId" th:value="${product.id}">
-        <input type="submit" value="投稿" />
-    </form>
 </div>
 </body>
 </html>
