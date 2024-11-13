@@ -20,4 +20,32 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>
+    <!-- 内部結合 -->
+    <resultMap id="productDetail" type="com.example.indoor.entity.Product">
+        <result column="id" property="id" />
+        <result column="account_id" property="accountId" />
+        <result column="account_name" property="accountName" />
+        <result column="product_name" property="name" />
+        <result column="price" property="price" />
+        <result column="category" property="category" />
+        <result column="stock" property="stock" />
+        <result column="is_stopped" property="isStopped" />
+        <result column="description" property="description" />
+    </resultMap>
+    <select id="findProductDetail" resultMap="productDetail">
+        SELECT
+        products.id AS id,
+        products.account_id AS account_id,
+        accounts.name AS account_name,
+        products.name AS product_name,
+        products.price AS price,
+        products.category AS category,
+        products.stock AS stock,
+        products.is_stopped AS is_stopped,
+        products.description AS description
+        FROM products
+        INNER JOIN accounts
+        ON accounts.id = products.account_id
+        WHERE products.id = #{id}
+    </select>
 </mapper>
