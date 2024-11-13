@@ -74,4 +74,21 @@
         ON accounts.id = products.account_id
         WHERE products.id = #{id}
     </select>
+    <select id="findProductDisplay" resultMap="productDetail">
+        SELECT
+        products.id AS id,
+        products.account_id AS account_id,
+        accounts.name AS account_name,
+        products.name AS product_name,
+        products.price AS price,
+        products.category AS category,
+        products.stock AS stock,
+        products.is_stopped AS is_stopped,
+        products.description AS description,
+        products.image_pass AS image_pass
+        FROM products
+        INNER JOIN accounts
+        ON accounts.id = products.account_id
+        WHERE products.account_id = #{id}
+    </select>
 </mapper>

@@ -1,7 +1,6 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.ProductForm;
-import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
@@ -10,8 +9,6 @@ import com.example.indoor.controller.form.ProductsNoticeForm;
 import com.example.indoor.service.ProductsNoticeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -189,7 +184,17 @@ public class ProductController {
         mav.setViewName("redirect:/productDetail");
         return mav;
     }
-
+    /*
+     * 9-1.出品商品画面表示
+     */
+    @GetMapping("/productDisplay")
+    public ModelAndView productDisplay(@AuthenticationPrincipal Account account) {
+        ModelAndView mav = new ModelAndView();
+        List<ProductForm> products = productService.findProductDisplay(account.getId());
+        mav.addObject("products", products);
+        mav.setViewName("/productDisplay");
+        return mav;
+    }
     /*
      * 10-1.商品登録画面表示
      */

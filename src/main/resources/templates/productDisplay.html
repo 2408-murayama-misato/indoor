@@ -8,6 +8,54 @@
     <title>商品出品</title>
 </head>
 <body>
-
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>外観</th>
+            <th>カテゴリー</th>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>在庫数</th>
+            <th>出品状態</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product: ${products}">
+            <td><img th:src="${product.imagePass}"></td>
+            <td th:text="${product.category}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.stock}"></td>
+            <td>
+                <!--th:block th:switch="${product.isStopped}">
+                        <span th:case="false">
+                            <form th:method="post" th:action="@{/changeIsStopped/{id}(id=${product.id})}" onSubmit="return CheckChange()">
+                                <input type="submit" value=復活 onclick="return false;">
+                                <input type="submit" th:value="変更">
+                                <input type="hidden" th:name="isStopped" th:value="1" class="isStoppedNumber">
+                            </form>
+                        </span>
+                    <span th:case="true">
+                            <form th:method="post" th:action="@{/change-isStopped/{id}(id=${user.id})}" th:object="${userForm}" onSubmit="return CheckChange()">
+                                <input type="submit" value="停止" onclick="return false;">
+                                <input type="submit" th:value="変更">
+                                <input type="hidden" th:name="isStopped" th:value="0" class="isStoppedNumber">
+                            </form>
+                        </span>
+                </th:block-->
+            </td>
+            <!-- ユーザー編集ボタン -->
+            <td>
+                <a th:href="@{/user-edit-{id}(id=${product.id})}">
+                    <input type="submit" value="編集">
+                    <input type="hidden" name="id" th:value="${product.id}">
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

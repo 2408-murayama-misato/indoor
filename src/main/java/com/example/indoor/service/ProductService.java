@@ -20,6 +20,11 @@ public class ProductService {
 
     final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
 
+    public List<ProductForm> findProductDisplay(int id) {
+        List<Product> results = productMapper.findProductDisplay(id);
+        List<ProductForm> products = setForm(results);
+        return products;
+    }
     /*
      * 主キー指定で商品レコードを取得
      */
