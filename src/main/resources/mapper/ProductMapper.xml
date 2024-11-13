@@ -16,21 +16,13 @@
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="category" property="category"/>
+        <result column="image_pass" property="imagePass"/>
         <result column="stock" property="stock"/>
         <result column="isStopped" property="isStopped"/>
         <result column="description" property="description"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
         <result column="avg" property="avg"/>
-        <collection property="productImage" resultMap="productImage"/>
-    </resultMap>
-<!--    リレーション用商品イメージマスタ-->
-    <resultMap id="productImage" type="com.example.indoor.entity.ProductImage">
-        <result column="id" property="id"/>
-        <result column="product_id" property="productId"/>
-        <result column="pass" property="pass"/>
-        <result column="created_date" property="createdDate"/>
-        <result column="updated_date" property="updatedDate"/>
     </resultMap>
     <!-- 内部結合 -->
     <resultMap id="productDetail" type="com.example.indoor.entity.Product">
@@ -64,8 +56,6 @@
 <!--    商品検索-->
     <select id="findAll" resultMap="Product">
         SELECT *  FROM products
-        INNER JOIN product_images
-        ON products.id = product_images.product_id
         INNER JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
         ON products.id = avg_product_id
         <where>
@@ -86,6 +76,12 @@
             <if test="(searchForm.getMinPrice() == null or searchForm.getMinPrice().trim() == '') and
                       searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
                 and products.price BETWEEN 1 AND ${searchForm.getMaxPrice()}
+            </if>
+            <if test="searchForm.getStockCheck() == 2">
+                and products.stock > 0
+            </if>
+            <if test="searchForm.getStockCheck() == 3">
+                and products.stock = 0
             </if>
         </where>
     </select>

@@ -15,6 +15,11 @@
             <input type="text" th:field="*{maxPrice}">
             <input type="hidden" name="keyWord" th:value="${searchForm.keyWord}">
             <input type="hidden" name="category" th:value="${searchForm.category}">
+            <select th:field="*{stockCheck}" class="form-select　me-2" aria-label="stockCheck">
+                <option value="1" >すべて</option>
+                <option value="2" >販売中</option>
+                <option value="3" >売り切れ</option>
+            </select>
             <input type="submit" value="絞込">
         </form>
     </div>
