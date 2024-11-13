@@ -42,15 +42,15 @@
     <div class="product-reviews"></div>
 
 
-    <div class="message-icon" th:each="message : ${productContacts}">
+    <div class="product-contacts overflow-auto" th:each="contact : ${productContacts}">
         <div class="account">
-            氏名：<span th:text="${message.accountName}" />
+            氏名：<span th:text="${contact.fromName}" />
         </div>
         <div class="text">
-            本文：<pre><span th:text="${message.text}"></span></pre>
+            本文：<pre><span th:text="${contact.text}"/></pre>
         </div>
         <div class="created-date">
-            投稿日時：<span th:text="${#dates.format(message.createdDate, 'yyyy/MM/dd HH:mm')}" />
+            投稿日時：<span th:text="${#dates.format(contact.createdDate, 'yyyy/MM/dd HH:mm')}" />
         </div>
     </div>
     <!-- 記入部分 -->
@@ -58,6 +58,7 @@
         <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
             <textarea th:field="*{text}" rows="5" cols="30"></textarea><br>
             <input type="hidden" th:value="${product.accountId}" th:name="toId">
+            <input type="hidden" th:value="${product.Id}" th:name="productId">
             <input type="submit" value="送信" />
         </form>
     </div>

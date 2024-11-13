@@ -18,4 +18,7 @@ public class ProductsNotice {
     private boolean isShippedInfo;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+
+    //inner join用
+    private String fromName;
 }

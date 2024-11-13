@@ -26,6 +26,7 @@
     <form th:method="post" th:action="@{/productDetail/{id}(id=${product.id})}" th:object="${productNotice}">
       <textarea th:field="${productsNotice.text}" rows="5" cols="30"></textarea><br>
       <input type="hidden" th:value="${product.accountId}" th:field="${productNotice.toId}">
+      <input type="hidden" th:value="${product.id}" th:field="${productNotice.productId}">
       <input type="submit" value="送信" />
     </form>
   </div>

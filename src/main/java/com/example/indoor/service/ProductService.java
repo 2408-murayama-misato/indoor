@@ -20,15 +20,12 @@ public class ProductService {
     @Autowired
     ProductMapper productMapper;
 
-    @Autowired
-    private ProductsNoticesMapper productsNoticesMapper;
-
     /*
      * 主キー指定で商品レコードを取得
      */
     public ProductForm findProduct(int id) {
         List<Product> results = new ArrayList<>();
-        results.add(productMapper.findProduct(id));
+        results.add(productMapper.findProductDetail(id));
         List<ProductForm> products = setForm(results);
 
         return products.get(0);
@@ -45,21 +42,5 @@ public class ProductService {
             forms.add(form);
         }
         return forms;
-    }
-
-    public void createProductContact(ProductsNoticeForm productsNoticeForm, int productId, Account account) {
-        ProductsNotice productsNoticeEntity = setEntity(productsNoticeForm, productId, account);
-        productsNoticesMapper.insertProductContact(productsNoticeEntity);
-    }
-
-    private ProductsNotice setEntity(ProductsNoticeForm productsNoticeForm, int productId, Account account) {
-        ProductsNotice productsNoticeEntity = new ProductsNotice();
-        productsNoticeEntity.setText(productsNoticeForm.getText());
-        productsNoticeEntity.setFromId(account.getId());
-        productsNoticeEntity.setProductId(productId);
-        productsNoticeEntity.setToId(productsNoticeForm.getToId());
-        productsNoticeEntity.setRead(false);
-        productsNoticeEntity.setShippedInfo(false);
-        return productsNoticeEntity;
     }
 }
