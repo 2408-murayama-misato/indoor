@@ -1,5 +1,7 @@
 package com.example.indoor.controller.form;
 
+import com.example.indoor.entity.Product;
+import com.example.indoor.entity.ProductImage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,4 +16,6 @@ public class CartForm {
     private int number;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    private Product product;
+    private ProductImage productsImage;
 }

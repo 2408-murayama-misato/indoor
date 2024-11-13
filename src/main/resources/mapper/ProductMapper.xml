@@ -7,6 +7,7 @@
         FROM products
         WHERE id = ${productId}
     </select>
+
     <resultMap id="Product" type="com.example.indoor.entity.Product">
         <result column="id" property="id"/>
         <result column="account_id" property="accountId"/>
