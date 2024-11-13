@@ -106,9 +106,6 @@ public class ProductController {
 
         List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             ProductForm product = productService.findProduct(reviewForm.getProductId());
             mav.addObject("product", product);
             mav.addObject("reviewForm", reviewForm);
@@ -160,9 +157,6 @@ public class ProductController {
 
         List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             mav.addObject("reviewForm", reviewForm);
             mav.setViewName("/reviewEdit");
             return mav;
