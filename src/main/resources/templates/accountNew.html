@@ -5,9 +5,60 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <meta charset="UTF-8">
   <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
-    <title>お知らせ新規作成</title>
+    <title>新規会員登録画面</title>
 </head>
 <body>
-
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-4">
+      <!-- エラーメッセージの表示 -->
+      <div class="text-danger">
+        <ul>
+          <div th:if="${accountErrorList}" th:each="error : ${accountErrorList}">
+            <li><div th:text="${error}"></div></li>
+          </div>
+        </ul>
+      </div>
+      <h1 class="text-center mb-4">会員登録</h1>
+        <form class="form-area" th:method="post" th:action="@{/signup}" th:object="${accountForm}">
+          <div class="mb-3">
+            <label class="form-label">アカウント</label><br/>
+            <input type="text" th:name="account" th:value="*{account}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">パスワード</label><br/>
+            <input type="password" th:name="password" th:value="*{password}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">パスワード確認用</label><br/>
+            <input type="password" th:name="passwordRetype" th:value="*{passwordRetype}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">氏名</label><br/>
+            <input type="text" th:name="name" th:value="*{name}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">住所</label><br/>
+            <input type="text" th:name="address" th:value="*{address}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">クレジットカード番号</label><br/>
+            <input type="text" th:name="credit" th:value="*{credit}" class="form-control"/><br/>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">種類</label>
+            <select th:name="role" th:value="*{role}" class="form-control">
+              <option value="user">利用者</option>
+              <option value="seller">販売者</option>
+            </select>
+          </div>
+          <br/>
+          <div class="d-grid">
+          <input type="submit" value="登録" class="btn btn-primary"/><br/>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

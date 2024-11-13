@@ -31,7 +31,7 @@
         <result column="price" property="price"/>
         <result column="category" property="category"/>
         <result column="stock" property="stock"/>
-        <result column="isStopped" property="isStopped"/>
+        <result column="is_stopped" property="isStopped"/>
         <result column="description" property="description"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
@@ -86,5 +86,4 @@
         where carts.account_id = ${id}
         AND carts.product_id = ${productId}
     </select>
-
 </mapper>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -9,11 +9,11 @@
     <title>商品詳細</title>
 </head>
 <body>
-<div class="header-contents"></div>
+<div th:include="header"></div>
 <div class="main-contents mt-2">
     <div class="product-information">
         <div class="product-image">
-            <img th:src="@{/img/sample.jpg}">
+            <img th:src="@{/img/no-image.png}">
         </div>
         <div class="product-overview" th:object="${product}">
             出品者: <span th:text ="*{accountName}"/><br/>
@@ -29,8 +29,8 @@
                 </span>
             </th:block>
             在庫数: <span th:text ="*{stock}"/><br/>
-            <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
-                数量: <input type="number" th:name="number" min="1"/>
+            <form th:method="put" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
+                数量: <input type="number" th:name="number" min="1" th:max="*{stock}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>
@@ -39,7 +39,56 @@
         商品説明<br/>
         <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
     </div>
-    <div class="product-reviews"></div>
+    商品レビュー<br/>
+    <div class="product-reviews" th:each="review : ${reviews}">
+        <div th:if="${review.productId} == ${product.id}">
+            <div>
+                投稿者 : <span th:text="${review.accountName}"/>
+                投稿日時 : <span th:text="${review.createdDate}"/>
+                更新日時 : <span th:text="${review.updatedDate}"/><br/>
+                点数 : <span th:text="${review.score}"/><br/>
+                コメント : <span th:text="${review.comment}"/>
+            </div>
+            <div>
+                <a th:href="@{/reviewEdit/{id}(id=${review.id})}">
+                    <input type="button" value="編集">
+                </a>
+            </div>
+            <div>
+                <form th:method="delete" th:action="@{/deleteReview/{id}-{productId}(id=${review.id}, productId=${product.id})}" onSubmit="return CheckDelete()">
+                    <input type="submit" value="削除" />
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="product-contacts overflow-auto" th:each="contact : ${productContacts}">
+        <div class="account">
+            氏名：<span th:text="${contact.fromName}" />
+        </div>
+        <div class="text">
+            本文：<pre><span th:text="${contact.text}"/></pre>
+        </div>
+        <div class="created-date">
+            投稿日時：<span th:text="${#dates.format(contact.createdDate, 'yyyy/MM/dd HH:mm')}" />
+        </div>
+    </div>
+    <!-- 記入部分 -->
+    <div sec:authorize="isAuthenticated()">
+        <div class="reply-form">
+            <div th:if="${errorMessages != null}">
+                <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+                    <li th:text="${errorMessage}" class="text-danger"/>
+                </div>
+            </div>
+            <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
+                <textarea th:field="*{text}" rows="5" cols="30" />
+                <input type="hidden" th:value="${product.accountId}" th:name="toId">
+                <input type="hidden" th:value="${product.Id}" th:name="productId">
+                <br>
+                <input type="submit" value="送信" />
+            </form>
+        </div>
+    </div>
 </div>
 </body>
 </html>

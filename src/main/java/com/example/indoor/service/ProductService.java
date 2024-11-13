@@ -2,6 +2,7 @@ package com.example.indoor.service;
 
 import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.controller.form.SearchForm;
+import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.ProductMapper;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +23,7 @@ public class ProductService {
      */
     public ProductForm findProduct(int id) {
         List<Product> results = new ArrayList<>();
-        results.add(productMapper.findProduct(id));
+        results.add(productMapper.findProductDetail(id));
         List<ProductForm> products = setForm(results);
 
         return products.get(0);

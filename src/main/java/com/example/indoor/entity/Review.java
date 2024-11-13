@@ -15,4 +15,6 @@ public class Review {
     private String comment;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+    // 内部結合用に追加
+    private String accountName;
 }
