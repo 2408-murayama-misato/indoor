@@ -5,19 +5,71 @@
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <script th:src="@{/js/main.js}"></script>
     <title>購入画面</title>
 </head>
 <body>
-<div th:each="cart : ${cartForms}">
-    <p th:text="${cart.product.name}"></p>
-    <p th:text="${cart.productsImage.pass}"></p>
-    <p th:text="${cart.product.value}"></p>
-    <p th:text="${cart.number}"></p>
-    <!--
-    <p th:text="${cart.account.name}"></p>
-    <p th:text="${cart.account.address}"></p>
-    <p th:text="${cart.account.credit}"></p>
-    -->
-</div>
+    <h1>購入画面</h1>
+    <form th:action="@{/purchaseProduct}" method="post" th:object="${formPurchase}" onSubmit="return CheckPurchase()">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">写真</th>
+                    <th scope="col">商品名</th>
+                    <th scope="col">価格</th>
+                    <th scope="col">個数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="cart : ${cartForms}" scope="row">
+                    <td>
+                        <span><image src="${cart.productsImage.pass}"/></span>
+                    </td>
+                    <td>
+                        <span th:text="${cart.product.name}"></span>
+                    </td>
+                    <td>
+                        <input type="hidden" name="Price" th:value="${cart.product.price}" readonly/>
+                        <span th:text="'￥' + ${cart.product.price}"></span>
+                    </td>
+                    <td>
+                        <input type="hidden" name="number" th:value="${cart.number}" readonly/>
+                        <span th:text="${cart.number}"></span>
+                        <input type="hidden" name="productId" th:value="${cart.productId}"/>
+                        <input type="hidden" name="accountId" th:value="${cart.accountId}"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <div class="text-danger">
+            <ul>
+                <div th:if="${purchaseErrorMessages}" th:each="error : ${purchaseErrorMessages}">
+                    <li><div th:text="${error}"></div></li>
+                </div>
+            </ul>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <fieldset>
+                    <legend>購入者情報</legend>
+                    <div class="mb-3">
+                        <label>氏名</label><br/>
+                        <input type="text" name="name" th:value="${name}"><br/>
+                    </div>
+                    <div class="mb-3">
+                        <label>住所</label><br/>
+                        <input type="text" name="address" th:value="${address}"><br/>
+                    </div>
+                    <div class="mb-3">
+                        <label>クレジットカード番号</label><br/>
+                        <input type="text" name="credit" th:value="${credit}">
+                    </div>
+                </fieldset>
+                <br/>
+                <input type="submit" value="購入する" class="btn btn-primary"/>
+            </div>
+        </div>
+    </form>
 </body>
 </html>

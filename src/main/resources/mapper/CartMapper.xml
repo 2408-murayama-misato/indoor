@@ -28,7 +28,7 @@
         <result column="id" property="id"/>
         <result column="account_id" property="accountId"/>
         <result column="name" property="name"/>
-        <result column="value" property="value"/>
+        <result column="price" property="price"/>
         <result column="category" property="category"/>
         <result column="stock" property="stock"/>
         <result column="is_stopped" property="isStopped"/>

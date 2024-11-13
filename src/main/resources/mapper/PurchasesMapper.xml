@@ -2,4 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.PurchasesMapper">
+    <!--
+    <resultMap id="Purchase" type="com.example.indoor.Purchase.">
+    <result column="id" property="id"/>
+    <result column="product_id" property="productId"/>
+    <result column="account_id" property="accountId"/>
+    <result column="price" property="price"/>
+    <result column="number" property="number"/>
+    <result column="created_date" property="createdDate"/>
+    <result column="updated_date" property="updatedDate"/>
+    </resultMap>
+    -->
+    <!-- 購入情報追加 -->
+    <insert id="save">
+        insert into purchases(product_id, account_id, price, number)
+        values (#{productId}, #{accountId}, #{price}, #{number})
+    </insert>
+
+    <!-- 複数の購入情報追加 不要なら消す -->
+    <insert id="insertPurchases" parameterType="java.util.List">
+        inset into purchases ((product_id, account_id, price, number)
+        values
+        <foreach collection="list" item="purchase" separator=",">
+            (#{productId}, #{accountId}, #{price}, #{number})
+        </foreach>
+
+    </insert>
+
 </mapper>
