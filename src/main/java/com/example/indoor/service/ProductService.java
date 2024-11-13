@@ -1,7 +1,9 @@
 package com.example.indoor.service;
 
 import com.example.indoor.controller.form.ProductForm;
+import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.entity.Product;
+import com.example.indoor.entity.ProductImage;
 import com.example.indoor.mapper.ProductMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ public class ProductService {
         return products.get(0);
     }
     /*
-     * EntityをFormにコピー
+     * Product entityをProduct formにコピー
      */
     private List<ProductForm> setForm(List<Product> entities) {
         List<ProductForm> forms = new ArrayList<>();
@@ -38,5 +40,20 @@ public class ProductService {
             forms.add(form);
         }
         return forms;
+    }
+    /*
+     * 商品レコード追加
+     */
+    public void insertProduct(ProductForm productForm) {
+        Product saveProduct = setProductEntity(productForm);
+        productMapper.insertProduct(saveProduct);
+    }
+    /*
+     * Product formをEntityにコピー
+     */
+    private Product setProductEntity(ProductForm form){
+        Product entity = new Product();
+        BeanUtils.copyProperties(form, entity);
+        return entity;
     }
 }

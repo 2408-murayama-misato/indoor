@@ -1,6 +1,7 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.ProductForm;
+import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
@@ -45,9 +46,6 @@ public class ProductController {
 
     @Autowired
     ReviewService reviewService;
-
-    @Autowired
-    protected ResourceLoader resourceLoader;
 
     final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
 
@@ -213,22 +211,26 @@ public class ProductController {
             return mav;
         }
 
-        // サーバーに商品イメージ画像を保存
-        saveFiles(productForm.getImageFile());
+        // 商品イメージがセットされていた場合、サーバーに商品イメージ画像を保存
+        for (MultipartFile file : productForm.getImageFile()) {
+            try {
+                String fileName = getUploadFileName(file.getOriginalFilename());
+                saveFile(file, fileName);
+                // ファイルパスを保存
+                productForm.setImagePass(PRODUCT_IMAGE_PATH + fileName);
+            } catch (IOException e) {
+                // エラー処理は省略
+            }
+        }
 
         productForm.setAccountId(account.getId());
-        //productService.insertProdcut(productForm);
+        productService.insertProduct(productForm);
 
         mav.setViewName("redirect:/productNew");
         return mav;
     }
-    private void saveFiles(List<MultipartFile> multipartFiles) {
-
-    }
-    private void saveFile(MultipartFile file) throws IOException {
-        String filename = getUploadFileName(file.getOriginalFilename());
-        // ファイル名をDBに保存
-        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + filename);
+    private void saveFile(MultipartFile file, String fileName) throws IOException {
+        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + fileName);
         try (OutputStream os = Files.newOutputStream(uploadFile, StandardOpenOption.CREATE)) {
             byte[] bytes = file.getBytes();
             os.write(bytes);

@@ -22,12 +22,12 @@ public class ProductForm {
     private int stock;
     private boolean isStopped;
     private String description;
+    private String imagePass;
     private Timestamp createdDate;
     private Timestamp updatedDate;
     // 内部結合用に追加
     private String accountName;
-    private String imagePass;
-    // 商品イメージ
+    // 商品イメージファイル
     private List<MultipartFile> imageFile;
     // カテゴリー管理用に追加
     private int categoryId;

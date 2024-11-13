@@ -16,9 +16,9 @@ public class Product {
     private int stock;
     private boolean isStopped;
     private String description;
+    private String imagePass;
     private Timestamp createdDate;
     private Timestamp updatedDate;
     // 内部結合用に追加
     private String accountName;
-    private String imagePass;
 }

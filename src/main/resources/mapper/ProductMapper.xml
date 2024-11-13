@@ -19,6 +19,31 @@
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>
+    <insert id="insertProduct" parameterType="com.example.indoor.entity.Product">
+        INSERT INTO products (
+            account_id,
+            name,
+            price,
+            category,
+            stock,
+            is_stopped,
+            description,
+            image_pass,
+            created_date,
+            updated_date
+        ) VALUES (
+            #{accountId},
+            #{name},
+            #{price},
+            #{category},
+            #{stock},
+            #{isStopped},
+            #{description},
+            #{imagePass},
+            DEFAULT,
+            DEFAULT
+        )
+    </insert>
     <!-- 内部結合 -->
     <resultMap id="productDetail" type="com.example.indoor.entity.Product">
         <result column="id" property="id" />
@@ -33,15 +58,15 @@
     </resultMap>
     <select id="findProductDetail" resultMap="productDetail">
         SELECT
-        products.id AS id,
-        products.account_id AS account_id,
-        accounts.name AS account_name,
-        products.name AS product_name,
-        products.price AS price,
-        products.category AS category,
-        products.stock AS stock,
-        products.is_stopped AS is_stopped,
-        products.description AS description
+            products.id AS id,
+            products.account_id AS account_id,
+            accounts.name AS account_name,
+            products.name AS product_name,
+            products.price AS price,
+            products.category AS category,
+            products.stock AS stock,
+            products.is_stopped AS is_stopped,
+            products.description AS description
         FROM products
         INNER JOIN accounts
         ON accounts.id = products.account_id
