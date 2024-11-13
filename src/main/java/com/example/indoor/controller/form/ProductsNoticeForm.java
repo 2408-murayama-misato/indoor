@@ -1,5 +1,6 @@
 package com.example.indoor.controller.form;
 
+import com.example.indoor.validation.CheckBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
 public class ProductsNoticeForm {
     private int id;
 
-    @NotNull(message = "本文を入力してください") //NotBlankアノテーション作ったら差し替える
+    @CheckBlank(message = "本文を入力してください")
     private String text;
 
     private int fromId;
