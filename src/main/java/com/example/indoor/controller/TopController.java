@@ -38,11 +38,4 @@ public class TopController {
         mav.setViewName("/adminTop");
         return mav;
     }
-
-    @GetMapping("/mypage")
-    public ModelAndView mypage() {
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("/mypage");
-        return  mav;
-    }
 }

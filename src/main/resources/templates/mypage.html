@@ -8,6 +8,18 @@
     <title>マイページ</title>
 </head>
 <body>
-
+<div th:include="header"></div>
+    <div class="container text-center">
+        <div class="my-3"><h2>マイページ</h2></div>
+        <div th:object="${account}" class="my-3">
+            アカウント名：<span th:text="*{account}" />
+            <br>
+            氏名：<span th:text="*{name}" />
+        </div>
+        <div class="list-group col-6 mx-auto">
+            <a class="list-group-item list-group-item-action" th:href="@{/accountEdit}">アカウント編集</a>
+            <a class="list-group-item list-group-item-action" th:href="@{/orderHistory}">注文履歴</a>
+        </div>
+    </div>
 </body>
 </html>
