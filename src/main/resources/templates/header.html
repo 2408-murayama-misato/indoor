@@ -32,8 +32,16 @@
                             </form>
                         </li>
                         <li>
-                            <form th:action="@{/search}"  class="d-flex" role="search">
-                                <input class="form-control me-2" name="keyWord" type="search" placeholder="Search" aria-label="Search">
+                            <form th:action="@{/search}" th:object="${searchForm}" class="d-flex" role="search">
+                                <input class="form-control me-2" th:field="*{keyWord}" th:value="${keyWord}" type="search" placeholder="Search" aria-label="Search">
+                                <select name="selectStatus" class="form-select　me-2" aria-label="category">
+                                    <option value=""></option>
+                                    <option value="1" th:selected="${selectStatus == '1'}">トップス</option>
+                                    <option value="2" th:selected="${selectStatus == '2'}">ボトムス</option>
+                                    <option value="3" th:selected="${selectStatus == '3'}">アウター</option>
+                                    <option value="4" th:selected="${selectStatus == '4'}">シューズ</option>
+                                    <option value="5" th:selected="${selectStatus == '5'}">アクセサリー</option>
+                                </select>
                                 <button class="btn btn-outline-success" type="submit">Search</button>
                             </form>
                         </li>
@@ -47,8 +55,16 @@
                             </a>
                         </li>
                         <li>
-                            <form th:action="@{/search}"  class="d-flex" role="search">
-                                <input class="form-control me-2" name="keyWord" type="search" placeholder="Search" aria-label="Search">
+                            <form th:action="@{/search}" th:object="${searchForm}"  class="d-flex" role="search">
+                                <input class="form-control me-2" th:field="*{keyWord}" type="search" placeholder="Search" aria-label="Search">
+                                <select th:field="*{category}" class="form-select　me-2" aria-label="category">
+                                    <option value=""></option>
+                                    <option value="トップス" th:selected="${selectStatus == 'トップス'}">トップス</option>
+                                    <option value="ボトムス" th:selected="${selectStatus == 'ボトムス'}">ボトムス</option>
+                                    <option value="アウター" th:selected="${selectStatus == 'アウター'}">アウター</option>
+                                    <option value="シューズ" th:selected="${selectStatus == 'シューズ'}">シューズ</option>
+                                    <option value="アクセサリー" th:selected="${selectStatus == 'アクセサリー'}">アクセサリー</option>
+                                </select>
                                 <button class="btn btn-outline-success" type="submit">Search</button>
                             </form>
                         </li>

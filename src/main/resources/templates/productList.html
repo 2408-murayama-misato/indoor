@@ -8,6 +8,16 @@
         <title>商品一覧</title>
     </head>
     <body>
+    <div th:include="header"></div>
+    <div class="narrow down">
+        <form th:action="@{/search}" th:object="${searchForm}">
+          <input type="text" th:field="*{minPrice}">
+            <input type="text" th:field="*{maxPrice}">
+            <input type="hidden" name="keyWord" th:value="${searchForm.keyWord}">
+            <input type="hidden" name="category" th:value="${searchForm.category}">
+            <input type="submit" value="絞込">
+        </form>
+    </div>
     <table class="table carts">
         <thead class="table-light">
         <tr class="cartsTableTitle">
@@ -19,21 +29,31 @@
         </thead>
         <tbody>
         <div th:each="product : ${productForm}">
-            <tr>
-                <td>
-                    <p><image src="${product.productsImage.pass}"/></p>
-                </td>
-                <td>
-                    <p th:text="${product.name}"/>
-                </td>
-                <td>
-                    <p class="text-danger" th:text="￥ + ${product.value}"/>
-                </td>
-                    <p th:text="${avg}"/>
-                </td>
-            </tr>
+                <tr>
+
+                    <td>
+                        <p><image src="${product.productsImage.pass}"/></p>
+                        <form th:action="@{/productDetail}">
+                            <input type="hidden" name="id" th:value="${product.id}">
+                            <button type="submit"></button>
+                        </form>
+                    </td>
+                    <td>
+                        <p th:text="${product.name}"/>
+                    </td>
+                    <td>
+                        <p class="text-danger" th:text="￥ + ${product.price}"/>
+                    </td>
+                    <td>
+                        <p th:text="${product.avg}"/>
+                    </td>
+                </tr>
+            </form>
         </div>
         </tbody>
     </table>
+    <a th:href="@{/top}">
+        <input type="button" value="戻る" class="btn btn-outline-secondary">
+    </a>
     </body>
 </html>

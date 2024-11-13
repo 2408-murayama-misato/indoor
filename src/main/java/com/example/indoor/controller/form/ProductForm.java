@@ -23,4 +23,5 @@ public class ProductForm {
     private String accountName;
     private String imagePass;
     private ProductImage productImage;
+    private long avg;
 }

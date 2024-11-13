@@ -41,29 +41,52 @@
         <result column="id" property="id"/>
         <result column="account_id" property="accountId"/>
         <result column="name" property="name"/>
-        <result column="value" property="value"/>
+        <result column="price" property="price"/>
         <result column="category" property="category"/>
         <result column="stock" property="stock"/>
         <result column="isStopped" property="isStopped"/>
         <result column="description" property="description"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
-        <collection property="productsImage" resultMap="productsImage"></collection>
+        <result column="avg" property="avg"/>
+        <collection property="productImage" resultMap="productImage"/>
     </resultMap>
-
-    <!--    リレーション用商品画像マスタのマッピング-->
-    <resultMap id="productsImage" type="com.example.indoor.entity.ProductImage">
+<!--    リレーション用商品イメージマスタ-->
+    <resultMap id="productImage" type="com.example.indoor.entity.ProductImage">
         <result column="id" property="id"/>
         <result column="product_id" property="productId"/>
         <result column="pass" property="pass"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>
+
 <!--    商品検索-->
     <select id="findAll" resultMap="Product">
         SELECT *  FROM products
-        INNER JOIN  product_images
+        INNER JOIN product_images
         ON products.id = product_images.product_id
-        WHERE category LIKE % ${keyWord} %　OR　name LIKE % ${keyWord} % ORDER BY createdDate DESC
+        INNER JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
+        ON products.id = avg_product_id
+        <where>
+             <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != ''">
+                products.category LIKE '%${searchForm.keyWord}%'OR products.name LIKE '%${searchForm.keyWord}%'
+             </if>
+            <if test="searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
+                and products.category = '${searchForm.getCategory()}'
+            </if>
+            <if test="searchForm.getMinPrice() != null and searchForm.getMinPrice().trim() != '' and
+                      searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
+                and products.price BETWEEN ${searchForm.getMinPrice()} AND ${searchForm.getMaxPrice()}
+            </if>
+            <if test="searchForm.getMinPrice() != null and searchForm.getMinPrice().trim() != '' and
+                      (searchForm.getMaxPrice() == null or searchForm.getMaxPrice().trim() == '')">
+                and products.price BETWEEN ${searchForm.getMinPrice()} AND 1000000
+            </if>
+            <if test="(searchForm.getMinPrice() == null or searchForm.getMinPrice().trim() == '') and
+                      searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
+                and products.price BETWEEN 1 AND ${searchForm.getMaxPrice()}
+            </if>
+
+        </where>
     </select>
 </mapper>

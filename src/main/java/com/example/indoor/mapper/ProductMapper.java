@@ -1,5 +1,6 @@
 package com.example.indoor.mapper;
 
+import com.example.indoor.controller.form.SearchForm;
 import com.example.indoor.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -14,5 +15,5 @@ public interface ProductMapper {
     public Product findProduct(int id);
     Product findById(@Param("productId") int productId);
 
-    List<Product> findAll(@Param("keyWord") String keyWord);
+    List<Product> findAll(@Param("searchForm") SearchForm searchForm);
 }

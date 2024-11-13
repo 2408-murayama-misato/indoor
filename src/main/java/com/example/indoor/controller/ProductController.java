@@ -3,6 +3,9 @@ package com.example.indoor.controller;
 import com.example.indoor.controller.form.*;
 import com.example.indoor.entity.Cart;
 import com.example.indoor.service.CartService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
@@ -11,15 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static org.apache.logging.log4j.util.Strings.isBlank;
 
 @Controller
 public class ProductController {
@@ -73,9 +83,30 @@ public class ProductController {
 
 //    商品検索
     @GetMapping("/search")
-    public ModelAndView searchProduct(@ModelAttribute("keyWord") String keyWord) {
+    public ModelAndView searchProduct(@Validated @ModelAttribute("searchForm") SearchForm searchForm,
+                                      BindingResult bindingResult,
+                                      RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
-        List<ProductForm> products = productService.findAllProduct(keyWord);
+        String errorMessage =  null;
+        if (isBlank(searchForm.getKeyWord()) && isBlank(searchForm.getCategory())) {
+            mav.setViewName("redirect:/top");
+            return mav;
+        }
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessage = error.getDefaultMessage();
+            }
+        }
+        if (errorMessage != null) {
+            redirectAttributes.addFlashAttribute("errorMessage",errorMessage);
+            redirectAttributes.addFlashAttribute("searchForm", searchForm);
+            mav.setViewName("redirect:/top");
+        } else {
+        List<ProductForm> products = productService.findAllProduct(searchForm);
+        mav.addObject("productForm", products);
+        mav.addObject("searchForm", searchForm);
+        mav.setViewName("/productList");
+        }
         return mav;
 
     }
