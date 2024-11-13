@@ -73,16 +73,22 @@ public class ProductController {
      * 商品問い合わせ登録処理
      */
     @PostMapping("/productDetail")
-    public ModelAndView addProductContact(@ModelAttribute("productNotice") @Validated ProductsNoticeForm productsNoticeForm,
-                                          @AuthenticationPrincipal Account account, BindingResult bindingResult) {
+    public ModelAndView addProductContact(@ModelAttribute("productsNoticeForm") @Validated ProductsNoticeForm productsNoticeForm,
+                                          BindingResult bindingResult, @AuthenticationPrincipal Account account) {
         ModelAndView mav = new ModelAndView();
         List<String> errorMessages = new ArrayList<>();
         if (bindingResult.hasErrors()) {
             for (ObjectError error : bindingResult.getAllErrors()) {
                 errorMessages.add(error.getDefaultMessage());
             }
+            int id = productsNoticeForm.getProductId();
+            ProductForm product = productService.findProduct(id);
+            mav.addObject("product", product);
             mav.addObject("errorMessages", errorMessages);
-            mav.addObject("productsContact", productsNoticeForm);
+            mav.addObject("productsNoticeForm", productsNoticeForm);
+            mav.addObject("id", id);
+            List<ProductsNoticeForm> productContacts = productsNoticeService.findProductContacts(id);
+            mav.addObject("productContacts", productContacts); //既にある商品問い合わせのやり取り
             mav.setViewName("/productDetail");
             return mav;
         }

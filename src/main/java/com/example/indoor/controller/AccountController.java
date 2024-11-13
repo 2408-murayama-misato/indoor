@@ -142,4 +142,14 @@ public class AccountController {
         return new ModelAndView("redirect:/accountNew");
     }
 
+    /*
+     * マイページ表示処理
+     */
+    @GetMapping("/mypage")
+    public ModelAndView mypage(@AuthenticationPrincipal Account account) {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("account", account);
+        mav.setViewName("/mypage");
+        return mav;
+    }
 }
