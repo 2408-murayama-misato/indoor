@@ -37,8 +37,31 @@ public class ProductsNoticeService {
     /*
      * 対象の商品問い合わせ取得処理
      */
-    public List<ProductsNoticeForm> findProductContacts(int productId) {
-        List<ProductsNoticeForm> result = productsNoticesMapper.findProductContacts(productId);
+    public List<ProductsNoticeForm> findAllProductContacts(int productId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findAllProductContacts(productId);
+        return result;
+    }
+
+    /*
+     * 通知一覧画面に表示する
+     * ログインアカウントが対象の未読の商品問い合わせを取得
+     */
+    public List<ProductsNoticeForm> findNotReadProductContacts(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductContacts(accountId);
+        return result;
+    }
+    /*
+     * 利用者権限かつログインアカウントが対象の未読の商品発送通知を取得
+     */
+    public List<ProductsNoticeForm> findNotReadProductShippedForUser(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductShippedForUser(accountId);
+        return result;
+    }
+    /*
+     * 販売者権限かつログインアカウントが対象の未読の商品発送通知を取得
+     */
+    public List<ProductsNoticeForm> findNotReadProductShippedForSeller(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductShippedForSeller(accountId);
         return result;
     }
 }

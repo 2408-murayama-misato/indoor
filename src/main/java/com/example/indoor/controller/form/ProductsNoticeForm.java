@@ -32,4 +32,5 @@ public class ProductsNoticeForm {
 
     //inner join用
     private String fromName;
+    private String productName;
 }

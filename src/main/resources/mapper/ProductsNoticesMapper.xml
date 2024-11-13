@@ -26,6 +26,19 @@
         <result column="created_date" property="createdDate" />
     </resultMap>
 
+    <!--通知一覧に表示する商品問い合わせ・発送の通知取得用-->
+    <resultMap id="ProductNoticeContactsAndShipped" type="com.example.indoor.entity.ProductsNotice">
+        <result column="id" property="id"/>
+        <result column="product_name" property="productName" />
+        <result column="text" property="text"/>
+        <result column="from_id" property="fromId"/>
+        <result column="product_id" property="productId"/>
+        <result column="to_id" property="toId"/>
+        <result column="is_read" property="isRead"/>
+        <result column="is_shipped_info" property="isShippedInfo"/>
+        <result column="created_date" property="createdDate" />
+    </resultMap>
+    <!--商品問い合わせ新規作成-->
     <select id="insertProductContact" resultMap="ProductNotice">
         insert into products_notices(
             text, from_id, product_id, to_id, is_read, is_shipped_info
@@ -33,7 +46,8 @@
             #{text}, #{fromId}, #{productId}, #{toId}, #{isRead}, #{isShippedInfo}
         )
     </select>
-    <select id="findProductContacts" resultMap="ProductContacts">
+    <!--商品詳細画面に表示する商品問い合わせを全取得-->
+    <select id="findAllProductContacts" resultMap="ProductContacts">
         select
             products_notices.id,
             accounts.name AS from_name,
@@ -49,5 +63,64 @@
         on accounts.id = products_notices.from_id
         where products_notices.product_id = #{productId}
         order by products_notices.created_date
+    </select>
+    <!--通知一覧に表示させる、ログインアカウントあての未読商品問い合わせ-->
+    <select id="findNotReadProductContacts" resultMap="ProductNoticeContactsAndShipped">
+        SELECT
+        products_notices.id,
+        products.name AS product_name,
+        products_notices.text,
+        products_notices.from_id,
+        products_notices.product_id,
+        products_notices.to_id,
+        products_notices.is_read,
+        products_notices.is_shipped_info,
+        products_notices.created_date
+        FROM products_notices
+        INNER JOIN products
+        ON products.id = products_notices.product_id
+        WHERE products_notices.to_id = #{accountId}
+        AND products_notices.is_read = false
+        ORDER BY products_notices.updated_date DESC
+    </select>
+    <!--通知一覧に表示させる、利用者ログインアカウントあての未読発送通知-->
+    <select id="findNotReadProductShippedForUser" resultMap="ProductNoticeContactsAndShipped">
+        SELECT
+        products_notices.id,
+        products.name AS product_name,
+        products_notices.text,
+        products_notices.from_id,
+        products_notices.product_id,
+        products_notices.to_id,
+        products_notices.is_read,
+        products_notices.is_shipped_info,
+        products_notices.created_date
+        FROM products_notices
+        INNER JOIN products
+        ON products.id = products_notices.product_id
+        WHERE products_notices.from_id = #{accountId} <!--自分が発行したレコード-->
+        AND products_notices.is_read = true <!--発送情報の時だけ未読/既読ではなく発送未完了/完了フラグとして扱う-->
+        AND products_notices.is_shipped_info = true
+        ORDER BY products_notices.updated_date DESC
+    </select>
+    <!--通知一覧に表示させる、販売者ログインアカウントあての未処理発送通知-->
+    <select id="findNotReadProductShippedForSeller" resultMap="ProductNoticeContactsAndShipped">
+        SELECT
+        products_notices.id,
+        products.name AS product_name,
+        products_notices.text,
+        products_notices.from_id,
+        products_notices.product_id,
+        products_notices.to_id,
+        products_notices.is_read,
+        products_notices.is_shipped_info,
+        products_notices.created_date
+        FROM products_notices
+        INNER JOIN products
+        ON products.id = products_notices.product_id
+        WHERE products_notices.to_id = #{accountId}
+        AND products_notices.is_read = false
+        AND products_notices.is_shipped_info = true
+        ORDER BY products_notices.updated_date DESC
     </select>
 </mapper>

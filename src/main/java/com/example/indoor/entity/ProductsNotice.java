@@ -21,4 +21,5 @@ public class ProductsNotice {
 
     //inner join用
     private String fromName;
+    private String productName;
 }

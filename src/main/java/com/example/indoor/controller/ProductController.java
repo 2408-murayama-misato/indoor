@@ -42,7 +42,7 @@ public class ProductController {
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
         List<ReviewForm> reviews = reviewService.findUserReviews();
-        List<ProductsNoticeForm> productContacts = productsNoticeService.findProductContacts(Integer.parseInt(id));
+        List<ProductsNoticeForm> productContacts = productsNoticeService.findAllProductContacts(Integer.parseInt(id));
         ProductsNoticeForm productsNoticeForm = new ProductsNoticeForm();
         mav.addObject("product", product);
         mav.addObject("reviews", reviews);
@@ -71,7 +71,7 @@ public class ProductController {
             mav.addObject("errorMessages", errorMessages);
             mav.addObject("productsNoticeForm", productsNoticeForm);
             mav.addObject("id", id);
-            List<ProductsNoticeForm> productContacts = productsNoticeService.findProductContacts(id);
+            List<ProductsNoticeForm> productContacts = productsNoticeService.findAllProductContacts(id);
             mav.addObject("productContacts", productContacts); //既にある商品問い合わせのやり取り
             mav.setViewName("/productDetail");
             return mav;

@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.StockNoticeMapper">
+    <!--在庫0通知取得用-->
+    <resultMap id="findAllStockNotice" type="com.example.indoor.entity.StockNotice">
+        <result column="id" property="id"/>
+        <result column="product_name" property="productName" />
+        <result column="text" property="text"/>
+        <result column="product_id" property="productId"/>
+        <result column="seller_id" property="sellerId"/>
+        <result column="is_read" property="isRead"/>
+        <result column="created_date" property="createdDate" />
+    </resultMap>
+
+    <!--通知一覧に表示させる、販売者ログインアカウントあての未読在庫通知-->
+    <select id="findAllStockNotice" resultMap="findAllStockNotice">
+        SELECT
+        stock_notices.id
+        products.name AS product_name,
+        products_notice.
+        FROM stock_notices
+        INNER JOIN products
+        ON products.id = stock_notices.product_id
+        WHERE stock_notices.seller_id = #{accountId}
+        AND stock_notices.is_read = false
+        ORDER BY stock_notices.created_date DESC
+    </select>
 </mapper>
