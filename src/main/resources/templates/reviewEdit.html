@@ -8,6 +8,7 @@
     <title>レビュー編集</title>
 </head>
 <body>
+<div th:include="header"></div>
 <div class="d-flex flex-fill justify-content-center align-items-center vh-100">
   <form th:action="@{/updateReview}" th:object="${reviewForm}" th:method="put">
     <div class="form-content">
