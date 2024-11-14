@@ -16,6 +16,7 @@
         <result column="stock" property="stock"/>
         <result column="isStopped" property="isStopped"/>
         <result column="description" property="description"/>
+        <result column="image_pass" property="imagePass"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
     </resultMap>

@@ -2,4 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.PurchasesMapper">
+
+    <resultMap id="Purchase" type="com.example.indoor.entity.Purchase">
+    <result column="id" property="id"/>
+    <result column="product_id" property="productId"/>
+    <result column="account_id" property="accountId"/>
+    <result column="price" property="price"/>
+    <result column="number" property="number"/>
+    <result column="category" property="category"/>
+    <result column="created_date" property="createdDate"/>
+    <result column="updated_date" property="updatedDate"/>
+    <collection property="product" resultMap="product"/>
+    </resultMap>
+
+    <resultMap id="product" type="com.example.indoor.entity.Product">
+        <result column="id" property="id"/>
+        <result column="account_id" property="accountId"/>
+        <result column="name" property="name"/>
+        <result column="price" property="price"/>
+        <result column="category" property="category"/>
+        <result column="stock" property="stock"/>
+        <result column="is_stopped" property="isStopped"/>
+        <result column="description" property="description"/>
+        <result column="image_pass" property="imagePass"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
+
+    <!-- 購入情報追加 -->
+    <insert id="save">
+        insert into purchases(product_id, account_id, price, number)
+        values (#{productId}, #{accountId}, #{price}, #{number})
+    </insert>
+
+    <!-- 購入情報取得(日付で絞り込み) -->
+    <select id="findById" resultMap="Purchase">
+        select *
+        from purchases
+        INNER JOIN products
+        ON purchases.product_id = products.id
+        where purchases.account_id = ${id}
+        and purchases.created_date
+        between CAST(#{start} AS TIMESTAMP) and CAST(#{end} AS TIMESTAMP)
+    </select>
+
 </mapper>
