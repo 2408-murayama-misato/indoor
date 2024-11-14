@@ -56,9 +56,9 @@ public class CartController {
        return mav;
    }
 
-   @PostMapping("/addCart/{productId}x{number}")
+   @PostMapping("/addCart/{productId}")
    public  ModelAndView addCart(@PathVariable String productId,
-                                @PathVariable String number,
+                                @ModelAttribute("number") String number,
                                 @AuthenticationPrincipal Account loginAccount,
                                 RedirectAttributes redirectAttributes) {
       ModelAndView mav = new ModelAndView();
@@ -66,18 +66,20 @@ public class CartController {
 //   商品情報取得
       Product product = productMapper.findById(Integer.parseInt(productId));
 //      パラメータチェック
-      if (!productId.matches("^[0-9]*$") && !number.matches("^[0-9]*$")) {
+      if (!productId.matches("^[0-9]*$") || !number.matches("^[0-9]*$")) {
          errorMessages.add( "不正なパラメータが入力されました");
-         return new ModelAndView("redirect:/");
       }
 //      在庫数と注文数比較
-      if (product.getStock() < Integer.parseInt(number)) {
-         errorMessages.add("注文数が在庫数を上回りました。注文数を減らして再度カートに入れてください");
+      if (number.matches("^[0-9]*$")) {
+         if (product.getStock() < Integer.parseInt(number)) {
+            errorMessages.add("注文数が在庫数を上回りました。注文数を減らして再度カートに入れてください");
+         }
       }
+
 
       if (errorMessages.size() > 0) {
          redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
-         redirectAttributes.addFlashAttribute("product",product);
+         redirectAttributes.addFlashAttribute("id",product.getId());
          mav.setViewName("redirect:/productDetail");
       } else {
          cartService.addCart(Integer.parseInt(number), (Integer.parseInt(productId)), loginAccount.getId());

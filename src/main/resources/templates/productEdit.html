@@ -8,6 +8,44 @@
     <title>商品編集</title>
 </head>
 <body>
-
+<div class="main-contents">
+    <form th:method="put" enctype="multipart/form-data" th:action="@{/editProduct}" th:object="${productForm}">
+        <div class="product-information">
+            <div class="product-image w-25 p-3">
+                <img th:src="*{imagePass}" class="rounded mx-auto d-block img-fluid">
+                <input type="file" th:field="*{imageFile}"  accept="image/png, image/jpeg"/><br/>
+                <!-- 余裕があればアップロードした画像のプレビュー追加 -->
+            </div>
+            <div>
+                <div>
+                    <label>カテゴリー: </label>
+                    <select th:name="category">
+                        <option th:each="item : *{categoryMap}" th:value="${item.value}" th:text="${item.value}"></option>
+                    </select>
+                </div>
+                <div>
+                    <label>商品名: </label>
+                    <input type="text" th:name="name" th:text="*{name}" th:value="*{name}"><br/>
+                </div>
+                <div>
+                    <label>価格: </label>
+                    <input type="text" th:name="price" th:text="*{price}" th:value="*{price}">円<br/>
+                </div>
+                <div>
+                    <label>在庫数: </label>
+                    <input type="number" th:name="stock" th:value="*{stock}" th:text="*{stock}" min="0"/>P<br/>
+                </div>
+                <div>
+                    <label>商品説明: </label><br/>
+                    <textarea th:name="description" th:value="*{description}" th:text="*{description}" size="20" maxlength="200" /></textarea><br/>
+                </div>
+                <div>
+                    <input type="hidden" th:name="id" th:value="*{id}">
+                    <input type="submit" value="登録">
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

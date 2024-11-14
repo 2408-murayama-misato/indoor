@@ -11,36 +11,36 @@
 <div th:include="header"></div>
 <div class="main-contents">
     <form th:method="put" enctype="multipart/form-data" th:action="@{/addProduct}" th:object="${productForm}">
-        <div class="form-area">
-            <div>
+        <div class="container w-25">
+            <div class="m-2">
                 <label>カテゴリー: </label>
                 <select th:name="category">
                     <option th:each="item : *{categoryMap}" th:value="${item.value}" th:text="${item.value}"></option>
                 </select>
             </div>
-            <div>
+            <div class="m-2">
                 <label>商品名: </label>
                 <input type="text" th:field="*{name}"><br/>
             </div>
-            <div>
+            <div class="m-2">
                 <label>価格: </label>
                 <input type="text" th:field="*{price}">円<br/>
             </div>
-            <div>
+            <div class="m-2">
                 <label>在庫数: </label>
                 <input type="number" th:name="stock" th:value="*{stock}" min="0"/>P<br/>
             </div>
-            <div>
+            <div class="m-2">
                 <label>商品説明: </label><br/>
-                <textarea th:field="*{description}" size="20" maxlength="200" /></textarea><br/>
+                <textarea th:field="*{description}" size="30" maxlength="200" rows="8"/></textarea><br/>
             </div>
-            <div>
+            <div class="m-2">
                 <label>商品イメージ: </label>
-                <input type="file" th:field="*{imageFile}" accept="image/png, image/jpeg" required/><br/>
+                <input type="file" th:field="*{imageFile}" accept="image/png, image/jpeg"/><br/>
             </div>
             <!-- 余裕があればアップロードした画像のプレビュー追加 -->
-            <div>
-                <input type="submit" value="登録">
+            <div class="m-2">
+                <input type="submit" value="登録" class="btn btn-primary">
             </div>
             <br/>
         </div>
