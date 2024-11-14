@@ -98,7 +98,7 @@ public class ProductService {
     private Product setProductEntity(ProductForm form){
         Product entity = new Product();
         // ファイルパスを修正
-        if (form.getImagePass().equals(NO_IMAGE_FILE_PATH)) {
+        if (StringUtils.isBlank(form.getImagePass()) || form.getImagePass().equals(NO_IMAGE_FILE_PATH)) {
             form.setImagePass(null);
         } else {
             int pathIndex = form.getImagePass().lastIndexOf(IMAGE_RELATIVE_PATH);
