@@ -11,6 +11,8 @@ public interface ProductMapper {
     public List<Product> findProductDisplay(int id);
     public Product findProductDetail(int id);
     Product findById(@Param("productId") int productId);
+    void updateProductStock(int number, int productId);
+    boolean checkStockIsZero(int productId);
     public void insertProduct(Product product);
     public void updateProduct(Product product);
 }

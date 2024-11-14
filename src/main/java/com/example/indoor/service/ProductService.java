@@ -5,6 +5,7 @@ import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.entity.Product;
 import com.example.indoor.entity.ProductImage;
 import com.example.indoor.mapper.ProductMapper;
+import com.example.indoor.mapper.StockNoticeMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,11 @@ public class ProductService {
     @Autowired
     ProductMapper productMapper;
 
+    @Autowired
+    StockNoticeMapper stockNoticeMapper;
+
     final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
+
 
     /*
      * 出品送品一覧を取得
@@ -57,6 +62,18 @@ public class ProductService {
         }
         return forms;
     }
+
+    /*
+     * 在庫数更新と在庫0チェック
+     */
+    public void updateProductStock(int number, int productId) {
+        // 商品の在庫更新
+        productMapper.updateProductStock(number, productId);
+        // 商品の在庫が0かチェック
+        boolean isStockZero = productMapper.checkStockIsZero(productId);
+        if (isStockZero) { //在庫が0の場合はstock_noticesにINSERT文を作る
+            stockNoticeMapper.insertStockNotice(productId);
+        }
     /*
      * 商品レコード追加
      */

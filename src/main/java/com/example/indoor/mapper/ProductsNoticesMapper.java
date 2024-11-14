@@ -10,5 +10,21 @@ import java.util.List;
 public interface ProductsNoticesMapper {
     void insertProductContact(ProductsNotice productsNoticeEntity);
 
-    List<ProductsNoticeForm> findProductContacts(int productId);
+    List<ProductsNoticeForm> findAllProductContacts(int productId);
+
+    List<ProductsNoticeForm> findNotReadProductContacts(int accountId);
+
+    List<ProductsNoticeForm> findNotReadProductShipped(int accountId);
+
+    List<ProductsNoticeForm> findNotReadProductShippedForSeller(int accountId);
+
+    void saveReadProductNotice(int id);
+
+    void saveProductShippedNotice(int id);
+
+    void insertProductNotice(int accountId, int productId, String text);
+
+    List<ProductsNoticeForm> findReadProductContacts(int accountId);
+
+    List<ProductsNoticeForm> findReadProductShipped(int accountId);
 }

@@ -61,6 +61,7 @@
             </div>
         </div>
     </div>
+    <h4>商品問い合わせ</h4>
     <div class="product-contacts overflow-auto" th:each="contact : ${productContacts}">
         <div class="account">
             氏名：<span th:text="${contact.fromName}" />
@@ -71,24 +72,47 @@
         <div class="created-date">
             投稿日時：<span th:text="${#dates.format(contact.createdDate, 'yyyy/MM/dd HH:mm')}" />
         </div>
+        <div sec:authorize="isAuthenticated()">
+            <div th:if="${account.id == product.accountId} and ${contact.fromId != account.id}">
+                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#reply" aria-expanded="false" aria-controls="reply">
+                    返信する
+                </button>
+                <div class="collapse" id="reply">
+                    <div class="card card-body">
+                        <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
+                            <textarea th:field="*{text}" rows="5" cols="30" />
+                            <input type="hidden" th:value="${contact.fromId}" th:name="toId">
+                            <input type="hidden" th:value="${product.Id}" th:name="productId">
+                            <br>
+                            <input type="submit" value="送信" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- 記入部分 -->
     <div sec:authorize="isAuthenticated()">
-        <div class="reply-form">
-            <div th:if="${errorMessages != null}">
-                <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
-                    <li th:text="${errorMessage}" class="text-danger"/>
+        <div th:if="${account.id != product.accountId}">
+            <div class="reply-form">
+                <div th:if="${errorMessages != null}">
+                    <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+                        <li th:text="${errorMessage}" class="text-danger"/>
+                    </div>
                 </div>
+                <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
+                    <textarea th:field="*{text}" rows="5" cols="30" />
+                    <input type="hidden" th:value="${product.accountId}" th:name="toId">
+                    <input type="hidden" th:value="${product.Id}" th:name="productId">
+                    <br>
+                    <input type="submit" value="送信" />
+                </form>
             </div>
-            <form th:method="post" th:action="@{/productDetail}" th:object="${productsNoticeForm}">
-                <textarea th:field="*{text}" rows="5" cols="30" />
-                <input type="hidden" th:value="${product.accountId}" th:name="toId">
-                <input type="hidden" th:value="${product.Id}" th:name="productId">
-                <br>
-                <input type="submit" value="送信" />
-            </form>
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
