@@ -1,5 +1,6 @@
 package com.example.indoor.controller;
 
+import com.example.indoor.controller.form.AccountForm;
 import com.example.indoor.controller.form.SearchForm;
 import com.example.indoor.entity.Account;
 import jakarta.servlet.http.HttpSession;
@@ -37,9 +38,10 @@ public class TopController {
     }
 
     @GetMapping("/adminTop")
-    public ModelAndView adminTop() {
+    public ModelAndView adminTop(@ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("/adminTop");
+        mav.addObject("searchForm", searchForm);
         return mav;
     }
 }

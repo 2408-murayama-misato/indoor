@@ -8,19 +8,19 @@
     <title>管理者Top</title>
 </head>
 <body>
-<div sec:authorize="isAuthenticated()">
-    管理者のtopページです　ログインしています
-    <form th:action="@{/logout}" method="post">
-        <button>ログアウト</button>
-    </form>
-    <form th:action="@{/userList}" method="get">
-        <button>利用者一覧</button>
-    </form>
-    </form>
-    <form th:action="@{/sellerList}" method="get">
-        <button>販売者一覧</button>
-    </form>
-
-</div>
+    <div th:include="header"></div>
+    <div class="container text-center my-3">
+        <h2>管理者トップページ</h2>
+        <div class="my-3">
+            <a th:href="@{/userList}">
+                <input type="button" value="利用者一覧" class="btn btn-primary w-50">
+            </a>
+        </div>
+        <div class="my-3">
+            <a th:href="@{/sellerList}">
+                <input type="button" value="販売者一覧" class="btn btn-secondary w-50">
+            </a>
+        </div>
+    </div>
 </body>
 </html>

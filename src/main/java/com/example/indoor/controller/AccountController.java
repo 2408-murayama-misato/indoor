@@ -166,6 +166,7 @@ public class AccountController {
                                      @ModelAttribute("searchForm") SearchForm searchForm
     ) {
         ModelAndView mav = new ModelAndView();
+        mav.addObject("searchForm", searchForm);
         if (account.length() >20 ) {
             mav.addObject( "errorMessage","アカウント名は２０文字以下で入力してください");
             mav.setViewName("/userList");
@@ -174,7 +175,6 @@ public class AccountController {
             mav.setViewName("/userList");
             mav.addObject("accounts", accounts);
             mav.addObject("account", account);
-            mav.addObject("searchForm", searchForm);
         }
         return mav;
     }
@@ -184,6 +184,7 @@ public class AccountController {
                                        @ModelAttribute("searchForm") SearchForm searchForm,
                                        RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
+        mav.addObject("searchForm", searchForm);
         if (account.length() >20 ) {
             mav.addObject( "errorMessage","アカウント名は２０文字以下で入力してください");
             mav.setViewName("/sellerList");
@@ -191,7 +192,6 @@ public class AccountController {
             List<AccountForm> accounts = accountService.findAllAccount("seller", account);
             mav.setViewName("/sellerList");
             mav.addObject("accounts", accounts);
-            mav.addObject("searchForm", searchForm);
         }
         return mav;
     }

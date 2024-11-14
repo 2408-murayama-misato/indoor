@@ -8,7 +8,7 @@
     <title>販売者一覧</title>
 </head>
 <body>
-
+<div th:include="header"></div>
     <div class="from">
         <form th:action="@{/sellerList}">
             <input type="text" name="account" th:value="${account}" placeholder="アカウント名">
