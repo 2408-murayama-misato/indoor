@@ -52,6 +52,7 @@ public class PurchaseController {
         mav.addObject("name", accountForm.getName());
         mav.addObject("address", accountForm.getAddress());
         mav.addObject("credit", accountForm.getCredit());
+        mav.addObject("formPurchase", new PurchaseForm());
         mav.setViewName("/purchase");
         return mav;
     }
@@ -64,6 +65,7 @@ public class PurchaseController {
                                         @RequestParam(value = "name", required = false) String name,
                                         @RequestParam(value = "address", required = false) String address,
                                         @RequestParam(value = "credit", required = false) String credit,
+                                        @AuthenticationPrincipal Account loginAccount,
                                         RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
 
@@ -92,6 +94,12 @@ public class PurchaseController {
             return new ModelAndView("redirect:/purchase");
         }
 
+        //カート情報取得
+        List<CartForm> cartForms = cartService.findCart(loginAccount.getId());
+        //購入済みマスタに登録
+        purchaseService.savePurchases(cartForms);
+        //購入した商品をカート内から削除
+        cartService.deleteCart(loginAccount.getId());
         purchaseService.savePurchase(purchaseForm);
 
         //在庫の計算と在庫がなくなったら販売者に自動通知する処理(引数は商品の個数, 商品のID)　※暫定単体の商品のみに適応
@@ -121,6 +129,12 @@ public class PurchaseController {
         mav.addObject("start", start);
         mav.addObject("end", end);
         mav.addObject("purchaseForms", purchaseForms);
+        //合計売上計算
+        int sum = 0;
+        for (int i=0; i < purchaseForms.size(); i++) {
+            sum += purchaseForms.get(i).getPrice();
+        }
+        mav.addObject("sum", sum);
         mav.setViewName("/sale");
         return mav;
     }

@@ -1,10 +1,8 @@
 package com.example.indoor.service;
 
-import com.example.indoor.controller.form.AccountForm;
+import com.example.indoor.controller.form.CartForm;
 import com.example.indoor.controller.form.PurchaseForm;
-import com.example.indoor.entity.Account;
 import com.example.indoor.entity.Purchase;
-import com.example.indoor.mapper.AccountMapper;
 import com.example.indoor.mapper.PurchasesMapper;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -12,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -26,19 +22,24 @@ public class PurchaseService {
     /*
      * 購入情報追加
      */
-    public void savePurchase(PurchaseForm reqPurchase) {
+    public void savePurchases(List<CartForm> cartForms) {
 
-        Purchase savePurchase = setPurchaseEntity(reqPurchase);
-        purchaseMapper.save(savePurchase);
+        List<Purchase> savePurchases = setPurchaseEntity(cartForms);
+        purchaseMapper.save(savePurchases);
     }
 
     /*
      * リクエストから取得した情報をentityに設定
      */
-    private Purchase setPurchaseEntity(PurchaseForm reqPurchase) {
-        Purchase purchase = new Purchase();
-        BeanUtils.copyProperties(reqPurchase, purchase);
-        return purchase;
+    private List<Purchase> setPurchaseEntity(List<CartForm> cartForms) {
+        List<Purchase> purchases = new ArrayList<>();
+
+        for (CartForm cartForm : cartForms) {
+            Purchase purchase = new Purchase();
+            BeanUtils.copyProperties(cartForm, purchase);
+            purchases.add(purchase);
+        }
+        return purchases;
     }
 
     /*
