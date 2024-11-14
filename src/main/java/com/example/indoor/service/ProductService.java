@@ -30,7 +30,7 @@ public class ProductService {
     @Autowired
     StockNoticeMapper stockNoticeMapper;
 
-    final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
+    public final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
     public final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
 
     /*
