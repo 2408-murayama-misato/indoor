@@ -84,5 +84,17 @@
                 and products.stock = 0
             </if>
         </where>
+            <if test="searchForm.getSort() == 1 or searchForm.getSort() == null">
+                ORDER BY products.created_date DESC
+            </if>
+            <if test="searchForm.getSort() == 2 ">
+                ORDER BY products.price ASC
+            </if>
+            <if test="searchForm.getSort() == 3 ">
+                ORDER BY products.price DESC
+            </if>
+            <if test="searchForm.getSort() == 4 ">
+                ORDER BY avg DESC
+            </if>
     </select>
 </mapper>

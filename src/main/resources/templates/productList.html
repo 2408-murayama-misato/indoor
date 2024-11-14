@@ -8,6 +8,12 @@
         <title>商品一覧</title>
     </head>
     <body>
+    <div class="errorMessages" th:if="${errorMessages != null}">
+        <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+            <li th:text="${errorMessage}" class="text-danger"/>
+        </div>
+        <br/>
+    </div>
     <div th:include="header"></div>
     <div class="narrow down">
         <form th:action="@{/search}" th:object="${searchForm}">
@@ -19,6 +25,12 @@
                 <option value="1" >すべて</option>
                 <option value="2" >販売中</option>
                 <option value="3" >売り切れ</option>
+            </select>
+            <select th:field="*{sort}" class="form-select　me-2" aria-label="stockCheck">
+                <option value="1" >新着順</option>
+                <option value="2" >価格が安い順</option>
+                <option value="3" >価格が高い順</option>
+                <option value="4" >レビュー順</option>
             </select>
             <input type="submit" value="絞込">
         </form>
@@ -34,8 +46,7 @@
         </thead>
         <tbody>
         <div th:each="product : ${productForm}">
-                <tr>
-
+                <tr class="linkbox">
                     <td>
                         <p><image src="${product.productsImage.pass}"/></p>
                         <form th:action="@{/productDetail}">

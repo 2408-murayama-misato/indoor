@@ -19,18 +19,45 @@
     <div class="container">
         <div class="category-button"><h2>カテゴリーから探す</h2>
             <div class="d-flex justify-content-between align-items-center">
-                <a th:href="@{/top}"> <!-- トップスでカテゴリー検索したときのURLを差し込む -->
-                    <img th:src="@{/img/T-Shirts.png}" class="d-flex align-items-stretch">
-                </a>
-                <a th:href="@{/top}"> <!-- ボトムスでカテゴリー検索したときのURLを差し込む -->
-                    <img th:src="@{/img/bottoms.png}" class="d-flex align-items-stretch">
-                </a>
-                <a th:href="@{/top}"> <!-- シューズでカテゴリー検索したときのURLを差し込む -->
-                    <img th:src="@{/img/shoes.png}" class="d-flex align-items-stretch">
-                </a>
-                <a th:href="@{/top}"> <!-- アクセサリーでカテゴリー検索したときのURLを差し込む -->
-                    <img th:src="@{/img/cap.png}">
-                </a>
+                <div class="linkbox">
+                    <form th:action="@{/search}" >
+                        <img th:src="@{/img/T-Shirts.png}" class="d-flex align-items-stretch">
+                        <input type="hidden" name="category" value="トップス">
+                    <button type="submit"></button>
+                    </form>
+                </div>
+
+                 <!-- ボトムスでカテゴリー検索したときのURLを差し込む -->
+                 <div class="linkbox">
+                    <form th:action="@{/search}" >
+                        <img th:src="@{/img/bottoms.png}" class="d-flex align-items-stretch">
+                        <input type="hidden" name="category" value="ボトムス">
+                        <button type="submit"></button>
+                    </form>
+                 </div>
+                 <div class="linkbox">
+                     <form th:action="@{/search}" >
+                         <img th:src="@{/img/shoes.png}" class="d-flex align-items-stretch">
+                         <input type="hidden" name="category" value="シューズ">
+                         <button type="submit"></button>
+                     </form>
+                 </div>
+                    <!-- アクセサリーでカテゴリー検索したときのURLを差し込む -->
+                <div class="linkbox">
+                    <form th:action="@{/search}" >
+                        <img th:src="@{/img/cap.png}">
+                        <input type="hidden" name="category" value="アクセサリー">
+                        <button type="submit"></button>
+                    </form>
+                </div>
+                <div class="linkbox">
+                    <form th:action="@{/search}" >
+                        <img th:src="@{/img/cap.png}">
+                        <input type="hidden" name="category" value="アウター">
+                        <button type="submit"></button>
+                    </form>
+                </div>
+            </div>
             </div>
         </div>
     </div>

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target( { ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MaxPrice {
-    String message() default "金額は１円以上で入力してください";
+    String message() default "金額は999999以内で入力してください";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

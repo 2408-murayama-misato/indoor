@@ -61,7 +61,8 @@ public class ProductController {
      * 5-1.商品詳細画面表示
      */
     @GetMapping("/productDetail")
-    public ModelAndView productDetail(@ModelAttribute("id") String id) {
+    public ModelAndView productDetail(@ModelAttribute("id") String id,
+                                      @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
@@ -72,7 +73,7 @@ public class ProductController {
         mav.addObject("reviews", reviews);
         mav.addObject("productsNoticeForm", productsNoticeForm);
         mav.addObject("productContacts", productContacts);
-
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/productDetail");
         return mav;
     }
@@ -213,20 +214,20 @@ public class ProductController {
                                       BindingResult bindingResult,
                                       RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
-        String errorMessage =  null;
+        List<String> errorMessages = new ArrayList<>();
         if (isBlank(searchForm.getKeyWord()) && isBlank(searchForm.getCategory())) {
             mav.setViewName("redirect:/top");
             return mav;
         }
         if (bindingResult.hasErrors()) {
             for (ObjectError error : bindingResult.getAllErrors()) {
-                errorMessage = error.getDefaultMessage();
+                errorMessages.add(error.getDefaultMessage());
             }
         }
-        if (errorMessage != null) {
-            redirectAttributes.addFlashAttribute("errorMessage",errorMessage);
-            redirectAttributes.addFlashAttribute("searchForm", searchForm);
-            mav.setViewName("redirect:/top");
+        if (errorMessages.size() > 0) {
+            mav.addObject("errorMessages",errorMessages);
+            mav.addObject("searchForm", searchForm);
+            mav.setViewName("/productList");
         } else {
         List<ProductForm> products = productService.findAllProduct(searchForm);
         mav.addObject("productForm", products);

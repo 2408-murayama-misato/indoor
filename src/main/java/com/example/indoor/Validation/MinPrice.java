@@ -8,11 +8,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = MaxPriceValidator.class)
+@Constraint(validatedBy = MinPriceValidator.class)
 @Target( { ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MinPrice {
-    String message() default "金額は999999以内で入力してください";
+    String message() default "金額は１円以上で入力してください";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

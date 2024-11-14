@@ -6,16 +6,16 @@ import jakarta.validation.ConstraintValidatorContext;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
 public class MinPriceValidator implements
-        ConstraintValidator<MaxPrice, String> {
+        ConstraintValidator<MinPrice, String> {
 
     @Override
-    public void initialize(MaxPrice contactNumber) {
+    public void initialize(MinPrice contactNumber) {
     }
 
     @Override
     public boolean isValid(String minPrice,
                            ConstraintValidatorContext cxt) {
-        if (isBlank(minPrice)) {
+        if (isBlank(minPrice) || !minPrice.matches("^[0-9]*$")) {
             return true;
         } else {
             return 1 <=Integer.parseInt(minPrice);

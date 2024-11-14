@@ -19,11 +19,6 @@
 }
 .linkbox {
     position: relative;
-
-    /* ここはボタン位置がわかりやすいように設定しています */
-    background-color: aqua;
-    height: 200px;
-    width: 500px;
 }
 .linkbox button {
     position: absolute;
