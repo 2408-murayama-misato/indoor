@@ -5,6 +5,7 @@
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
   <meta charset="UTF-8">
   <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+  <script th:src="@{/js/main.js}"></script>
     <title>通知一覧</title>
 </head>
 <body>
@@ -52,13 +53,13 @@
     <div class="collapse" id="productShipped">
       <div class="card card-body">
         <div class="list-group">
-          <div th:if="${#lists.isEmpty(productShippedForSeller)}">
+          <div th:if="${#lists.isEmpty(productShipped)}">
             通知はありません。
           </div>
           <div th:if="!${#lists.isEmpty(productShippedForSeller)}" class="list-group-item">
             <div th:each="productShippedForSeller : ${productShippedForSeller}">
               <li th:text="${productShippedForSeller.productName} + 'が購入されました。発送が完了しましたら発送完了ボタンを押してください。'" />
-              <form th:method="put" th:action="@{/noticeList/productShipped/{id}(id=${productShippedForSeller.id})}">
+              <form th:method="put" th:action="@{/noticeList/productShipped/{id}(id=${productShippedForSeller.id})}" onSubmit="return CheckShipped()">
                 <input type="submit" value="発送完了" class="btn btn-primary">
               </form>
             </div>

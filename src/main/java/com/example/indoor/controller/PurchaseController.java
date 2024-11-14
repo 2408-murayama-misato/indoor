@@ -103,12 +103,13 @@ public class PurchaseController {
         purchaseService.savePurchases(cartForms);
         //購入した商品をカート内から削除
         cartService.deleteCart(loginAccount.getId());
-        purchaseService.savePurchase(purchaseForm);
 
-        //在庫の計算と在庫がなくなったら販売者に自動通知する処理(引数は商品の個数, 商品のID)　※暫定単体の商品のみに適応
-        productService.updateProductStock(purchaseForm.getNumber(), purchaseForm.getProductId());
-        //発送準備をするように販売者に通知する処理(引数は購入者のID, 購入された商品のID)
-        productsNoticeService.createProductNotice(purchaseForm.getAccountId(), purchaseForm.getProductId());
+        for (CartForm cartForm : cartForms) {
+            //在庫の計算と在庫がなくなったら販売者に自動通知する処理(引数は商品の個数, 商品のID)　※暫定単体の商品のみに適応
+            productService.updateProductStock(cartForm.getNumber(), cartForm.getProductId());
+            //発送準備をするように販売者に通知する処理(引数は購入者のID, 購入された商品のID)
+            productsNoticeService.createProductNotice(cartForm.getAccountId(), cartForm.getProductId());
+        }
         //決済完了画面に遷移
         mav.setViewName("redirect:/payment");
         return mav;
