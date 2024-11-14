@@ -3,7 +3,6 @@ package com.example.indoor.controller;
 import com.example.indoor.controller.form.AccountForm;
 import com.example.indoor.service.AccountService;
 import jakarta.servlet.http.HttpSession;
-import com.example.indoor.controller.form.AccountForm;
 import com.example.indoor.entity.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
@@ -150,6 +148,54 @@ public class AccountController {
         ModelAndView mav = new ModelAndView();
         mav.addObject("account", account);
         mav.setViewName("/mypage");
+        return mav;
+    }
+
+//    利用者一覧取得
+    @GetMapping("/userList")
+    public ModelAndView getUserList (@ModelAttribute("account") String account) {
+        ModelAndView mav = new ModelAndView();
+        if (account.length() >20 ) {
+            mav.addObject( "errorMessage","アカウント名は２０文字以下で入力してください");
+            mav.setViewName("/userList");
+        } else {
+            List<AccountForm> accounts = accountService.findAllAccount("user", account);
+            mav.setViewName("/userList");
+            mav.addObject("accounts", accounts);
+            mav.addObject("account", account);
+        }
+        return mav;
+    }
+//    販売者一覧取得
+    @GetMapping("/sellerList")
+    public ModelAndView getSellerList (@ModelAttribute("account") String account,
+                                       RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+        if (account.length() >20 ) {
+            mav.addObject( "errorMessage","アカウント名は２０文字以下で入力してください");
+            mav.setViewName("/sellerList");
+        } else {
+            List<AccountForm> accounts = accountService.findAllAccount("seller", account);
+            mav.setViewName("/sellerList");
+            mav.addObject("accounts", accounts);
+        }
+        return mav;
+    }
+//    Userステータス停止処理
+    @PutMapping("/stop/{id}")
+    public ModelAndView stoppedIsStopped(@PathVariable("id") int id) {
+            ModelAndView mav = new ModelAndView();
+            accountService.stopAccount(id);
+            mav.setViewName("redirect:/userList");
+            return mav;
+    }
+
+//    Userステータス復活
+    @PutMapping("/active/{id}")
+    public ModelAndView activeIsStopped(@PathVariable("id") int id) {
+        ModelAndView mav = new ModelAndView();
+        accountService.activeAccount(id);
+        mav.setViewName("redirect:/userList");
         return mav;
     }
 }

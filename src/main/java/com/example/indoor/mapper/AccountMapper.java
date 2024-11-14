@@ -3,7 +3,8 @@ package com.example.indoor.mapper;
 
 import com.example.indoor.entity.Account;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Result;
+
+import java.util.List;
 
 @Mapper
 public interface AccountMapper {
@@ -16,4 +17,10 @@ public interface AccountMapper {
     void update(Account account);
     //アカウント削除
     void deleteById(Integer id);
+
+    List<Account> findAllUser(String status, String account);
+
+    void stopAccount(int id);
+
+    void activeAccount(int id);
 }

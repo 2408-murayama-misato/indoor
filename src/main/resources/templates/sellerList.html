@@ -1,13 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <meta charset="UTF-8">
-  <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
     <title>販売者一覧</title>
 </head>
 <body>
 
+    <div class="from">
+        <form th:action="@{/sellerList}">
+            <input type="text" name="account" th:value="${account}" placeholder="アカウント名">
+            <input type="submit" value="検索"/>
+        </form>
+    </div>
+    <div class="errorMessage" th:if="${errorMessage != null}">
+        <li th:text="${errorMessage}" class="text-danger"/>
+        <br/>
+    </div>
+    <table class="table carts">
+        <thead class="table-light">
+        <tr class="cartsTableTitle">
+            <th>アカウント名</th>
+            <th>氏名</th>
+            <th>住所</th>
+            <th>ユーザーステータス</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="account : ${accounts}">
+            <tr>
+                <td>
+                    <p th:text="${account.account}"/>
+                </td>
+                <td>
+                    <p th:text="${account.name}"/>
+                </td>
+                <td>
+                    <p th:text="account.adress"/>
+                </td>
+                <td>
+                    <div th:if="${account.isStopped == 0}">
+                        <form th:method="put" th:action="@{/stop/{id}(id=${account.id})}">
+                            <input type="submit" value="停止" name="isStopped-button" class="off">
+                        </form>
+                    </div>
+                    <div th:if="${account.isStopped == 1}">
+                        <form th:method="put" th:action="@{/active/{id}(id=${account.id})}">
+                            <input type="submit" value="復活" name="isStopped-button" class="on">
+                        </form>
+                    </div>
+        </div>
+        </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/adminTop}">
+        <input type="button" value="戻る" class="btn btn-outline-secondary">
+    </a>
 </body>
 </html>

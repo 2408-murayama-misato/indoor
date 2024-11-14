@@ -8,17 +8,17 @@
         <title>商品一覧</title>
     </head>
     <body>
+    <div th:include="header"></div>
     <div class="errorMessages" th:if="${errorMessages != null}">
         <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
             <li th:text="${errorMessage}" class="text-danger"/>
         </div>
         <br/>
     </div>
-    <div th:include="header"></div>
     <div class="narrow down">
         <form th:action="@{/search}" th:object="${searchForm}">
-          <input type="text" th:field="*{minPrice}">
-            <input type="text" th:field="*{maxPrice}">
+          <input type="text" th:field="*{minPrice}" placeholder="最低金額 1~">
+            <input type="text" th:field="*{maxPrice}" placeholder="最高金額 ~1000000">
             <input type="hidden" name="keyWord" th:value="${searchForm.keyWord}">
             <input type="hidden" name="category" th:value="${searchForm.category}">
             <select th:field="*{stockCheck}" class="form-select　me-2" aria-label="stockCheck">
@@ -35,10 +35,14 @@
             <input type="submit" value="絞込">
         </form>
     </div>
+    <div th:if="${productForm == null}">
+        <p class="fs-1"  value="商品が見つかりませんでした"/>
+    </div>
+    <div th:if="${productForm != null}">
     <table class="table carts">
         <thead class="table-light">
         <tr class="cartsTableTitle">
-            <th>写真</th>
+            <th style="width: 10%">写真</th>
             <th>商品名</th>
             <th>価格</th>
             <th>レビュー</th>
@@ -48,7 +52,7 @@
         <div th:each="product : ${productForm}">
                 <tr class="linkbox">
                     <td>
-                        <p><image src="${product.productsImage.pass}"/></p>
+                        <p><image class="rounded mx-auto d-block img-fluid" th:src="@{product.imagePass}"/></p>
                         <form th:action="@{/productDetail}">
                             <input type="hidden" name="id" th:value="${product.id}">
                             <button type="submit"></button>
@@ -58,7 +62,12 @@
                         <p th:text="${product.name}"/>
                     </td>
                     <td>
+                        <div th:if="${product.stock == 0}">
+                            <p class="text-danger" th:text="SOLDOUT"/>
+                        </div>
+                        <div th:unless="${product.stock == 0}">
                         <p class="text-danger" th:text="￥ + ${product.price}"/>
+                        </div>
                     </td>
                     <td>
                         <p th:text="${product.avg}"/>
@@ -68,6 +77,7 @@
         </div>
         </tbody>
     </table>
+    </div>
     <a th:href="@{/top}">
         <input type="button" value="戻る" class="btn btn-outline-secondary">
     </a>

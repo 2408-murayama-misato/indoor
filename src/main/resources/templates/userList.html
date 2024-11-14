@@ -8,12 +8,23 @@
       <title>利用者一覧</title>
   </head>
   <body>
+  <div class="from">
+    <form th:action="@{/userList}">
+      <input type="text" name="account" th:value="${account}">
+      <input type="submit" value="検索"/>
+    </form>
+  </div>
+  <div class="errorMessage" th:if="${errorMessage != null}">
+    <li th:text="${errorMessage}" class="text-danger"/>
+    <br/>
+  </div>
     <table class="table carts">
       <thead class="table-light">
       <tr class="cartsTableTitle">
         <th>アカウント名</th>
         <th>氏名</th>
         <th>住所</th>
+        <th>ユーザーステータス</th>
       </tr>
       </thead>
       <tbody>
@@ -28,9 +39,24 @@
           <td>
             <p th:text="account.adress"/>
           </td>
+          <td>
+              <div th:if="${account.isStopped == 0}">
+                <form th:method="put" th:action="@{/stop/{id}(id=${account.id})}">
+                  <input type="submit" value="停止" name="isStopped-button" class="off">
+                </form>
+              </div>
+              <div th:if="${account.isStopped == 1}">
+                <form th:method="put" th:action="@{/active/{id}(id=${account.id})}">
+                  <input type="submit" value="復活" name="isStopped-button" class="on">
+                </form>
+              </div>
+            </div>
+          </td>
         </tr>
-      </div>
       </tbody>
     </table>
+    <a th:href="@{/adminTop}">
+      <input type="button" value="戻る" class="btn btn-outline-secondary">
+    </a>
   </body>
 </html>
