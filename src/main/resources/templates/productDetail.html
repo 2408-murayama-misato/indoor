@@ -12,8 +12,8 @@
 <div th:include="header"></div>
 <div class="main-contents mt-2">
     <div class="product-information">
-        <div class="product-image">
-            <img th:src="${product.imagePass}">
+        <div class="product-image" style="width: 40%">
+            <img th:src="${product.imagePass}" class="rounded mx-auto d-block img-fluid">
         </div>
         <div class="product-overview" th:object="${product}">
             出品者: <span th:text ="*{accountName}"/><br/>
@@ -29,8 +29,8 @@
                 </span>
             </th:block>
             在庫数: <span th:text ="*{stock}"/><br/>
-            <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=*{id})}">
-                数量: <input type="number" th:name="number" min="1" th:max="*{stock}"/>
+            <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
+                数量: <input type="number" name="number" th:value="${number}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>

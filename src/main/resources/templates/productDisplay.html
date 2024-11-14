@@ -16,8 +16,8 @@
                 <th style="width: 10%">外観</th>
                 <th>カテゴリー</th>
                 <th>商品名</th>
-                <th>価格</th>
-                <th>在庫数</th>
+                <th>価格 (円)</th>
+                <th>在庫数 (P)</th>
                 <th>出品状態</th>
                 <th></th>
             </tr>
@@ -27,25 +27,25 @@
             <td><img th:src="${product.imagePass}" class="rounded mx-auto d-block img-fluid"></td>
             <td th:text="${product.category}"></td>
             <td th:text="${product.name}"></td>
-            <td th:text="${product.price}">円</td>
-            <td th:text="${product.stock}">P</td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.stock}"></td>
             <td>
                 <th:block th:switch="${product.isStopped}">
                     <span th:case="false">
                         <form th:method="put" th:action="@{/changeProductIsStopped-{id}(id=${product.id})}" onSubmit="return CheckChange()">
-                            <input type="submit" th:value="出品中">
+                            <input type="submit" th:value="出品中" class="btn btn-primary">
                         </form>
                     </span>
                     <span th:case="true">
                         <form th:method="put" th:action="@{/changeProductIsStopped-{id}(id=${product.id})}" onSubmit="return CheckChange()">
-                            <input type="submit" th:value="出品停止中">
+                            <input type="submit" th:value="出品停止中" class="btn btn-secondary">
                         </form>
                     </span>
                 </th:block>
             </td>
             <td>
                 <a th:href="@{/productEdit-{id}(id=${product.id})}">
-                    <input type="submit" value="編集">
+                    <input type="submit" value="編集" class="btn btn-outline-secondary">
                     <input type="hidden" name="id" th:value="${product.id}">
                 </a>
             </td>

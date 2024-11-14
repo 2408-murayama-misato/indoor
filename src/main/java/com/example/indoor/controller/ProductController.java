@@ -18,6 +18,7 @@ import com.example.indoor.service.ReviewService;
 import com.example.indoor.controller.form.ProductsNoticeForm;
 import com.example.indoor.service.ProductsNoticeService;
 
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
@@ -65,8 +66,6 @@ public class ProductController {
 
     @Autowired
     ReviewService reviewService;
-
-    final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
 
     /*
      * 5-1.商品詳細画面表示
@@ -252,13 +251,15 @@ public class ProductController {
             return mav;
         }
 
-        // サーバーに商品イメージ画像を保存
+        // サーバーに商品イメージ画像を保存して、ファイル名をformにセット
         for (MultipartFile file : productForm.getImageFile()) {
             try {
-                String fileName = getUploadFileName(file.getOriginalFilename());
-                saveFile(file, fileName);
-                // ファイルパスを保存
-                productForm.setImagePass(fileName);
+                if (!StringUtils.isBlank(file.getOriginalFilename())) {
+                    String fileName = productService.getUploadFileName(file.getOriginalFilename());
+                    productService.saveFile(file, fileName);
+                    // ファイルパスを保存
+                    productForm.setImagePass(fileName);
+                }
             } catch (IOException e) {
                 // エラー処理は省略
             }
@@ -270,29 +271,7 @@ public class ProductController {
         mav.setViewName("redirect:/productDisplay");
         return mav;
     }
-    private void saveFile(MultipartFile file, String fileName) throws IOException {
-        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + fileName);
-        try (OutputStream os = Files.newOutputStream(uploadFile, StandardOpenOption.CREATE)) {
-            byte[] bytes = file.getBytes();
-            os.write(bytes);
-        } catch (IOException e) {
-            //エラー処理は省略
-        }
-    }
-    private String getUploadFileName(String fileName) {
 
-        return fileName + "_" +
-                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
-                        .format(LocalDateTime.now())
-                + getExtension(fileName);
-    }
-    private String getExtension(String filename) {
-        int dot = filename.lastIndexOf(".");
-        if (dot > 0) {
-            return filename.substring(dot).toLowerCase();
-        }
-        return "";
-    }
 
     /*
      * 9-2．出品商品状態変更処理
@@ -307,6 +286,58 @@ public class ProductController {
         return new ModelAndView("redirect:/productDisplay");
     }
 
+    /*
+     * 11-1.商品編集画面表示
+     */
+    @GetMapping("/productEdit-{id}")
+    public ModelAndView productNew(@PathVariable Integer id) {
+        ModelAndView mav = new ModelAndView();
+        ProductForm productForm = productService.findProduct(id);
+        mav.addObject("productForm", productForm);
+        mav.setViewName("/productEdit");
+        return mav;
+    }
+    /*
+     * 11-2.商品編集処理
+     */
+    @PutMapping("/editProduct")
+    public ModelAndView editProduct(@AuthenticationPrincipal Account account,
+                                    @Validated @ModelAttribute("productForm") ProductForm productForm,
+                                    BindingResult bindingResult) {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (bindingResult.hasErrors()) {
+            mav.addObject("productForm", productForm);
+            mav.setViewName("/productNew");
+            return mav;
+        }
+
+        ProductForm refProduct = productService.findProduct(productForm.getId());
+
+        // サーバーに商品イメージ画像を保存して、ファイル名をformにセット
+        for (MultipartFile file : productForm.getImageFile()) {
+            try {
+                if (!StringUtils.isBlank(file.getOriginalFilename())) {
+                    String fileName = productService.getUploadFileName(file.getOriginalFilename());
+                    productService.saveFile(file, fileName);
+                    // ファイルパスを保存
+                    productForm.setImagePass(fileName);
+                } else if (!refProduct.getImagePass().equals(productService.NO_IMAGE_FILE_PATH)){
+                    String imagePass = refProduct.getImagePass();
+                    productForm.setImagePass(imagePass.substring(productService.IMAGE_RELATIVE_PATH.length()).toLowerCase());
+                }
+            } catch (IOException e) {
+                // エラー処理は省略
+            }
+        }
+
+        productForm.setStopped(refProduct.isStopped());
+        productService.updateProduct(productForm);
+
+        mav.setViewName("redirect:/productDisplay");
+        return mav;
+    }
 
 //    商品検索
     @GetMapping("/search")
