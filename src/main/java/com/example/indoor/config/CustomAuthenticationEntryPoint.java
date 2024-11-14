@@ -23,6 +23,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         //セッションにエラーメッセージを追加
         HttpSession session = request.getSession();
         session.setAttribute("ErrorMessage", "ログインしてください");
-        response.sendRedirect("/login");
+        response.sendRedirect(request.getContextPath() + "/login?loginFilter=true");
     }
 }
