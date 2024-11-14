@@ -14,7 +14,17 @@ public interface ProductsNoticesMapper {
 
     List<ProductsNoticeForm> findNotReadProductContacts(int accountId);
 
-    List<ProductsNoticeForm> findNotReadProductShippedForUser(int accountId);
+    List<ProductsNoticeForm> findNotReadProductShipped(int accountId);
 
     List<ProductsNoticeForm> findNotReadProductShippedForSeller(int accountId);
+
+    void saveReadProductNotice(int id);
+
+    void saveProductShippedNotice(int id);
+
+    void insertProductNotice(int accountId, int productId, String text);
+
+    List<ProductsNoticeForm> findReadProductContacts(int accountId);
+
+    List<ProductsNoticeForm> findReadProductShipped(int accountId);
 }

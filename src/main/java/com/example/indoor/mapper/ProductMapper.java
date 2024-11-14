@@ -8,4 +8,8 @@ import org.apache.ibatis.annotations.Param;
 public interface ProductMapper {
     public Product findProductDetail(int id);
     Product findById(@Param("productId") int productId);
+
+    void updateProductStock(int number, int productId);
+
+    boolean checkStockIsZero(int productId);
 }

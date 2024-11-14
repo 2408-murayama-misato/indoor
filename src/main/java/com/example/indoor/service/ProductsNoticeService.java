@@ -23,13 +23,21 @@ public class ProductsNoticeService {
         productsNoticesMapper.insertProductContact(productsNoticeEntity);
     }
 
+    /*
+     * 購入後通知作成(登録)処理
+     */
+    public void createProductNotice(int accountId, int productId) {
+        String text = "発送依頼通知";
+        productsNoticesMapper.insertProductNotice(accountId, productId, text);
+    }
+
     private ProductsNotice setEntity(ProductsNoticeForm productsNoticeForm, Account account) {
         ProductsNotice productsNoticeEntity = new ProductsNotice();
         productsNoticeEntity.setText(productsNoticeForm.getText());
         productsNoticeEntity.setFromId(account.getId());
         productsNoticeEntity.setProductId(productsNoticeForm.getProductId());
         productsNoticeEntity.setToId(productsNoticeForm.getToId());
-        productsNoticeEntity.setRead(false);
+        productsNoticeEntity.setIsRead(0);
         productsNoticeEntity.setShippedInfo(false);
         return productsNoticeEntity;
     }
@@ -51,10 +59,10 @@ public class ProductsNoticeService {
         return result;
     }
     /*
-     * 利用者権限かつログインアカウントが対象の未読の商品発送通知を取得
+     * ログインアカウントが対象の未読の商品発送通知を取得
      */
-    public List<ProductsNoticeForm> findNotReadProductShippedForUser(int accountId) {
-        List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductShippedForUser(accountId);
+    public List<ProductsNoticeForm> findNotReadProductShipped(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductShipped(accountId);
         return result;
     }
     /*
@@ -62,6 +70,34 @@ public class ProductsNoticeService {
      */
     public List<ProductsNoticeForm> findNotReadProductShippedForSeller(int accountId) {
         List<ProductsNoticeForm> result = productsNoticesMapper.findNotReadProductShippedForSeller(accountId);
+        return result;
+    }
+
+    /*
+     * 既読処理
+     */
+    public void saveReadProductNotice(int id) {
+        productsNoticesMapper.saveReadProductNotice(id);
+    }
+    /*
+     * 発送完了通知送信処理
+     */
+    public void saveProductShippedNotice(int id) {
+        productsNoticesMapper.saveProductShippedNotice(id);
+    }
+
+    /*
+     * 通知アーカイブ取得(商品問い合わせ)
+     */
+    public List<ProductsNoticeForm> findReadProductContacts(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findReadProductContacts(accountId);
+        return result;
+    }
+    /*
+     * 通知アーカイブ取得(商品発送完了)
+     */
+    public List<ProductsNoticeForm> findReadProductShipped(int accountId) {
+        List<ProductsNoticeForm> result = productsNoticesMapper.findReadProductShipped(accountId);
         return result;
     }
 }

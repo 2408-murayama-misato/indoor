@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.StockNoticeMapper">
     <!--在庫0通知取得用-->
-    <resultMap id="findAllStockNotice" type="com.example.indoor.entity.StockNotice">
+    <resultMap id="StockNotice" type="com.example.indoor.entity.StockNotice">
         <result column="id" property="id"/>
         <result column="product_name" property="productName" />
         <result column="text" property="text"/>
@@ -14,11 +14,14 @@
     </resultMap>
 
     <!--通知一覧に表示させる、販売者ログインアカウントあての未読在庫通知-->
-    <select id="findAllStockNotice" resultMap="findAllStockNotice">
+    <select id="findAllStockNotice" resultMap="StockNotice">
         SELECT
-        stock_notices.id
+        stock_notices.id,
         products.name AS product_name,
-        products_notice.
+        stock_notices.product_id,
+        stock_notices.seller_id,
+        stock_notices.is_read,
+        stock_notices.created_date
         FROM stock_notices
         INNER JOIN products
         ON products.id = stock_notices.product_id
@@ -26,4 +29,35 @@
         AND stock_notices.is_read = false
         ORDER BY stock_notices.created_date DESC
     </select>
+    <!--通知アーカイブ用の取得処理-->
+    <select id="findAllReadStockNotice" resultMap="StockNotice">
+        SELECT
+        stock_notices.id,
+        products.name AS product_name,
+        stock_notices.product_id,
+        stock_notices.seller_id,
+        stock_notices.is_read,
+        stock_notices.created_date
+        FROM stock_notices
+        INNER JOIN products
+        ON products.id = stock_notices.product_id
+        WHERE stock_notices.seller_id = #{accountId}
+        AND stock_notices.is_read = true
+        ORDER BY stock_notices.created_date DESC
+    </select>
+    <!--通知既読処理-->
+    <select id="saveProductShipped" resultMap="StockNotice">
+        UPDATE stock_notices
+        SET is_read = true
+        WHERE id = #{id}
+    </select>
+    <!--通知追加処理-->
+    <insert id="insertStockNotice">
+        INSERT INTO stock_notices (
+            product_id, seller_id
+        ) VALUES (
+            #{productId},
+        (SELECT account_id FROM products WHERE id = #{productId})
+        )
+    </insert>
 </mapper>

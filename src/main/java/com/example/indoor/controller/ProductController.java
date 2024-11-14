@@ -37,7 +37,7 @@ public class ProductController {
      * 5-1.商品詳細画面表示
      */
     @GetMapping("/productDetail")
-    public ModelAndView productDetail(@ModelAttribute("id") String id) {
+    public ModelAndView productDetail(@ModelAttribute("id") String id, @AuthenticationPrincipal Account account) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
@@ -48,6 +48,7 @@ public class ProductController {
         mav.addObject("reviews", reviews);
         mav.addObject("productsNoticeForm", productsNoticeForm);
         mav.addObject("productContacts", productContacts);
+        mav.addObject("account", account);
 
         mav.setViewName("/productDetail");
         return mav;

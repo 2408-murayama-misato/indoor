@@ -23,7 +23,7 @@ public class ProductsNoticeForm {
 
     private int toId;
 
-    private boolean isRead;
+    private int isRead;
 
     private boolean isShippedInfo;
 

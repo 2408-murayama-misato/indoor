@@ -1,13 +1,85 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <meta charset="UTF-8">
     <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
-    <title>通知アーカイブ一覧</title>
+    <title>通知既読一覧</title>
 </head>
 <body>
-
+<div th:include="header"></div>
+<div class="container text-center">
+    <h2>通知既読一覧</h2>
+    <div class="my-3">
+        <a th:href="@{/noticeList}">
+            <input type="button" value="通知一覧はこちら" class="btn btn-secondary">
+        </a>
+    </div>
+    <!-- 商品問い合わせ(userとseller)-->
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#productContacts" aria-expanded="false" aria-controls="productContacts">
+        商品の問い合わせに関するお知らせ
+    </button>
+    <div class="collapse" id="productContacts">
+        <div class="card card-body">
+            <div class="list-group">
+                <div th:if="${#lists.isEmpty(productContacts)}">
+                    通知はありません。
+                </div>
+                <div th:if="!${#lists.isEmpty(productContacts)}" class="list-group-item">
+                    <div th:each="productContact : ${productContacts}">
+                        <li th:text="${productContact.productName} + 'についてコメントが来ています'" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-3" />
+    <!--発送通知(userとseller)-->
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#productShipped" aria-expanded="false" aria-controls="productShipped">
+        商品発送に関するお知らせ
+    </button>
+    <div class="collapse" id="productShipped">
+        <div class="card card-body">
+            <div class="list-group">
+                <div th:if="${#lists.isEmpty(productShipped)}">
+                    通知はありません。
+                </div>
+                <div th:if="!${#lists.isEmpty(productShipped)}" class="list-group-item">
+                    <div th:each="productShipped : ${productShipped}">
+                        <li th:text="${productShipped.productName} + 'が発送されました。到着まで少々お待ちください。'" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="my-3" />
+    <!--商品在庫通知(sellerのみ)-->
+    <div sec:authorize="hasRole('seller')">
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#productStock" aria-expanded="false" aria-controls="productStock">
+            商品在庫に関するお知らせ
+        </button>
+        <div class="collapse" id="productStock">
+            <div class="card card-body">
+                <div class="list-group">
+                    <div th:if="${#lists.isEmpty(productStock)}">
+                        <div class="list-group-item">
+                            通知はありません。
+                        </div>
+                    </div>
+                    <div th:if="!${#lists.isEmpty(productStock)}" class="list-group-item">
+                        <div th:each="productStock : ${productStock}">
+                            <li th:text="${productStock.productName} + 'の在庫が0になりました。'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous">
+    </script>
+</div>
 </body>
 </html>
