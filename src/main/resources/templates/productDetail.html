@@ -29,8 +29,8 @@
                 </span>
             </th:block>
             在庫数: <span th:text ="*{stock}"/><br/>
-            <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number={number})}">
-                数量: <input type="text" th:name="number" th:value="number"/>
+            <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
+                数量: <input type="number" name="number" th:value="${number}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>
