@@ -11,7 +11,7 @@
 <body>
 <div th:include="header"></div>
 <div class="main-contents mt-2">
-    <div class="product-information">
+    <div class="product-information p-3 d-flex justify-content-center">
         <div class="product-image" style="width: 40%">
             <img th:src="${product.imagePass}" class="rounded mx-auto d-block img-fluid">
         </div>
@@ -29,18 +29,18 @@
                 </span>
             </th:block>
             在庫数: <span th:text ="*{stock}"/><br/>
+            <div class="product-description">
+                商品説明<br/>
+                <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
+            </div>
             <form th:method="post" th:action="@{/addCart/{productId}x{number}(productId=*{id}, number=${number})}">
                 数量: <input type="number" name="number" th:value="${number}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>
     </div>
-    <div class="product-description">
-        商品説明<br/>
-        <pre th:text="${product.description}" style="white-space: pre-wrap;"></pre>
-    </div>
-    商品レビュー<br/>
-    <div class="product-reviews" th:each="review : ${reviews}">
+    <h4 class="d-flex justify-content-center">商品レビュー</h4><br/>
+    <div class="product-reviews d-flex justify-content-center" th:each="review : ${reviews}">
         <div th:if="${review.productId} == ${product.id}">
             <div>
                 投稿者 : <span th:text="${review.accountName}"/>
@@ -51,17 +51,17 @@
             </div>
             <div>
                 <a th:href="@{/reviewEdit/{id}(id=${review.id})}">
-                    <input type="button" value="編集">
+                    <input type="button" value="編集" class="btn btn-primary">
                 </a>
             </div>
             <div>
                 <form th:method="delete" th:action="@{/deleteReview/{id}-{productId}(id=${review.id}, productId=${product.id})}" onSubmit="return CheckDelete()">
-                    <input type="submit" value="削除" />
+                    <input type="submit" value="削除" class="btn btn-danger"/>
                 </form>
             </div>
         </div>
     </div>
-    <h4>商品問い合わせ</h4>
+    <h4 class="d-flex justify-content-center">商品問い合わせ</h4>
     <div class="product-contacts overflow-auto" th:each="contact : ${productContacts}">
         <div class="account">
             氏名：<span th:text="${contact.fromName}" />
