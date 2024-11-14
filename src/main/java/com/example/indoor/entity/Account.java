@@ -44,7 +44,7 @@ public class Account implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return isStopped != 1; //isStoppedが0以外の場合はロックされている
     }
 
     @Override
