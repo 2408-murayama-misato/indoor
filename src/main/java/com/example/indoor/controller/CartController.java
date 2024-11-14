@@ -24,6 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 @Controller
 public class CartController {
 
@@ -70,16 +72,18 @@ public class CartController {
          errorMessages.add( "不正なパラメータが入力されました");
       }
 //      在庫数と注文数比較
-      if (number.matches("^[0-9]*$")) {
+      if (number.matches("^[0-9]*$") && !isBlank(number)) {
          if (product.getStock() < Integer.parseInt(number)) {
             errorMessages.add("注文数が在庫数を上回りました。注文数を減らして再度カートに入れてください");
          }
       }
-
-
+      if (isBlank(number)) {
+         errorMessages.add( "数値を入力してください");
+      }
       if (errorMessages.size() > 0) {
          redirectAttributes.addFlashAttribute("errorMessages", errorMessages);
          redirectAttributes.addFlashAttribute("id",product.getId());
+         redirectAttributes.addFlashAttribute("number", number);
          mav.setViewName("redirect:/productDetail");
       } else {
          cartService.addCart(Integer.parseInt(number), (Integer.parseInt(productId)), loginAccount.getId());

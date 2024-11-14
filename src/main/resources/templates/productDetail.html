@@ -36,7 +36,7 @@
                 <br/>
             </div>
             <form th:method="post" th:action="@{/addCart/{productId}(productId=*{id})}">
-                数量: <input type="text" name="number"/>
+                数量: <input type="number" name="number" th:value="${number}"/>
                 <input class="btn btn-primary w-100 py-2 my-2" type="submit" value="カートに入れる"/>
             </form>
         </div>
