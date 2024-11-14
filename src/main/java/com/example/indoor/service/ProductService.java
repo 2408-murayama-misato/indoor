@@ -1,5 +1,6 @@
 package com.example.indoor.service;
 
+import com.example.indoor.controller.ProductController;
 import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.ProductMapper;
@@ -32,6 +33,7 @@ public class ProductService {
 
     public final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
     public final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
+    public final String IMAGE_RELATIVE_PATH = "/img/product/";
 
     /*
      * 出品送品一覧を取得
@@ -59,13 +61,13 @@ public class ProductService {
 
         for (Product entity : entities) {
             ProductForm form = new ProductForm();
-            BeanUtils.copyProperties(entity, form);
             // ファイルパスを修正
-            if (StringUtils.isBlank(form.getImagePass())) {
-                form.setImagePass(NO_IMAGE_FILE_PATH);
+            if (StringUtils.isBlank(entity.getImagePass())) {
+                entity.setImagePass(NO_IMAGE_FILE_PATH);
             } else {
-                form.setImagePass("/img/product/" + form.getImagePass());
+                entity.setImagePass(IMAGE_RELATIVE_PATH + entity.getImagePass());
             }
+            BeanUtils.copyProperties(entity, form);
             forms.add(form);
         }
         return forms;
@@ -95,6 +97,15 @@ public class ProductService {
      */
     private Product setProductEntity(ProductForm form){
         Product entity = new Product();
+        // ファイルパスを修正
+        if (form.getImagePass().equals(NO_IMAGE_FILE_PATH)) {
+            form.setImagePass(null);
+        } else {
+            int pathIndex = form.getImagePass().lastIndexOf(IMAGE_RELATIVE_PATH);
+            if (pathIndex >= 0) {
+                form.setImagePass(form.getImagePass().substring(IMAGE_RELATIVE_PATH.length()).toLowerCase());
+            }
+        }
         BeanUtils.copyProperties(form, entity);
         return entity;
     }

@@ -43,8 +43,6 @@ public class ProductController {
     @Autowired
     ReviewService reviewService;
 
-    final String IMAGE_RELATIVE_PATH = "/img/product/";
-
     /*
      * 5-1.商品詳細画面表示
      */
@@ -286,10 +284,11 @@ public class ProductController {
             return mav;
         }
 
+        ProductForm refProduct = productService.findProduct(productForm.getId());
+
         // サーバーに商品イメージ画像を保存して、ファイル名をformにセット
         for (MultipartFile file : productForm.getImageFile()) {
             try {
-                ProductForm refProduct = productService.findProduct(productForm.getId());
                 if (!StringUtils.isBlank(file.getOriginalFilename())) {
                     String fileName = productService.getUploadFileName(file.getOriginalFilename());
                     productService.saveFile(file, fileName);
@@ -297,14 +296,14 @@ public class ProductController {
                     productForm.setImagePass(fileName);
                 } else if (!refProduct.getImagePass().equals(productService.NO_IMAGE_FILE_PATH)){
                     String imagePass = refProduct.getImagePass();
-                    //int indexFileName = imagePass.lastIndexOf("/img/product/");
-                    productForm.setImagePass(imagePass.substring(IMAGE_RELATIVE_PATH.length()).toLowerCase());
+                    productForm.setImagePass(imagePass.substring(productService.IMAGE_RELATIVE_PATH.length()).toLowerCase());
                 }
             } catch (IOException e) {
                 // エラー処理は省略
             }
         }
 
+        productForm.setStopped(refProduct.isStopped());
         productService.updateProduct(productForm);
 
         mav.setViewName("redirect:/productDisplay");
