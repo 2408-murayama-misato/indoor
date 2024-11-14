@@ -26,6 +26,14 @@ public class ProductService {
 
 
     /*
+     * 出品送品一覧を取得
+     */
+    public List<ProductForm> findProductDisplay(int account_id) {
+        List<Product> results = productMapper.findProductDisplay(account_id);
+        List<ProductForm> products = setForm(results);
+        return products;
+    }
+    /*
      * 主キー指定で商品レコードを取得
      */
     public ProductForm findProduct(int id) {
@@ -80,5 +88,12 @@ public class ProductService {
         Product entity = new Product();
         BeanUtils.copyProperties(form, entity);
         return entity;
+    }
+    /*
+     * 商品レコードを更新
+     */
+    public void updateProduct(ProductForm productForm) {
+        Product saveProduct = setProductEntity(productForm);
+        productMapper.updateProduct(saveProduct);
     }
 }

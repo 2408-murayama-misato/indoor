@@ -1,7 +1,6 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.ProductForm;
-import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
@@ -10,8 +9,6 @@ import com.example.indoor.controller.form.ProductsNoticeForm;
 import com.example.indoor.service.ProductsNoticeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,8 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -190,7 +185,17 @@ public class ProductController {
         mav.setViewName("redirect:/productDetail");
         return mav;
     }
-
+    /*
+     * 9-1.出品商品画面表示
+     */
+    @GetMapping("/productDisplay")
+    public ModelAndView productDisplay(@AuthenticationPrincipal Account account) {
+        ModelAndView mav = new ModelAndView();
+        List<ProductForm> products = productService.findProductDisplay(account.getId());
+        mav.addObject("products", products);
+        mav.setViewName("/productDisplay");
+        return mav;
+    }
     /*
      * 10-1.商品登録画面表示
      */
@@ -218,7 +223,7 @@ public class ProductController {
             return mav;
         }
 
-        // 商品イメージがセットされていた場合、サーバーに商品イメージ画像を保存
+        // サーバーに商品イメージ画像を保存
         for (MultipartFile file : productForm.getImageFile()) {
             try {
                 String fileName = getUploadFileName(file.getOriginalFilename());
@@ -233,7 +238,7 @@ public class ProductController {
         productForm.setAccountId(account.getId());
         productService.insertProduct(productForm);
 
-        mav.setViewName("redirect:/productNew");
+        mav.setViewName("redirect:/productDisplay");
         return mav;
     }
     private void saveFile(MultipartFile file, String fileName) throws IOException {
@@ -258,6 +263,19 @@ public class ProductController {
             return filename.substring(dot).toLowerCase();
         }
         return "";
+    }
+
+    /*
+     * 9-2．出品商品状態変更処理
+     */
+    @PutMapping("/changeProductIsStopped-{id}")
+    public ModelAndView changeIsStopped(@PathVariable Integer id) {
+
+        ProductForm saveProduct = productService.findProduct(id);
+        // isStoppedを反転
+        saveProduct.setStopped(!saveProduct.isStopped());
+        productService.updateProduct(saveProduct);
+        return new ModelAndView("redirect:/productDisplay");
     }
 
 }

@@ -32,11 +32,11 @@ public class ProductForm {
     // カテゴリー管理用に追加
     private int categoryId;
     private Map<Integer, String> categoryMap = Map.ofEntries(
-            entry(1, "T-Shirts"),
-            entry(2, "Bottoms"),
-            entry(3, "Cap"),
-            entry(4, "Shoes"),
-            entry(5, "Outer")
+            entry(1, "Tシャツ"),
+            entry(2, "ボトムス"),
+            entry(3, "アクセサリー"),
+            entry(4, "シューズ"),
+            entry(5, "アウター")
     );
     /*
      * カテゴリーのvalueを取得
