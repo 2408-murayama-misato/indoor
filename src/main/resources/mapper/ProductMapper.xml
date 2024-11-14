@@ -44,6 +44,19 @@
             DEFAULT
         )
     </insert>
+    <update id="updateProduct" parameterType="com.example.indoor.entity.Product">
+        UPDATE products
+        SET
+            name = #{name},
+            price = #{price},
+            category = #{category},
+            stock = #{stock},
+            is_stopped = #{isStopped},
+            description = #{description},
+            image_pass = #{imagePass},
+            updated_date = DEFAULT
+        WHERE id = #{id}
+    </update>
     <!-- 内部結合 -->
     <resultMap id="productDetail" type="com.example.indoor.entity.Product">
         <result column="id" property="id" />
@@ -76,16 +89,16 @@
     </select>
     <select id="findProductDisplay" resultMap="productDetail">
         SELECT
-        products.id AS id,
-        products.account_id AS account_id,
-        accounts.name AS account_name,
-        products.name AS product_name,
-        products.price AS price,
-        products.category AS category,
-        products.stock AS stock,
-        products.is_stopped AS is_stopped,
-        products.description AS description,
-        products.image_pass AS image_pass
+            products.id AS id,
+            products.account_id AS account_id,
+            accounts.name AS account_name,
+            products.name AS product_name,
+            products.price AS price,
+            products.category AS category,
+            products.stock AS stock,
+            products.is_stopped AS is_stopped,
+            products.description AS description,
+            products.image_pass AS image_pass
         FROM products
         INNER JOIN accounts
         ON accounts.id = products.account_id

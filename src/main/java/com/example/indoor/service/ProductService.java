@@ -20,8 +20,11 @@ public class ProductService {
 
     final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
 
-    public List<ProductForm> findProductDisplay(int id) {
-        List<Product> results = productMapper.findProductDisplay(id);
+    /*
+     * 出品送品一覧を取得
+     */
+    public List<ProductForm> findProductDisplay(int account_id) {
+        List<Product> results = productMapper.findProductDisplay(account_id);
         List<ProductForm> products = setForm(results);
         return products;
     }
@@ -68,5 +71,12 @@ public class ProductService {
         Product entity = new Product();
         BeanUtils.copyProperties(form, entity);
         return entity;
+    }
+    /*
+     * 商品レコードを更新
+     */
+    public void updateProduct(ProductForm productForm) {
+        Product saveProduct = setProductEntity(productForm);
+        productMapper.updateProduct(saveProduct);
     }
 }

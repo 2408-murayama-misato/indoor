@@ -12,4 +12,5 @@ public interface ProductMapper {
     public Product findProductDetail(int id);
     Product findById(@Param("productId") int productId);
     public void insertProduct(Product product);
+    public void updateProduct(Product product);
 }

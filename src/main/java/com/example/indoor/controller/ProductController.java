@@ -222,7 +222,7 @@ public class ProductController {
             return mav;
         }
 
-        // 商品イメージがセットされていた場合、サーバーに商品イメージ画像を保存
+        // サーバーに商品イメージ画像を保存
         for (MultipartFile file : productForm.getImageFile()) {
             try {
                 String fileName = getUploadFileName(file.getOriginalFilename());
@@ -237,7 +237,7 @@ public class ProductController {
         productForm.setAccountId(account.getId());
         productService.insertProduct(productForm);
 
-        mav.setViewName("redirect:/productNew");
+        mav.setViewName("redirect:/productDisplay");
         return mav;
     }
     private void saveFile(MultipartFile file, String fileName) throws IOException {
@@ -262,6 +262,19 @@ public class ProductController {
             return filename.substring(dot).toLowerCase();
         }
         return "";
+    }
+
+    /*
+     * 9-2．出品商品状態変更処理
+     */
+    @PutMapping("/changeProductIsStopped-{id}")
+    public ModelAndView changeIsStopped(@PathVariable Integer id) {
+
+        ProductForm saveProduct = productService.findProduct(id);
+        // isStoppedを反転
+        saveProduct.setStopped(!saveProduct.isStopped());
+        productService.updateProduct(saveProduct);
+        return new ModelAndView("redirect:/productDisplay");
     }
 
 }
