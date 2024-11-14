@@ -8,18 +8,19 @@
     <title>商品出品</title>
 </head>
 <body>
+<div th:include="header"></div>
 <div>
     <table>
         <thead>
-        <tr>
-            <th>外観</th>
-            <th>カテゴリー</th>
-            <th>商品名</th>
-            <th>価格</th>
-            <th>在庫数</th>
-            <th>出品状態</th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>外観</th>
+                <th>カテゴリー</th>
+                <th>商品名</th>
+                <th>価格</th>
+                <th>在庫数</th>
+                <th>出品状態</th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
         <tr th:each="product: ${products}">
