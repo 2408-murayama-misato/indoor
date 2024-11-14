@@ -16,4 +16,6 @@ public class Purchase {
     private String category;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+
+    private Product product;
 }

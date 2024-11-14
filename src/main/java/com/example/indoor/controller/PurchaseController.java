@@ -1,10 +1,8 @@
 package com.example.indoor.controller;
 
-import com.example.indoor.controller.form.AccountForm;
-import com.example.indoor.controller.form.CartForm;
-import com.example.indoor.controller.form.ProductForm;
-import com.example.indoor.controller.form.PurchaseForm;
+import com.example.indoor.controller.form.*;
 import com.example.indoor.entity.Account;
+import com.example.indoor.entity.Purchase;
 import com.example.indoor.service.AccountService;
 import com.example.indoor.service.CartService;
 import com.example.indoor.service.PurchaseService;
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -89,12 +88,7 @@ public class PurchaseController {
             return new ModelAndView("redirect:/purchase");
         }
 
-
-        for (PurchaseForm.Purchase purchase : purchaseForm.getPurchases()) {
-            purchaseService.savePurchase(purchase);
-        }
-
-//        purchaseService.savePurchase(purchaseForm);
+        purchaseService.savePurchase(purchaseForm);
         //決済完了画面に遷移
         mav.setViewName("redirect:/payment");
         return mav;
@@ -106,5 +100,20 @@ public class PurchaseController {
     @GetMapping("/payment")
     public void payment(){}
 
+    /*
+     * 売上集計画面表示(絞り込み含む)
+     */
+    @GetMapping("/sale")
+    public ModelAndView sale(@AuthenticationPrincipal Account loginAccount,
+                             @RequestParam(value = "start", required = false) String start,
+                             @RequestParam(value = "end", required = false) String end) {
+        ModelAndView mav = new ModelAndView();
+        List<PurchaseForm> purchaseForms = purchaseService.findPurchases(loginAccount.getId(), start, end);
+        mav.addObject("start", start);
+        mav.addObject("end", end);
+        mav.addObject("purchaseForms", purchaseForms);
+        mav.setViewName("/sale");
+        return mav;
+    }
 
 }
