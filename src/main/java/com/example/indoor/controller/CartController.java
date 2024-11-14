@@ -103,11 +103,21 @@ public class CartController {
    }
 
 //   カートの注文数プラス
-   @PutMapping("/countUpCart/{id}/{number}")
-   public ModelAndView countUpCart (@ModelAttribute CartForm cartForm) {
+   @PutMapping("/countUpCart/{id}/{number}/{productId}")
+   public ModelAndView countUpCart (@ModelAttribute CartForm cartForm,
+                                    RedirectAttributes redirectAttributes) {
       ModelAndView mav = new ModelAndView();
-      cartService.countUpCart(cartForm);
-      mav.setViewName("redirect:/cart");
+      String errorMessage;
+      Product product = productMapper.findById(cartForm.getProductId());
+      if (product.getStock() < cartForm.getNumber() +1) {
+         errorMessage = "注文数が在庫数を上回るため、これ以上追加できません";
+         mav.setViewName("redirect:/cart");
+         redirectAttributes.addFlashAttribute("errorMessage", errorMessage);
+         redirectAttributes.addFlashAttribute("errorMessageId", cartForm.getId());
+      } else {
+         cartService.countUpCart(cartForm);
+         mav.setViewName("redirect:/cart");
+      }
       return mav;
    }
 

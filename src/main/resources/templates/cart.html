@@ -37,6 +37,10 @@
                             <p class="text-danger" th:text="￥ + ${cart.product.price}"/>
                         </td>
                         <td>
+                            <div class="errorMessage" th:if="${errorMessage != null && cart.id == errorMessageId }">
+                                <li th:text="${errorMessage}" class="text-danger"/>
+                                <br/>
+                            </div>
                             <div class=" d-flex  align-items-center gap-3">
                             <div th:if="${cart.number == 1}">
                                 <form th:action="@{/deleteCart/{id}(id = ${cart.id})}" th:method="delete"　onSubmit="return CheckCart()">
@@ -53,7 +57,7 @@
                                 </form>
                             </div>
                             <p th:text="${cart.number}"/>
-                            <form th:action="@{/countUpCart/{id}/{number}(id = ${cart.id}, number = ${cart.number})}"  th:method="put">
+                            <form th:action="@{/countUpCart/{id}/{number}/{productId}(id = ${cart.id}, number = ${cart.number}, productId = ${cart.productId})}"  th:method="put">
                                 <button type="submit" class="btn">
                                     <span class="bi bi-plus-circle"/>
                                 </button>
