@@ -15,4 +15,6 @@ public class StockNotice {
     private boolean isRead;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+
+    private String productName;
 }

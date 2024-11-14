@@ -74,4 +74,16 @@
         ON accounts.id = products.account_id
         WHERE products.id = #{id}
     </select>
+    <!--購入後に在庫数を変更-->
+    <update id="updateProductStock">
+        UPDATE products
+        SET stock = stock - #{number}
+        WHERE id = #{productId}
+    </update>
+    <!--在庫が0かどうかチェック-->
+    <select id="checkStockIsZero" resultType="boolean">
+        SELECT CASE WHEN stock = 0 THEN TRUE ELSE FALSE END
+        FROM products
+        WHERE id = #{productId}
+    </select>
 </mapper>

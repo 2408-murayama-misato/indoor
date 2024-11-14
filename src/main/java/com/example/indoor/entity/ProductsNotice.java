@@ -14,11 +14,12 @@ public class ProductsNotice {
     private int fromId;
     private int productId;
     private int toId;
-    private boolean isRead;
+    private int isRead;
     private boolean isShippedInfo;
     private Timestamp createdDate;
     private Timestamp updatedDate;
 
     //inner join用
     private String fromName;
+    private String productName;
 }
