@@ -9,7 +9,8 @@
     <title>カート</title>
 </head>
 <body>
-
+<div th:include="header"></div>
+<p><image style="width: 100px"  th:src="@{/img/shopping-cart_icon_1477.png}"/></p>
         <div class="resultMessage" th:if="${resultMessages != null}">
                 <li th:text="${resultMessage}"/>
             <br/>
@@ -17,7 +18,7 @@
         <table class="table carts">
             <thead class="table-light">
                 <tr class="cartsTableTitle">
-                    <th>写真</th>
+                    <th style="width: 10%">写真</th>
                     <th>商品名</th>
                     <th>価格</th>
                     <th>個数</th>
@@ -27,7 +28,7 @@
                 <div th:each="cart : ${cartForms}">
                     <tr>
                         <td>
-                            <p><image src="${cart.productsImage.pass}"/></p>
+                            <p><image class="rounded mx-auto d-block img-fluid" th:src="@{product.imagePass}"/></p>
                         </td>
                         <td>
                             <p th:text="${cart.product.name}"/>
@@ -38,8 +39,8 @@
                         <td>
                             <div class=" d-flex  align-items-center gap-3">
                             <div th:if="${cart.number == 1}">
-                                <form th:action="@{/deleteCart/{id}(id = ${cart.id})}" th:method="delete">
-                                    <button type="submit" class="btn">
+                                <form th:action="@{/deleteCart/{id}(id = ${cart.id})}" th:method="delete"　onSubmit="return CheckCart()">
+                                    <button  type="submit" class="btn"　>
                                         <span class="bi bi-trash"/>
                                     </button>
                                 </form>

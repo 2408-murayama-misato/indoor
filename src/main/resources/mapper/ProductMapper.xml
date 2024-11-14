@@ -2,6 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.ProductMapper">
+    <select id="find" resultType="com.example.indoor.entity.Product">
+        SELECT * FROM products WHERE id = #{id}
+    </select>
     <select id="findById" resultMap="Product">
         SELECT *
         FROM products
@@ -11,7 +14,7 @@
         <result column="id" property="id"/>
         <result column="account_id" property="accountId"/>
         <result column="name" property="name"/>
-        <result column="value" property="value"/>
+        <result column="price" property="price"/>
         <result column="category" property="category"/>
         <result column="stock" property="stock"/>
         <result column="isStopped" property="isStopped"/>
@@ -19,6 +22,7 @@
         <result column="image_pass" property="imagePass"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
+        <result column="avg" property="avg"/>
     </resultMap>
     <insert id="insertProduct" parameterType="com.example.indoor.entity.Product">
         INSERT INTO products (
@@ -116,5 +120,50 @@
         SELECT CASE WHEN stock = 0 THEN TRUE ELSE FALSE END
         FROM products
         WHERE id = #{productId}
+    </select>
+
+<!--    商品検索-->
+    <select id="findAll" resultMap="Product">
+        SELECT *  FROM products
+        INNER JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
+        ON products.id = avg_product_id
+        <where>
+             <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != ''">
+                products.category LIKE '%${searchForm.keyWord}%'OR products.name LIKE '%${searchForm.keyWord}%'
+             </if>
+            <if test="searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
+                and products.category = '${searchForm.getCategory()}'
+            </if>
+            <if test="searchForm.getMinPrice() != null and searchForm.getMinPrice().trim() != '' and
+                      searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
+                and products.price BETWEEN ${searchForm.getMinPrice()} AND ${searchForm.getMaxPrice()}
+            </if>
+            <if test="searchForm.getMinPrice() != null and searchForm.getMinPrice().trim() != '' and
+                      (searchForm.getMaxPrice() == null or searchForm.getMaxPrice().trim() == '')">
+                and products.price BETWEEN ${searchForm.getMinPrice()} AND 1000000
+            </if>
+            <if test="(searchForm.getMinPrice() == null or searchForm.getMinPrice().trim() == '') and
+                      searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
+                and products.price BETWEEN 1 AND ${searchForm.getMaxPrice()}
+            </if>
+            <if test="searchForm.getStockCheck() == 2">
+                and products.stock > 0
+            </if>
+            <if test="searchForm.getStockCheck() == 3">
+                and products.stock = 0
+            </if>
+        </where>
+            <if test="searchForm.getSort() == 1 or searchForm.getSort() == null">
+                ORDER BY products.created_date DESC
+            </if>
+            <if test="searchForm.getSort() == 2 ">
+                ORDER BY products.price ASC
+            </if>
+            <if test="searchForm.getSort() == 3 ">
+                ORDER BY products.price DESC
+            </if>
+            <if test="searchForm.getSort() == 4 ">
+                ORDER BY avg DESC
+            </if>
     </select>
 </mapper>

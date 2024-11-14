@@ -27,6 +27,7 @@
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="category" property="category"/>
+        <result column="image_pass" property="imagePass"/>
         <result column="stock" property="stock"/>
         <result column="is_stopped" property="isStopped"/>
         <result column="description" property="description"/>

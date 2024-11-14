@@ -1,6 +1,8 @@
 package com.example.indoor.service;
 
 import com.example.indoor.controller.form.ProductForm;
+import com.example.indoor.controller.form.SearchForm;
+import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.ProductMapper;
 import com.example.indoor.mapper.StockNoticeMapper;
@@ -94,5 +96,11 @@ public class ProductService {
     public void updateProduct(ProductForm productForm) {
         Product saveProduct = setProductEntity(productForm);
         productMapper.updateProduct(saveProduct);
+    }
+
+    public List<ProductForm> findAllProduct(SearchForm searchForm) {
+        List<Product> results = productMapper.findAll(searchForm);
+        List<ProductForm> productForms = setForm(results);
+        return productForms;
     }
 }

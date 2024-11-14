@@ -1,7 +1,6 @@
 package com.example.indoor.controller.form;
 
-import com.example.indoor.validation.CheckBlank;
-import jakarta.validation.constraints.NotNull;
+import com.example.indoor.Validation.CheckBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;

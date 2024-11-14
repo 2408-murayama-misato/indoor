@@ -1,5 +1,6 @@
 package com.example.indoor.controller.form;
 
+import com.example.indoor.entity.ProductImage;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,4 +61,5 @@ public class ProductForm {
         }
         return 0;
     }
+    private long avg;
 }

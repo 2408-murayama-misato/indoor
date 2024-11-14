@@ -21,4 +21,5 @@ public class Product {
     private Timestamp updatedDate;
     // 内部結合用に追加
     private String accountName;
+    private long avg;
 }
