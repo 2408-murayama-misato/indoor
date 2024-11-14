@@ -1,14 +1,17 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.ProductForm;
+import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
 import com.example.indoor.service.ReviewService;
-
 import com.example.indoor.controller.form.ProductsNoticeForm;
 import com.example.indoor.service.ProductsNoticeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,8 +19,19 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +46,8 @@ public class ProductController {
 
     @Autowired
     ReviewService reviewService;
+
+    final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
 
     /*
      * 5-1.商品詳細画面表示
@@ -111,11 +127,7 @@ public class ProductController {
 
         ModelAndView mav = new ModelAndView();
 
-        List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             ProductForm product = productService.findProduct(reviewForm.getProductId());
             mav.addObject("product", product);
             mav.addObject("reviewForm", reviewForm);
@@ -165,11 +177,7 @@ public class ProductController {
                                      BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView();
 
-        List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             mav.addObject("reviewForm", reviewForm);
             mav.setViewName("/reviewEdit");
             return mav;
@@ -181,6 +189,75 @@ public class ProductController {
         mav.addObject("id", reviewForm.getProductId());
         mav.setViewName("redirect:/productDetail");
         return mav;
+    }
+
+    /*
+     * 10-1.商品登録画面表示
+     */
+    @GetMapping("/productNew")
+    public ModelAndView productNew() {
+        ModelAndView mav = new ModelAndView();
+        ProductForm productForm = new ProductForm();
+        mav.addObject("productForm", productForm);
+        mav.setViewName("/productNew");
+        return mav;
+    }
+    /*
+     * 10-2.商品登録処理
+     */
+    @PutMapping("/addProduct")
+    public ModelAndView addProduct(@AuthenticationPrincipal Account account,
+                                   @Validated @ModelAttribute("productForm") ProductForm productForm,
+                                   BindingResult bindingResult) {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (bindingResult.hasErrors()) {
+            mav.addObject("productForm", productForm);
+            mav.setViewName("/productNew");
+            return mav;
+        }
+
+        // 商品イメージがセットされていた場合、サーバーに商品イメージ画像を保存
+        for (MultipartFile file : productForm.getImageFile()) {
+            try {
+                String fileName = getUploadFileName(file.getOriginalFilename());
+                saveFile(file, fileName);
+                // ファイルパスを保存
+                productForm.setImagePass(fileName);
+            } catch (IOException e) {
+                // エラー処理は省略
+            }
+        }
+
+        productForm.setAccountId(account.getId());
+        productService.insertProduct(productForm);
+
+        mav.setViewName("redirect:/productNew");
+        return mav;
+    }
+    private void saveFile(MultipartFile file, String fileName) throws IOException {
+        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + fileName);
+        try (OutputStream os = Files.newOutputStream(uploadFile, StandardOpenOption.CREATE)) {
+            byte[] bytes = file.getBytes();
+            os.write(bytes);
+        } catch (IOException e) {
+            //エラー処理は省略
+        }
+    }
+    private String getUploadFileName(String fileName) {
+
+        return fileName + "_" +
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                        .format(LocalDateTime.now())
+                + getExtension(fileName);
+    }
+    private String getExtension(String filename) {
+        int dot = filename.lastIndexOf(".");
+        if (dot > 0) {
+            return filename.substring(dot).toLowerCase();
+        }
+        return "";
     }
 
 }

@@ -1,7 +1,9 @@
 package com.example.indoor.service;
 
 import com.example.indoor.controller.form.ProductForm;
+import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.entity.Product;
+import com.example.indoor.entity.ProductImage;
 import com.example.indoor.mapper.ProductMapper;
 import com.example.indoor.mapper.StockNoticeMapper;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +22,9 @@ public class ProductService {
     @Autowired
     StockNoticeMapper stockNoticeMapper;
 
+    final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
+
+
     /*
      * 主キー指定で商品レコードを取得
      */
@@ -31,7 +36,7 @@ public class ProductService {
         return products.get(0);
     }
     /*
-     * EntityをFormにコピー
+     * Product entityをProduct formにコピー
      */
     private List<ProductForm> setForm(List<Product> entities) {
         List<ProductForm> forms = new ArrayList<>();
@@ -39,6 +44,12 @@ public class ProductService {
         for (Product entity : entities) {
             ProductForm form = new ProductForm();
             BeanUtils.copyProperties(entity, form);
+            // ファイルパスを修正
+            if (form.getImagePass().isBlank()) {
+                form.setImagePass(NO_IMAGE_FILE_PATH);
+            } else {
+                form.setImagePass("/img/product/" + form.getImagePass());
+            }
             forms.add(form);
         }
         return forms;
@@ -55,5 +66,19 @@ public class ProductService {
         if (isStockZero) { //在庫が0の場合はstock_noticesにINSERT文を作る
             stockNoticeMapper.insertStockNotice(productId);
         }
+    /*
+     * 商品レコード追加
+     */
+    public void insertProduct(ProductForm productForm) {
+        Product saveProduct = setProductEntity(productForm);
+        productMapper.insertProduct(saveProduct);
+    }
+    /*
+     * Product formをEntityにコピー
+     */
+    private Product setProductEntity(ProductForm form){
+        Product entity = new Product();
+        BeanUtils.copyProperties(form, entity);
+        return entity;
     }
 }
