@@ -76,19 +76,7 @@ public class WebSecurityConfig {
                 //エラーハンドリングなど
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                 .authenticationEntryPoint(customAuthenticationEntryPoint) // 認証が必要なページにログアウト状態でアクセスした際のエラー処理
-                                .accessDeniedHandler(customAccessDeniedHandler) //権限による閲覧制御とCSRF対策の403エラー処理
-                );
+                        .accessDeniedHandler(customAccessDeniedHandler)); //権限による閲覧制御とCSRF対策の403エラー処理
         return http.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        IsStoppedFilterAuthenticationProvider isStoppedFilter = new IsStoppedFilterAuthenticationProvider();
-        isStoppedFilter.setUserDetailsService(accountService); //accountServiceをUserDetailServiceとして設定
-        isStoppedFilter.setPasswordEncoder(passwordEncoder()); //パスワードエンコーダも設定
-
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .authenticationProvider(isStoppedFilter)
-                .build();
     }
 }
