@@ -3,9 +3,7 @@ package com.example.indoor.controller;
 import com.example.indoor.controller.form.*;
 import com.example.indoor.entity.Account;
 import com.example.indoor.entity.Purchase;
-import com.example.indoor.service.AccountService;
-import com.example.indoor.service.CartService;
-import com.example.indoor.service.PurchaseService;
+import com.example.indoor.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -31,6 +29,12 @@ public class PurchaseController {
 
     @Autowired
     PurchaseService purchaseService;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    ProductsNoticeService productsNoticeService;
 
     /*
      * 購入画面表示
@@ -99,6 +103,13 @@ public class PurchaseController {
         purchaseService.savePurchases(cartForms);
         //購入した商品をカート内から削除
         cartService.deleteCart(loginAccount.getId());
+
+        for (CartForm cartForm : cartForms) {
+            //在庫の計算と在庫がなくなったら販売者に自動通知する処理(引数は商品の個数, 商品のID)　※暫定単体の商品のみに適応
+            productService.updateProductStock(cartForm.getNumber(), cartForm.getProductId());
+            //発送準備をするように販売者に通知する処理(引数は購入者のID, 購入された商品のID)
+            productsNoticeService.createProductNotice(cartForm.getAccountId(), cartForm.getProductId());
+        }
         //決済完了画面に遷移
         mav.setViewName("redirect:/payment");
         return mav;
