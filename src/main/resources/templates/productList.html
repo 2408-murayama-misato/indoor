@@ -1,13 +1,80 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
-    <title>商品一覧</title>
-</head>
-<body>
-
-</body>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css"/>
+        <title>商品一覧</title>
+    </head>
+    <body>
+    <div th:include="header"></div>
+    <div class="errorMessages" th:if="${errorMessages != null}">
+        <div class="errorMessages" th:each="errorMessage : ${errorMessages} ">
+            <li th:text="${errorMessage}" class="text-danger"/>
+        </div>
+        <br/>
+    </div>
+    <div class="narrow down">
+        <form th:action="@{/search}" th:object="${searchForm}">
+          <input type="text" th:field="*{minPrice}" placeholder="最低金額 1~">
+            <input type="text" th:field="*{maxPrice}" placeholder="最高金額 ~1000000">
+            <input type="hidden" name="keyWord" th:value="${searchForm.keyWord}">
+            <input type="hidden" name="category" th:value="${searchForm.category}">
+            <select th:field="*{stockCheck}" class="form-select　me-2" aria-label="stockCheck">
+                <option value="1" >すべて</option>
+                <option value="2" >販売中</option>
+                <option value="3" >売り切れ</option>
+            </select>
+            <select th:field="*{sort}" class="form-select　me-2" aria-label="stockCheck">
+                <option value="1" >新着順</option>
+                <option value="2" >価格が安い順</option>
+                <option value="3" >価格が高い順</option>
+                <option value="4" >レビュー順</option>
+            </select>
+            <input class="btn btn-outline-success" type="submit" value="絞込">
+        </form>
+    </div>
+    <table class="table carts">
+        <thead class="table-light">
+        <tr class="cartsTableTitle">
+            <th style="width: 10%">写真</th>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>レビュー</th>
+        </tr>
+        </thead>
+        <tbody>
+        <div th:each="product : ${productForm}">
+                <tr class="linkbox">
+                    <td>
+                        <p><image class="rounded mx-auto d-block img-fluid" th:src="@{product.imagePass}"/></p>
+                        <form th:action="@{/productDetail}">
+                            <input type="hidden" name="id" th:value="${product.id}">
+                            <button  type="submit"></button>
+                        </form>
+                    </td>
+                    <td>
+                        <p th:text="${product.name}"/>
+                    </td>
+                    <td>
+                        <div th:if="${product.stock == 0}">
+                            <p class="text-danger" th:text="SOLDOUT"/>
+                        </div>
+                        <div th:unless="${product.stock == 0}">
+                        <p class="text-danger" th:text="￥ + ${product.price}"/>
+                        </div>
+                    </td>
+                    <td>
+                        <p th:text="${product.avg}"/>
+                    </td>
+                </tr>
+            </form>
+        </div>
+        </tbody>
+    </table>
+    <a th:href="@{/top}">
+        <input type="button" value="戻る" class="btn btn-outline-secondary">
+    </a>
+    </body>
 </html>

@@ -39,8 +39,16 @@
                             </form>
                         </li>
                         <li>
-                            <form class="d-flex" role="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <form th:action="@{/search}" th:object="${searchForm}"  class="d-flex" role="search">
+                                <input class="form-control me-2" th:field="*{keyWord}" type="search" placeholder="Search" aria-label="Search">
+                                <select th:field="*{category}" class="form-select　me-2" aria-label="category">
+                                    <option value="">すべて</option>
+                                    <option value="トップス" >トップス</option>
+                                    <option value="ボトムス" >ボトムス</option>
+                                    <option value="アウター" >アウター</option>
+                                    <option value="シューズ" >シューズ</option>
+                                    <option value="アクセサリー" >アクセサリー</option>
+                                </select>
                                 <button class="btn btn-outline-success" type="submit">Search</button>
                             </form>
                         </li>
@@ -54,8 +62,16 @@
                             </a>
                         </li>
                         <li>
-                            <form class="d-flex" role="search">
-                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                            <form th:action="@{/search}" th:object="${searchForm}"  class="d-flex" role="search">
+                                <input class="form-control me-2" th:field="*{keyWord}" type="search" placeholder="Search" aria-label="Search">
+                                <select th:field="*{category}" class="form-select　me-2" aria-label="category">
+                                    <option value="">すべて</option>
+                                    <option value="トップス" >トップス</option>
+                                    <option value="ボトムス" >ボトムス</option>
+                                    <option value="アウター" >アウター</option>
+                                    <option value="シューズ" >シューズ</option>
+                                    <option value="アクセサリー" >アクセサリー</option>
+                                </select>
                                 <button class="btn btn-outline-success" type="submit">Search</button>
                             </form>
                         </li>

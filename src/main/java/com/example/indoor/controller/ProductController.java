@@ -1,5 +1,15 @@
 package com.example.indoor.controller;
 
+import com.example.indoor.controller.form.*;
+import com.example.indoor.entity.Cart;
+import com.example.indoor.service.CartService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.example.indoor.entity.Account;
+import com.example.indoor.service.ProductService;
+import com.example.indoor.service.ReviewService;
 import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
@@ -11,11 +21,17 @@ import com.example.indoor.service.ProductsNoticeService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +46,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static org.apache.logging.log4j.util.Strings.isBlank;
 
 @Controller
 public class ProductController {
@@ -47,7 +71,8 @@ public class ProductController {
      * 5-1.商品詳細画面表示
      */
     @GetMapping("/productDetail")
-    public ModelAndView productDetail(@ModelAttribute("id") String id, @AuthenticationPrincipal Account account) {
+    public ModelAndView productDetail(@ModelAttribute("id") String id, @AuthenticationPrincipal Account account,
+                                      @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
@@ -58,6 +83,7 @@ public class ProductController {
         mav.addObject("reviews", reviews);
         mav.addObject("productsNoticeForm", productsNoticeForm);
         mav.addObject("productContacts", productContacts);
+        mav.addObject("searchForm", searchForm);
         mav.addObject("account", account);
 
         mav.setViewName("/productDetail");
@@ -97,11 +123,14 @@ public class ProductController {
      * 6-1.レビュー投稿画面表示
      */
     @GetMapping("/reviewNew-{id}")
-    public ModelAndView reviewNew(@PathVariable String id) {
+    public ModelAndView reviewNew(@PathVariable String id,
+                                  @ModelAttribute("searchForm") SearchForm searchForm
+                                  ) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
         mav.addObject("product", product);
+        mav.addObject("searchForm", searchForm);
 
         ReviewForm reviewForm = new ReviewForm();
         reviewForm.setProductId(Integer.parseInt(id));
@@ -308,5 +337,35 @@ public class ProductController {
 
         mav.setViewName("redirect:/productDisplay");
         return mav;
+    }
+
+//    商品検索
+    @GetMapping("/search")
+    public ModelAndView searchProduct(@Validated @ModelAttribute("searchForm") SearchForm searchForm,
+                                      BindingResult bindingResult,
+                                      RedirectAttributes redirectAttributes) {
+        ModelAndView mav = new ModelAndView();
+        List<String> errorMessages = new ArrayList<>();
+        if (isBlank(searchForm.getKeyWord()) && isBlank(searchForm.getCategory())) {
+            mav.setViewName("redirect:/top");
+            return mav;
+        }
+        if (bindingResult.hasErrors()) {
+            for (ObjectError error : bindingResult.getAllErrors()) {
+                errorMessages.add(error.getDefaultMessage());
+            }
+        }
+        if (errorMessages.size() > 0) {
+            mav.addObject("errorMessages",errorMessages);
+            mav.addObject("searchForm", searchForm);
+            mav.setViewName("/productList");
+        } else {
+        List<ProductForm> products = productService.findAllProduct(searchForm);
+        mav.addObject("productForm", products);
+        mav.addObject("searchForm", searchForm);
+        mav.setViewName("/productList");
+        }
+        return mav;
+
     }
 }

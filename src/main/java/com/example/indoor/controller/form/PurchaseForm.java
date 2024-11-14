@@ -11,15 +11,14 @@ import java.util.List;
 @Getter
 @Setter
 public class PurchaseForm {
-    private int id;
-    private int productId;
-    private int accountId;
-    private int price;
-    private int number;
-    private String category;
-    private Timestamp createdDate;
-    private Timestamp updatedDate;
+        private int id;
+        private int productId;
+        private int accountId;
+        private int price;
+        private int number;
+        private String category;
+        private Timestamp createdDate;
+        private Timestamp updatedDate;
 
-    private Product product;
-
+        private Product product;
 }

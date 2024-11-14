@@ -9,6 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface PurchasesMapper {
-    void save(Purchase purchase);
+    void save(@Param("savePurchases") List<Purchase> savePurchases);
     List<Purchase> findById(Integer id, @Param("start") String start, @Param("end") String end);
 }

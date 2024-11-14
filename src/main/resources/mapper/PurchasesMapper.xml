@@ -32,7 +32,10 @@
     <!-- 購入情報追加 -->
     <insert id="save">
         insert into purchases(product_id, account_id, price, number)
-        values (#{productId}, #{accountId}, #{price}, #{number})
+        values
+        <foreach collection="savePurchases" item="item" separator=",">
+            (#{item.productId}, #{item.accountId}, #{item.product.price}, #{item.number})
+        </foreach>
     </insert>
 
     <!-- 購入情報取得(日付で絞り込み) -->
