@@ -21,10 +21,6 @@
             <div th:if="${errorMessage}">
                 <p th:text="${errorMessage}" />
             </div>
-            <!-- ログインフィルターのエラーメッセージ表示 -->
-            <div th:if="${param.loginFilter}">
-                <p>ログインしてください</p>
-            </div>
             <div class="form-floating">
                 <input th:field="*{account}" class="form-control" id="floatingInput">
                 <label for="floatingInput">アカウント</label>

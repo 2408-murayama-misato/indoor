@@ -66,6 +66,7 @@ public class ProductService {
         if (isStockZero) { //在庫が0の場合はstock_noticesにINSERT文を作る
             stockNoticeMapper.insertStockNotice(productId);
         }
+    }
     /*
      * 商品レコード追加
      */

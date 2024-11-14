@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -77,5 +79,16 @@ public class WebSecurityConfig {
                                 .accessDeniedHandler(customAccessDeniedHandler) //権限による閲覧制御とCSRF対策の403エラー処理
                 );
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
+        IsStoppedFilterAuthenticationProvider isStoppedFilter = new IsStoppedFilterAuthenticationProvider();
+        isStoppedFilter.setUserDetailsService(accountService); //accountServiceをUserDetailServiceとして設定
+        isStoppedFilter.setPasswordEncoder(passwordEncoder()); //パスワードエンコーダも設定
+
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .authenticationProvider(isStoppedFilter)
+                .build();
     }
 }
