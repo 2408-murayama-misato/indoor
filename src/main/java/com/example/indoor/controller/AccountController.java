@@ -1,6 +1,7 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.AccountForm;
+import com.example.indoor.controller.form.SearchForm;
 import com.example.indoor.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import com.example.indoor.entity.Account;
@@ -25,13 +26,15 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping("/login")
-    public ModelAndView login(HttpSession session){
+    public ModelAndView login(HttpSession session,@ModelAttribute("searchForm") SearchForm searchForm
+        ){
         ModelAndView mav = new ModelAndView();
         AccountForm accountForm = new AccountForm();
         //セッションからメッセージを取得
-        String errorMessage = (String)session.getAttribute("ErrorMessage");
+        String errorMessage = (String)session.getAttribute("errorMessage");
         mav.setViewName("login");
         mav.addObject("accountForm", accountForm);
+        mav.addObject("searchForm", searchForm);
         if (errorMessage != null) {
             mav.addObject("errorMessage", errorMessage);
             session.removeAttribute("errorMessage");
@@ -43,11 +46,12 @@ public class AccountController {
      * 会員登録画面表示
      */
     @GetMapping("/accountNew")
-    public ModelAndView addAccount() {
+    public ModelAndView addAccount(@ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         AccountForm accountForm = new AccountForm();
         mav.setViewName("/accountNew");
         mav.addObject("accountForm", accountForm);
+        mav.addObject("searchForm", searchForm);
         return mav;
     }
 
@@ -88,13 +92,15 @@ public class AccountController {
      * アカウント編集画面表示
      */
     @GetMapping("/accountEdit")
-    public ModelAndView accountEdit(@AuthenticationPrincipal Account loginAccount) {
+    public ModelAndView accountEdit(@AuthenticationPrincipal Account loginAccount,
+                                    @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         AccountForm accountForm = new AccountForm();
         accountForm = accountService.findById(loginAccount.getId());
         //編集画面でパスワードは表示させない
         accountForm.setPassword("");
         mav.addObject("accountForm", accountForm);
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/accountEdit");
         return mav;
     }
@@ -144,16 +150,21 @@ public class AccountController {
      * マイページ表示処理
      */
     @GetMapping("/mypage")
-    public ModelAndView mypage(@AuthenticationPrincipal Account account) {
+    public ModelAndView mypage(@AuthenticationPrincipal Account account,
+                               @ModelAttribute("searchForm") SearchForm searchForm
+    ) {
         ModelAndView mav = new ModelAndView();
         mav.addObject("account", account);
         mav.setViewName("/mypage");
+        mav.addObject("searchForm", searchForm);
         return mav;
     }
 
 //    利用者一覧取得
     @GetMapping("/userList")
-    public ModelAndView getUserList (@ModelAttribute("account") String account) {
+    public ModelAndView getUserList (@ModelAttribute("account") String account,
+                                     @ModelAttribute("searchForm") SearchForm searchForm
+    ) {
         ModelAndView mav = new ModelAndView();
         if (account.length() >20 ) {
             mav.addObject( "errorMessage","アカウント名は２０文字以下で入力してください");
@@ -163,12 +174,14 @@ public class AccountController {
             mav.setViewName("/userList");
             mav.addObject("accounts", accounts);
             mav.addObject("account", account);
+            mav.addObject("searchForm", searchForm);
         }
         return mav;
     }
 //    販売者一覧取得
     @GetMapping("/sellerList")
     public ModelAndView getSellerList (@ModelAttribute("account") String account,
+                                       @ModelAttribute("searchForm") SearchForm searchForm,
                                        RedirectAttributes redirectAttributes) {
         ModelAndView mav = new ModelAndView();
         if (account.length() >20 ) {
@@ -178,6 +191,7 @@ public class AccountController {
             List<AccountForm> accounts = accountService.findAllAccount("seller", account);
             mav.setViewName("/sellerList");
             mav.addObject("accounts", accounts);
+            mav.addObject("searchForm", searchForm);
         }
         return mav;
     }
@@ -196,6 +210,24 @@ public class AccountController {
         ModelAndView mav = new ModelAndView();
         accountService.activeAccount(id);
         mav.setViewName("redirect:/userList");
+        return mav;
+    }
+
+    //    sellerステータス停止処理
+    @PutMapping("/sellerStop/{id}")
+    public ModelAndView stoppedSeller(@PathVariable("id") int id) {
+        ModelAndView mav = new ModelAndView();
+        accountService.stopAccount(id);
+        mav.setViewName("redirect:/sellerList");
+        return mav;
+    }
+
+    //    sellerステータス復活
+    @PutMapping("/sellerActive/{id}")
+    public ModelAndView activeIsSeller(@PathVariable("id") int id) {
+        ModelAndView mav = new ModelAndView();
+        accountService.activeAccount(id);
+        mav.setViewName("redirect:/sellerList");
         return mav;
     }
 }

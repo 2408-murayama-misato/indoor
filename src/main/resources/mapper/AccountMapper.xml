@@ -2,7 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.indoor.mapper.AccountMapper">
-    <select id="findByAccount" resultType="com.example.indoor.entity.Account">
+
+
+    <resultMap id="Account" type="com.example.indoor.entity.Account">
+        <result column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="credit" property="credit"/>
+        <result column="role" property="role"/>
+        <result column="is_stopped" property="isStopped"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
+
+
+    <select id="findByAccount" resultMap="Account">
         select *
         from accounts
         where account = #{account}
@@ -13,7 +29,7 @@
         values (#{account}, #{password}, #{name}, #{address}, #{credit}, #{role}, #{isStopped})
     </insert>
     <!-- アカウント情報取得 -->
-    <select id="findById" resultType="com.example.indoor.entity.Account">
+    <select id="findById" resultMap="Account">
         select *
         from accounts
         where id = #{id}

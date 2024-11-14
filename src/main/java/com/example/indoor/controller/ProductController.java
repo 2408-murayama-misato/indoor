@@ -15,9 +15,9 @@ import com.example.indoor.controller.form.ReviewForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductService;
 import com.example.indoor.service.ReviewService;
-
 import com.example.indoor.controller.form.ProductsNoticeForm;
 import com.example.indoor.service.ProductsNoticeService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker;
@@ -32,8 +32,17 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,23 +66,27 @@ public class ProductController {
     @Autowired
     ReviewService reviewService;
 
+    final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
+
     /*
      * 5-1.商品詳細画面表示
      */
     @GetMapping("/productDetail")
-    public ModelAndView productDetail(@ModelAttribute("id") String id,
+    public ModelAndView productDetail(@ModelAttribute("id") String id, @AuthenticationPrincipal Account account,
                                       @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
         List<ReviewForm> reviews = reviewService.findUserReviews();
-        List<ProductsNoticeForm> productContacts = productsNoticeService.findProductContacts(Integer.parseInt(id));
+        List<ProductsNoticeForm> productContacts = productsNoticeService.findAllProductContacts(Integer.parseInt(id));
         ProductsNoticeForm productsNoticeForm = new ProductsNoticeForm();
         mav.addObject("product", product);
         mav.addObject("reviews", reviews);
         mav.addObject("productsNoticeForm", productsNoticeForm);
         mav.addObject("productContacts", productContacts);
         mav.addObject("searchForm", searchForm);
+        mav.addObject("account", account);
+
         mav.setViewName("/productDetail");
         return mav;
     }
@@ -96,7 +109,7 @@ public class ProductController {
             mav.addObject("errorMessages", errorMessages);
             mav.addObject("productsNoticeForm", productsNoticeForm);
             mav.addObject("id", id);
-            List<ProductsNoticeForm> productContacts = productsNoticeService.findProductContacts(id);
+            List<ProductsNoticeForm> productContacts = productsNoticeService.findAllProductContacts(id);
             mav.addObject("productContacts", productContacts); //既にある商品問い合わせのやり取り
             mav.setViewName("/productDetail");
             return mav;
@@ -111,11 +124,14 @@ public class ProductController {
      * 6-1.レビュー投稿画面表示
      */
     @GetMapping("/reviewNew-{id}")
-    public ModelAndView reviewNew(@PathVariable String id) {
+    public ModelAndView reviewNew(@PathVariable String id,
+                                  @ModelAttribute("searchForm") SearchForm searchForm
+                                  ) {
         ModelAndView mav = new ModelAndView();
 
         ProductForm product = productService.findProduct(Integer.parseInt(id));
         mav.addObject("product", product);
+        mav.addObject("searchForm", searchForm);
 
         ReviewForm reviewForm = new ReviewForm();
         reviewForm.setProductId(Integer.parseInt(id));
@@ -135,11 +151,7 @@ public class ProductController {
 
         ModelAndView mav = new ModelAndView();
 
-        List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             ProductForm product = productService.findProduct(reviewForm.getProductId());
             mav.addObject("product", product);
             mav.addObject("reviewForm", reviewForm);
@@ -189,11 +201,7 @@ public class ProductController {
                                      BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView();
 
-        List<String> errorList = new ArrayList<String>();
         if (bindingResult.hasErrors()) {
-            /*for (ObjectError error : bindingResult.getAllErrors()) {
-                errorList.add(error.getDefaultMessage());
-            }*/
             mav.addObject("reviewForm", reviewForm);
             mav.setViewName("/reviewEdit");
             return mav;
@@ -205,6 +213,98 @@ public class ProductController {
         mav.addObject("id", reviewForm.getProductId());
         mav.setViewName("redirect:/productDetail");
         return mav;
+    }
+    /*
+     * 9-1.出品商品画面表示
+     */
+    @GetMapping("/productDisplay")
+    public ModelAndView productDisplay(@AuthenticationPrincipal Account account) {
+        ModelAndView mav = new ModelAndView();
+        List<ProductForm> products = productService.findProductDisplay(account.getId());
+        mav.addObject("products", products);
+        mav.setViewName("/productDisplay");
+        return mav;
+    }
+    /*
+     * 10-1.商品登録画面表示
+     */
+    @GetMapping("/productNew")
+    public ModelAndView productNew() {
+        ModelAndView mav = new ModelAndView();
+        ProductForm productForm = new ProductForm();
+        mav.addObject("productForm", productForm);
+        mav.setViewName("/productNew");
+        return mav;
+    }
+    /*
+     * 10-2.商品登録処理
+     */
+    @PutMapping("/addProduct")
+    public ModelAndView addProduct(@AuthenticationPrincipal Account account,
+                                   @Validated @ModelAttribute("productForm") ProductForm productForm,
+                                   BindingResult bindingResult) {
+
+        ModelAndView mav = new ModelAndView();
+
+        if (bindingResult.hasErrors()) {
+            mav.addObject("productForm", productForm);
+            mav.setViewName("/productNew");
+            return mav;
+        }
+
+        // サーバーに商品イメージ画像を保存
+        for (MultipartFile file : productForm.getImageFile()) {
+            try {
+                String fileName = getUploadFileName(file.getOriginalFilename());
+                saveFile(file, fileName);
+                // ファイルパスを保存
+                productForm.setImagePass(fileName);
+            } catch (IOException e) {
+                // エラー処理は省略
+            }
+        }
+
+        productForm.setAccountId(account.getId());
+        productService.insertProduct(productForm);
+
+        mav.setViewName("redirect:/productDisplay");
+        return mav;
+    }
+    private void saveFile(MultipartFile file, String fileName) throws IOException {
+        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + fileName);
+        try (OutputStream os = Files.newOutputStream(uploadFile, StandardOpenOption.CREATE)) {
+            byte[] bytes = file.getBytes();
+            os.write(bytes);
+        } catch (IOException e) {
+            //エラー処理は省略
+        }
+    }
+    private String getUploadFileName(String fileName) {
+
+        return fileName + "_" +
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                        .format(LocalDateTime.now())
+                + getExtension(fileName);
+    }
+    private String getExtension(String filename) {
+        int dot = filename.lastIndexOf(".");
+        if (dot > 0) {
+            return filename.substring(dot).toLowerCase();
+        }
+        return "";
+    }
+
+    /*
+     * 9-2．出品商品状態変更処理
+     */
+    @PutMapping("/changeProductIsStopped-{id}")
+    public ModelAndView changeIsStopped(@PathVariable Integer id) {
+
+        ProductForm saveProduct = productService.findProduct(id);
+        // isStoppedを反転
+        saveProduct.setStopped(!saveProduct.isStopped());
+        productService.updateProduct(saveProduct);
+        return new ModelAndView("redirect:/productDisplay");
     }
 
 

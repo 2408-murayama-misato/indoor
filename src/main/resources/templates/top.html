@@ -9,7 +9,6 @@
 </head>
 <body>
 <div th:include="header"></div>
-<h2>みんなが見られるtopページ</h2>
 <div th:if="${errorMessage != null}">
     <p th:text="${errorMessage}" />
 </div>
@@ -52,7 +51,7 @@
                 </div>
                 <div class="linkbox">
                     <form th:action="@{/search}" >
-                        <img th:src="@{/img/cap.png}">
+                        <img th:src="@{/img/outer.png}">
                         <input type="hidden" name="category" value="アウター">
                         <button type="submit"></button>
                     </form>

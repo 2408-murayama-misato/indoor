@@ -42,12 +42,12 @@
                 </td>
                 <td>
                     <div th:if="${account.isStopped == 0}">
-                        <form th:method="put" th:action="@{/stop/{id}(id=${account.id})}">
+                        <form th:method="put" th:action="@{/sellerStop/{id}(id=${account.id})}">
                             <input type="submit" value="停止" name="isStopped-button" class="off">
                         </form>
                     </div>
                     <div th:if="${account.isStopped == 1}">
-                        <form th:method="put" th:action="@{/active/{id}(id=${account.id})}">
+                        <form th:method="put" th:action="@{/sellerActive/{id}(id=${account.id})}">
                             <input type="submit" value="復活" name="isStopped-button" class="on">
                         </form>
                     </div>

@@ -11,9 +11,11 @@ public class Purchase {
     private int id;
     private int productId;
     private int accountId;
-    private int value;
+    private int price;
     private int number;
     private String category;
     private Timestamp createdDate;
     private Timestamp updatedDate;
+
+    private Product product;
 }

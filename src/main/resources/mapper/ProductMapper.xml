@@ -16,14 +16,52 @@
         <result column="name" property="name"/>
         <result column="price" property="price"/>
         <result column="category" property="category"/>
-        <result column="image_pass" property="imagePass"/>
         <result column="stock" property="stock"/>
         <result column="isStopped" property="isStopped"/>
         <result column="description" property="description"/>
+        <result column="image_pass" property="imagePass"/>
         <result column="created_date" property="createdDate"/>
         <result column="updated_date" property="updatedDate"/>
         <result column="avg" property="avg"/>
     </resultMap>
+    <insert id="insertProduct" parameterType="com.example.indoor.entity.Product">
+        INSERT INTO products (
+            account_id,
+            name,
+            price,
+            category,
+            stock,
+            is_stopped,
+            description,
+            image_pass,
+            created_date,
+            updated_date
+        ) VALUES (
+            #{accountId},
+            #{name},
+            #{price},
+            #{category},
+            #{stock},
+            #{isStopped},
+            #{description},
+            #{imagePass},
+            DEFAULT,
+            DEFAULT
+        )
+    </insert>
+    <update id="updateProduct" parameterType="com.example.indoor.entity.Product">
+        UPDATE products
+        SET
+            name = #{name},
+            price = #{price},
+            category = #{category},
+            stock = #{stock},
+            is_stopped = #{isStopped},
+            description = #{description},
+            image_pass = #{imagePass},
+            updated_date = DEFAULT
+        WHERE id = #{id}
+    </update>
     <!-- 内部結合 -->
     <resultMap id="productDetail" type="com.example.indoor.entity.Product">
         <result column="id" property="id" />
@@ -35,22 +73,53 @@
         <result column="stock" property="stock" />
         <result column="is_stopped" property="isStopped" />
         <result column="description" property="description" />
+        <result column="image_pass" property="imagePass" />
     </resultMap>
     <select id="findProductDetail" resultMap="productDetail">
         SELECT
-        products.id AS id,
-        products.account_id AS account_id,
-        accounts.name AS account_name,
-        products.name AS product_name,
-        products.price AS price,
-        products.category AS category,
-        products.stock AS stock,
-        products.is_stopped AS is_stopped,
-        products.description AS description
+            products.id AS id,
+            products.account_id AS account_id,
+            accounts.name AS account_name,
+            products.name AS product_name,
+            products.price AS price,
+            products.category AS category,
+            products.stock AS stock,
+            products.is_stopped AS is_stopped,
+            products.description AS description,
+            products.image_pass AS image_pass
         FROM products
         INNER JOIN accounts
         ON accounts.id = products.account_id
         WHERE products.id = #{id}
+    </select>
+    <select id="findProductDisplay" resultMap="productDetail">
+        SELECT
+            products.id AS id,
+            products.account_id AS account_id,
+            accounts.name AS account_name,
+            products.name AS product_name,
+            products.price AS price,
+            products.category AS category,
+            products.stock AS stock,
+            products.is_stopped AS is_stopped,
+            products.description AS description,
+            products.image_pass AS image_pass
+        FROM products
+        INNER JOIN accounts
+        ON accounts.id = products.account_id
+        WHERE products.account_id = #{id}
+    </select>
+    <!--購入後に在庫数を変更-->
+    <update id="updateProductStock">
+        UPDATE products
+        SET stock = stock - #{number}
+        WHERE id = #{productId}
+    </update>
+    <!--在庫が0かどうかチェック-->
+    <select id="checkStockIsZero" resultType="boolean">
+        SELECT CASE WHEN stock = 0 THEN TRUE ELSE FALSE END
+        FROM products
+        WHERE id = #{productId}
     </select>
 
 <!--    商品検索-->

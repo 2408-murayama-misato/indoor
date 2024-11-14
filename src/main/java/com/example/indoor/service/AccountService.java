@@ -19,7 +19,7 @@ import java.util.List;
 public class AccountService implements UserDetailsService {
 
     @Autowired
-    private AccountMapper accountMapper;
+    AccountMapper accountMapper;
 
     @Autowired
     @Lazy
