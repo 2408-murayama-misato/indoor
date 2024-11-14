@@ -14,13 +14,12 @@
             <h1 class="text-center mb-4">売上集計</h1><br/>
             <h2 class="text-center mb-4">絞り込みフォーム</h2><br/>
             <form th:action="@{/sale}" method="get">
-                <div class="col-12 col-md-6 mb-3">
                     売上期間<input type="date" name="start" th:value="*{start}" class="form-control"> - <input type="date" name="end" th:value="*{end}" class="form-control">
-                </div>
                 <div class="cal-12 text-center">
                     <input type="submit" value="絞込" class="btn btn-primary btn-block">
                 </div>
             </form>
+            <br/>
         </div>
     </div>
 </div>
@@ -54,5 +53,8 @@
         </tr>
         </tbody>
     </table>
+    <br/>
+    <label class="fs-2 justify-content-center text-danger">合計売上金額</label>
+    <label th:text="'￥' + ${sum}" class="fs-2 justify-content-center text-danger"></label>
 </body>
 </html>
