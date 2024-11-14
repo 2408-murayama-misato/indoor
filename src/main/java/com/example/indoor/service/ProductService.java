@@ -1,9 +1,7 @@
 package com.example.indoor.service;
 
 import com.example.indoor.controller.form.ProductForm;
-import com.example.indoor.controller.form.ProductImageForm;
 import com.example.indoor.entity.Product;
-import com.example.indoor.entity.ProductImage;
 import com.example.indoor.mapper.ProductMapper;
 import com.example.indoor.mapper.StockNoticeMapper;
 import org.springframework.beans.BeanUtils;
@@ -74,6 +72,7 @@ public class ProductService {
         if (isStockZero) { //在庫が0の場合はstock_noticesにINSERT文を作る
             stockNoticeMapper.insertStockNotice(productId);
         }
+    }
     /*
      * 商品レコード追加
      */
