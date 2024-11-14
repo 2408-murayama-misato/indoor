@@ -134,4 +134,20 @@ public class PurchaseController {
         mav.setViewName("/sale");
         return mav;
     }
+
+    /*
+     * 注文履歴画面表示
+     */
+    @GetMapping("/orderHistory")
+    public ModelAndView sale(@AuthenticationPrincipal Account loginAccount, @ModelAttribute("searchForm") SearchForm searchForm) {
+        ModelAndView mav = new ModelAndView();
+        String start = null;
+        String end = null;
+        List<PurchaseForm> purchaseForms = purchaseService.findPurchases(loginAccount.getId(), start, end);
+        mav.addObject("purchaseForms", purchaseForms);
+        mav.addObject("searchForm", searchForm);
+        mav.setViewName("/orderHistory");
+        return mav;
+    }
+    
 }
