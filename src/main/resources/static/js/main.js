@@ -16,6 +16,12 @@ function CheckPurchase(){
     if (!result) return false;
 }
 
+//発送完了のボタンアラート
+function CheckShipped(){
+    let result = window.confirm("発送完了通知を購入者にお送りしてよろしいですか？");
+    if (!result) return false;
+}
+
 $( function() {
             $('button[name="cart-button"]').on('click',function(){
                  if (confirm("カートから削除してよろしいですか？")){

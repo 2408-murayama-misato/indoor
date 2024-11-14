@@ -8,6 +8,45 @@
     <title>注文履歴</title>
 </head>
 <body>
-
+<div class="container mt-5">
+    <div class="row justify-content-center h-100">
+        <div class="col-12 col-md-8">
+            <h1 class="text-center mb-4">注文履歴</h1><br/>
+        </div>
+    </div>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">写真</th>
+        <th scope="col">商品名</th>
+        <th scope="col">金額</th>
+        <th scope="col">個数</th>
+        <th scope="col">日時</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="purchase : ${purchaseForms}" scope="row">
+        <td>
+            <span><image src="${purchase.imagePass}"/></span>
+        </td>
+        <td>
+            <span th:text="${purchase.product.name}"></span>
+        </td>
+        <td>
+            <span th:text="'￥' + ${purchase.price}"></span>
+        </td>
+        <td>
+            <span th:text="${purchase.number}"></span>
+        </td>
+        <td>
+            <span th:text="${purchase.createdDate}"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a th:href="@{/mypage}">
+    <input type="button" value="戻る" class="btn btn-outline-secondary">
+</a>
 </body>
 </html>

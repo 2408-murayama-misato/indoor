@@ -51,6 +51,7 @@
                         <p><image class="rounded mx-auto d-block img-fluid" th:src="@{product.imagePass}"/></p>
                         <form th:action="@{/productDetail}">
                             <input type="hidden" name="id" th:value="${product.id}">
+                            <input type="hidden" name="number">
                             <button  type="submit"></button>
                         </form>
                     </td>

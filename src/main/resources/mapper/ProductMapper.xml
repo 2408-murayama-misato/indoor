@@ -117,7 +117,7 @@
     </update>
     <!--在庫が0かどうかチェック-->
     <select id="checkStockIsZero" resultType="boolean">
-        SELECT CASE WHEN stock = 0 THEN TRUE ELSE FALSE END
+        SELECT CASE WHEN stock <![CDATA[ <= ]]> 0 THEN TRUE ELSE FALSE END
         FROM products
         WHERE id = #{productId}
     </select>
