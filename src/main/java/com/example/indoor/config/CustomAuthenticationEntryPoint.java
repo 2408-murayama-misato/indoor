@@ -22,7 +22,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         //セッションにエラーメッセージを追加
         HttpSession session = request.getSession();
-        session.setAttribute("ErrorMessage", "ログインしてください");
+        session.setAttribute("errorMessage", "ログインしてください");
         response.sendRedirect(request.getContextPath() + "/login?loginFilter=true");
     }
 }

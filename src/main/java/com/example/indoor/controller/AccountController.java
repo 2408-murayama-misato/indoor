@@ -31,7 +31,7 @@ public class AccountController {
         ModelAndView mav = new ModelAndView();
         AccountForm accountForm = new AccountForm();
         //セッションからメッセージを取得
-        String errorMessage = (String)session.getAttribute("ErrorMessage");
+        String errorMessage = (String)session.getAttribute("errorMessage");
         mav.setViewName("login");
         mav.addObject("accountForm", accountForm);
         if (errorMessage != null) {
