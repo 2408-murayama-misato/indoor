@@ -12,8 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -87,5 +87,30 @@ public class AccountService implements UserDetailsService {
      */
     public void deleteAccount(Integer id) {
         accountMapper.deleteById(id);
+    }
+
+    public List<AccountForm> findAllAccount(String status, String account) {
+        List<Account> results = accountMapper.findAllUser(status, account);
+        List<AccountForm> accountForms = setForm(results);
+        return accountForms;
+    }
+
+    private List<AccountForm> setForm(List<Account> results) {
+        List<AccountForm> forms = new ArrayList<>();
+
+        for (Account account : results) {
+            AccountForm form = new AccountForm();
+            BeanUtils.copyProperties(account, form);
+            forms.add(form);
+        }
+        return forms;
+    }
+
+    public void stopAccount(int id) {
+        accountMapper.stopAccount(id);
+    }
+
+    public void activeAccount(int id) {
+        accountMapper.activeAccount(id);
     }
 }

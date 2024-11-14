@@ -2,6 +2,7 @@ package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.AccountForm;
 import com.example.indoor.controller.form.CartForm;
+import com.example.indoor.controller.form.SearchForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.AccountMapper;
@@ -43,12 +44,15 @@ public class CartController {
 
 
    @GetMapping("/cart")
-    public ModelAndView findCart(@AuthenticationPrincipal Account loginAccount) {
+    public ModelAndView findCart(@AuthenticationPrincipal Account loginAccount,
+                                 @ModelAttribute("searchForm") SearchForm searchForm
+    ) {
        ModelAndView mav = new ModelAndView();
 //       カートマスタ商品取得
        List<CartForm> cartForms = cartService.findCart(loginAccount.getId());
        mav.setViewName("/cart");
        mav.addObject("cartForms", cartForms);
+       mav.addObject("searchForm", searchForm);
        return mav;
    }
 

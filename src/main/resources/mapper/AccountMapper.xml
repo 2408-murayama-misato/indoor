@@ -67,4 +67,36 @@
         delete from accounts
         where id = #{id}
     </delete>
+    <select id="findAllUser" resultMap="accounts">
+        SELECT * FROM accounts
+        WHERE role = #{status}
+        <if test="account != null and account.trim() != ''">
+            and account LIKE '%${account}%'
+        </if>
+        ORDER BY created_date DESC
+    </select>
+<!--    アカウント停止-->
+    <update id="stopAccount" >
+        UPDATE accounts SET
+        is_stopped = 1
+        WHERE id = #{id};
+    </update>
+<!--アカウント復活-->
+    <update id="activeAccount" >
+        UPDATE accounts SET
+        is_stopped = 0
+        WHERE id = #{id};
+    </update>
+    <resultMap id="accounts" type="com.example.indoor.entity.Account">
+        <result column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="name" property="name"/>
+        <result column="address" property="address"/>
+        <result column="credit" property="credit"/>
+        <result column="role" property="role"/>
+        <result column="is_stopped" property="isStopped"/>
+        <result column="created_date" property="createdDate"/>
+        <result column="updated_date" property="updatedDate"/>
+    </resultMap>
 </mapper>

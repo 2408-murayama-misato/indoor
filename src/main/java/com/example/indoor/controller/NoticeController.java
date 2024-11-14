@@ -1,6 +1,7 @@
 package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.ProductsNoticeForm;
+import com.example.indoor.controller.form.SearchForm;
 import com.example.indoor.controller.form.StockNoticeForm;
 import com.example.indoor.entity.Account;
 import com.example.indoor.service.ProductsNoticeService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -29,7 +31,8 @@ public class NoticeController {
      * 画面初期表示
      */
     @GetMapping("/noticeList")
-    public ModelAndView noticeList(@AuthenticationPrincipal Account account) {
+    public ModelAndView noticeList(@AuthenticationPrincipal Account account,
+                                   @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         int id = account.getId();
         // 商品問い合わせ、商品発送、商品在庫の通知数をログインしているアカウントのidをもとに取得
@@ -42,6 +45,7 @@ public class NoticeController {
         mav.addObject("productShippedForSeller", productShippedForSeller);
         List<StockNoticeForm> productStock = stockNoticeService.findAllStockNotice(id);
         mav.addObject("productStock", productStock);
+        mav.addObject("searchForm", searchForm);
         return mav;
     }
 
@@ -74,12 +78,16 @@ public class NoticeController {
      * 通知アーカイブ一覧画面表示
      */
     @GetMapping("/noticeArchive")
-    public ModelAndView noticeArchive(@AuthenticationPrincipal Account account) {
+    public ModelAndView noticeArchive(@AuthenticationPrincipal Account account,
+                                      @ModelAttribute("searchForm") SearchForm searchForm
+                                      ) {
         ModelAndView mav = new ModelAndView();
+        mav.addObject("searchForm", searchForm);
         int id = account.getId();
         // 商品問い合わせ、商品発送、商品在庫の通知数をログインしているアカウントのidをもとに取得
         List<ProductsNoticeForm> productContacts = productsNoticeService.findReadProductContacts(id);
         mav.addObject("productContacts", productContacts);
+
         //商品発送完了通知
         List<ProductsNoticeForm> productShipped = productsNoticeService.findReadProductShipped(id);
         mav.addObject("productShipped", productShipped);

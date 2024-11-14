@@ -40,7 +40,9 @@ public class PurchaseController {
      * 購入画面表示
      */
     @GetMapping("/purchase")
-    public ModelAndView purchase(@AuthenticationPrincipal Account loginAccount) {
+    public ModelAndView purchase(@AuthenticationPrincipal Account loginAccount,
+                                 @ModelAttribute("searchForm") SearchForm searchForm
+                                 ) {
         ModelAndView mav = new ModelAndView();
         //カート情報取得
         List<CartForm> cartForms = cartService.findCart(loginAccount.getId());
@@ -52,6 +54,7 @@ public class PurchaseController {
         mav.addObject("name", accountForm.getName());
         mav.addObject("address", accountForm.getAddress());
         mav.addObject("credit", accountForm.getCredit());
+        mav.addObject("searchForm", searchForm);
         mav.addObject("formPurchase", new PurchaseForm());
         mav.setViewName("/purchase");
         return mav;
@@ -123,7 +126,9 @@ public class PurchaseController {
     @GetMapping("/sale")
     public ModelAndView sale(@AuthenticationPrincipal Account loginAccount,
                              @RequestParam(value = "start", required = false) String start,
-                             @RequestParam(value = "end", required = false) String end) {
+                             @RequestParam(value = "end", required = false) String end,
+                             @ModelAttribute("searchForm") SearchForm searchForm
+    ) {
         ModelAndView mav = new ModelAndView();
         List<PurchaseForm> purchaseForms = purchaseService.findPurchases(loginAccount.getId(), start, end);
         mav.addObject("start", start);
@@ -135,6 +140,7 @@ public class PurchaseController {
             sum += purchaseForms.get(i).getPrice();
         }
         mav.addObject("sum", sum);
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/sale");
         return mav;
     }

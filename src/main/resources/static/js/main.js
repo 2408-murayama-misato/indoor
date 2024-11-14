@@ -15,3 +15,13 @@ function CheckPurchase(){
     let result = window.confirm("購入してよろしいですか？");
     if (!result) return false;
 }
+
+$( function() {
+            $('button[name="cart-button"]').on('click',function(){
+                 if (confirm("カートから削除してよろしいですか？")){
+                    return true;
+                 } else {
+                     return false;
+                 }
+             });
+          });
