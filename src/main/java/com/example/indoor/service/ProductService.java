@@ -4,10 +4,20 @@ import com.example.indoor.controller.form.ProductForm;
 import com.example.indoor.entity.Product;
 import com.example.indoor.mapper.ProductMapper;
 import com.example.indoor.mapper.StockNoticeMapper;
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +31,7 @@ public class ProductService {
     StockNoticeMapper stockNoticeMapper;
 
     final String NO_IMAGE_FILE_PATH = "/img/no-image.png";
-
+    public final String PRODUCT_IMAGE_PATH = "./src/main/resources/static/img/product/";
 
     /*
      * 出品送品一覧を取得
@@ -51,7 +61,7 @@ public class ProductService {
             ProductForm form = new ProductForm();
             BeanUtils.copyProperties(entity, form);
             // ファイルパスを修正
-            if (form.getImagePass().isBlank()) {
+            if (StringUtils.isBlank(form.getImagePass())) {
                 form.setImagePass(NO_IMAGE_FILE_PATH);
             } else {
                 form.setImagePass("/img/product/" + form.getImagePass());
@@ -94,5 +104,31 @@ public class ProductService {
     public void updateProduct(ProductForm productForm) {
         Product saveProduct = setProductEntity(productForm);
         productMapper.updateProduct(saveProduct);
+    }
+    // ファイルをサーバーに保存
+    public void saveFile(MultipartFile file, String fileName) throws IOException {
+        Path uploadFile = Paths.get(PRODUCT_IMAGE_PATH + fileName);
+        try (OutputStream os = Files.newOutputStream(uploadFile, StandardOpenOption.CREATE)) {
+            byte[] bytes = file.getBytes();
+            os.write(bytes);
+        } catch (IOException e) {
+            //エラー処理は省略
+        }
+    }
+    //　ファイル名にタイムスタンプを付与
+    public String getUploadFileName(String fileName) {
+
+        return fileName + "_" +
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
+                        .format(LocalDateTime.now())
+                + getExtension(fileName);
+    }
+    // ファイルの拡張子を取得
+    private String getExtension(String filename) {
+        int dot = filename.lastIndexOf(".");
+        if (dot > 0) {
+            return filename.substring(dot).toLowerCase();
+        }
+        return "";
     }
 }
