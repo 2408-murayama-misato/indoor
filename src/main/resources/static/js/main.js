@@ -22,12 +22,10 @@ function CheckShipped(){
     if (!result) return false;
 }
 
-$( function() {
-            $('button[name="cart-button"]').on('click',function(){
-                 if (confirm("カートから削除してよろしいですか？")){
-                    return true;
-                 } else {
-                     return false;
-                 }
-             });
-          });
+//カートの数量カウントアップアラート
+function CheckCartCountUp(){
+    let result = window.confirm("追加で購入してよろしいですか？");
+    if (!result) return false;
+}
+
+
