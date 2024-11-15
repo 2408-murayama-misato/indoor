@@ -54,7 +54,11 @@
         </tbody>
     </table>
     <br/>
-    <label class="fs-2 justify-content-center text-danger">合計売上金額</label>
-    <label th:text="'￥' + ${sum}" class="fs-2 justify-content-center text-danger"></label>
+<label class="fs-2 justify-content-center text-danger">合計売上金額</label>
+<label th:text="'￥' + ${sum}" class="fs-2 justify-content-center text-danger"></label>
+<br/>
+<a th:href="@{/productDisplay}">
+    <input type="button" value="戻る" class="btn btn-outline-secondary">
+</a>
 </body>
 </html>

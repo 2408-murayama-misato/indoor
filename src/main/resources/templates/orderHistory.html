@@ -23,6 +23,7 @@
         <th scope="col">金額</th>
         <th scope="col">個数</th>
         <th scope="col">日時</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -41,6 +42,11 @@
         </td>
         <td>
             <span th:text="${purchase.createdDate}"></span>
+        </td>
+        <td>
+            <a th:href="@{/reviewNew-{id}(id=${purchase.productId})}">
+                <input type="button" value="レビューを投稿する" class="btn btn-outline-secondary">
+            </a>
         </td>
     </tr>
     </tbody>
