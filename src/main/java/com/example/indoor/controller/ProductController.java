@@ -217,10 +217,12 @@ public class ProductController {
      * 9-1.出品商品画面表示
      */
     @GetMapping("/productDisplay")
-    public ModelAndView productDisplay(@AuthenticationPrincipal Account account) {
+    public ModelAndView productDisplay(@AuthenticationPrincipal Account account,
+                                       @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         List<ProductForm> products = productService.findProductDisplay(account.getId());
         mav.addObject("products", products);
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/productDisplay");
         return mav;
     }
@@ -228,10 +230,11 @@ public class ProductController {
      * 10-1.商品登録画面表示
      */
     @GetMapping("/productNew")
-    public ModelAndView productNew() {
+    public ModelAndView productNew(@ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         ProductForm productForm = new ProductForm();
         mav.addObject("productForm", productForm);
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/productNew");
         return mav;
     }
@@ -290,11 +293,13 @@ public class ProductController {
      * 11-1.商品編集画面表示
      */
     @GetMapping("/productEdit-{id}")
-    public ModelAndView productNew(@PathVariable Integer id) {
+    public ModelAndView productNew(@PathVariable Integer id,
+                                   @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         ProductForm productForm = productService.findProduct(id);
         mav.addObject("productForm", productForm);
         mav.setViewName("/productEdit");
+        mav.addObject("productForm", productForm);
         return mav;
     }
     /*

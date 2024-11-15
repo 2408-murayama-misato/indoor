@@ -9,6 +9,8 @@
         INNER JOIN products
         ON carts.product_id = products.id
         where carts.account_id = ${id}
+        ORDER BY carts.created_date DESC
+
     </select>
 <!--    カートマッピング-->
     <resultMap id="Cart" type="com.example.indoor.entity.Cart">

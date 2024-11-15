@@ -125,11 +125,11 @@
 <!--    商品検索-->
     <select id="findAll" resultMap="Product">
         SELECT *  FROM products
-        INNER JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
+        LEFT JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
         ON products.id = avg_product_id
         <where>
              <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != ''">
-                products.category LIKE '%${searchForm.keyWord}%'OR products.name LIKE '%${searchForm.keyWord}%'
+                products.category = '${searchForm.keyWord}'OR products.name LIKE '%${searchForm.keyWord}%'
              </if>
             <if test="searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
                 and products.category = '${searchForm.getCategory()}'
