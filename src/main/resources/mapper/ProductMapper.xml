@@ -128,12 +128,19 @@
         LEFT JOIN (SELECT product_id as avg_product_id ,AVG(score) FROM reviews GROUP BY product_id)
         ON products.id = avg_product_id
         <where>
-             <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != ''">
+             <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != '' and
+                        (searchForm.getCategory() == null or searchForm.getCategory().trim() == '')">
                 products.category = '${searchForm.keyWord}'OR products.name LIKE '%${searchForm.keyWord}%'
              </if>
-            <if test="searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
+            <if test="(searchForm.getKeyWord() == null or searchForm.getKeyWord().trim() == '') and
+                       searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
                 and products.category = '${searchForm.getCategory()}'
             </if>
+            <if test="searchForm.getKeyWord() != null and searchForm.getKeyWord().trim() != '' and
+                      searchForm.getCategory() != null and searchForm.getCategory().trim() != ''">
+                and products.category = '${searchForm.getCategory()}' and products.name LIKE '%${searchForm.keyWord}%'
+            </if>
+
             <if test="searchForm.getMinPrice() != null and searchForm.getMinPrice().trim() != '' and
                       searchForm.getMaxPrice() != null and searchForm.getMaxPrice().trim() != ''">
                 and products.price BETWEEN ${searchForm.getMinPrice()} AND ${searchForm.getMaxPrice()}
