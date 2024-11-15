@@ -22,4 +22,9 @@ public class ProductsNotice {
     //inner join用
     private String fromName;
     private String productName;
+
+    //発送準備依頼の通知のinner join用
+    private String shipToName;
+    private String shipToAddress;
+    private Integer number;
 }
