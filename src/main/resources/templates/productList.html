@@ -48,7 +48,7 @@
         <div th:each="product : ${productForm}">
                 <tr class="linkbox">
                     <td>
-                        <p><image class="rounded mx-auto d-block img-fluid" th:src="@{/img/T-Shirts.png}"/></p>
+                        <p><image class="rounded mx-auto d-block img-fluid" th:src="${product.imagePass}"/></p>
                         <form th:action="@{/productDetail}">
                             <input type="hidden" name="id" th:value="${product.id}">
                             <input type="hidden" name="number">

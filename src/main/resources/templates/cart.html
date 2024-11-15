@@ -28,7 +28,7 @@
                 <div th:each="cart : ${cartForms}">
                     <tr>
                         <td>
-                            <p><image class="rounded mx-auto d-block img-fluid" th:src="@{product.imagePass}"/></p>
+                            <p><image class="rounded mx-auto d-block img-fluid" th:src="${product.imagePass}"/></p>
                         </td>
                         <td>
                             <p th:text="${cart.product.name}"/>
