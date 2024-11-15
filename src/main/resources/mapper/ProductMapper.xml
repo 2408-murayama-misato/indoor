@@ -108,6 +108,7 @@
         INNER JOIN accounts
         ON accounts.id = products.account_id
         WHERE products.account_id = #{id}
+        ORDER BY id ASC
     </select>
     <!--購入後に在庫数を変更-->
     <update id="updateProductStock">
