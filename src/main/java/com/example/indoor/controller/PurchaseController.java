@@ -93,8 +93,10 @@ public class PurchaseController {
         }
 
         if (!purchaseErrorMessages.isEmpty()) {
-            redirectAttributes.addFlashAttribute("purchaseErrorMessages", purchaseErrorMessages);
-            return new ModelAndView("redirect:/purchase");
+//            redirectAttributes.addFlashAttribute("purchaseErrorMessages", purchaseErrorMessages);
+            mav.addObject("purchaseErrorMessages", purchaseErrorMessages);
+            mav.setViewName("/purchase");
+            return mav;
         }
 
         //カート情報取得
@@ -102,7 +104,7 @@ public class PurchaseController {
         //購入済みマスタに登録
         purchaseService.savePurchases(cartForms);
         //購入した商品をカート内から削除
-        cartService.deleteCart(loginAccount.getId());
+        cartService.deletePurchasedCart(loginAccount.getId());
 
         for (CartForm cartForm : cartForms) {
             //在庫の計算と在庫がなくなったら販売者に自動通知する処理(引数は商品の個数, 商品のID)　※暫定単体の商品のみに適応

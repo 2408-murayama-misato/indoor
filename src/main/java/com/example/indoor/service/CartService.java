@@ -74,4 +74,8 @@ public class CartService {
     public void deleteCart(int id) {
         cartMapper.deleteCart(id);
     }
+
+    public void deletePurchasedCart(int id) {
+        cartMapper.deletePurchasedCart(id);
+    }
 }

@@ -75,10 +75,11 @@ public class AccountController {
                 accountErrorList.add("アカウントが重複しています");
             }
 
-            redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
+//            redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
+            mav.addObject("accountErrorList", accountErrorList);
             //エラーの際に入力情報が保持されるように
 //            mav.addObject("accountForm", accountForm);
-            mav.setViewName("redirect:/accountNew");
+            mav.setViewName("/accountNew");
             return mav;
         }
 
@@ -124,10 +125,10 @@ public class AccountController {
                 accountEditErrorList.add("アカウントが重複しています");
             }
 
-            redirectAttributes.addFlashAttribute("accountEditErrorList", accountEditErrorList);
+//            redirectAttributes.addFlashAttribute("accountEditErrorList", accountEditErrorList);
             //エラーの際に入力情報が保持されるように
-//            mav.addObject("accountForm", accountForm);
-            mav.setViewName("redirect:/accountEdit");
+            mav.addObject("accountEditErrorList", accountEditErrorList);
+            mav.setViewName("/accountEdit");
             return mav;
         }
 

@@ -47,7 +47,7 @@ public class WebSecurityConfig {
                         "/purchase", "/payment", "/mypage", "/orderHistory", "/favorite", "/accountEdit").hasAnyRole("user","seller")
 
                 //以下は販売者のみアクセス可能ページの指定。ログインアカウントのRoleがsellerならばアクセスできる
-                .requestMatchers("/productNew", "/productEdit", "/productDisplay").hasRole("seller")
+                .requestMatchers("/productNew", "/productEdit", "/productDisplay", "/sale").hasRole("seller")
 
                 //以下は管理者のみアクセス可能ページの指定。ログインアカウントのRoleがadminならばアクセスできる
                 .requestMatchers("/adminTop", "/contactReply", "/announceNew", "/userList", "/sellerList").hasRole("admin")

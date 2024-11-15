@@ -25,4 +25,6 @@ public  interface CartMapper {
 
     Cart findCart(@Param("productId") int productId,
                   @Param("id") int id);
+
+    void deletePurchasedCart(@Param("id") int id);
 }

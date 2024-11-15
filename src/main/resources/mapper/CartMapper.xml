@@ -77,4 +77,11 @@
         where carts.account_id = ${id}
         AND carts.product_id = ${productId}
     </select>
+
+    <!--    購入した商品をカートから削除-->
+    <delete id="deletePurchasedCart">
+        DELETE
+        FROM carts
+        WHERE account_id = ${id}
+    </delete>
 </mapper>
