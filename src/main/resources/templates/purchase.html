@@ -23,7 +23,7 @@
         <tbody>
         <tr th:each="cart : ${cartForms}" scope="row">
             <td>
-                <span><image src="${cart.productsImage.pass}"/></span>
+                <span><img th:src="@{'/img/product/' + ${cart.product.imagePass}}" class="rounded mx-auto d-block img-fluid"/></span>
             </td>
             <td>
                 <span th:text="${cart.product.name}"></span>

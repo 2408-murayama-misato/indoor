@@ -183,10 +183,11 @@ public class ProductController {
      * 7-1.レビュー編集画面表示
      */
     @GetMapping("/reviewEdit/{id}")
-    public ModelAndView reviewEdit(@PathVariable String id) {
+    public ModelAndView reviewEdit(@PathVariable String id, @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         ReviewForm review = reviewService.findReview(Integer.parseInt(id));
         mav.addObject("reviewForm", review);
+        mav.addObject("searchForm", searchForm);
         mav.setViewName("/reviewEdit");
         return mav;
     }
@@ -197,11 +198,13 @@ public class ProductController {
     @PutMapping("/updateReview")
     public ModelAndView updateReview(@AuthenticationPrincipal Account account,
                                      @Validated @ModelAttribute("reviewForm") ReviewForm reviewForm,
-                                     BindingResult bindingResult) {
+                                     BindingResult bindingResult,
+                                     @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
 
         if (bindingResult.hasErrors()) {
             mav.addObject("reviewForm", reviewForm);
+            mav.addObject("searchForm", searchForm);
             mav.setViewName("/reviewEdit");
             return mav;
         }
@@ -244,12 +247,14 @@ public class ProductController {
     @PutMapping("/addProduct")
     public ModelAndView addProduct(@AuthenticationPrincipal Account account,
                                    @Validated @ModelAttribute("productForm") ProductForm productForm,
-                                   BindingResult bindingResult) {
+                                   BindingResult bindingResult,
+                                   @ModelAttribute("searchForm") SearchForm searchForm) {
 
         ModelAndView mav = new ModelAndView();
 
         if (bindingResult.hasErrors()) {
             mav.addObject("productForm", productForm);
+            mav.addObject("searchForm", searchForm);
             mav.setViewName("/productNew");
             return mav;
         }

@@ -30,13 +30,14 @@
             <th scope="col">商品名</th>
             <th scope="col">金額</th>
             <th scope="col">個数</th>
-            <th scope="col">日時</th>
+            <th scope="col">売上
+                日時</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="purchase : ${purchaseForms}" scope="row">
             <td>
-                <span><image src="${purchase.imagePass}"/></span>
+                <span><img th:src="@{'/img/product/' + ${purchase.product.imagePass}}"/></span>
             </td>
             <td>
                 <span th:text="${purchase.product.name}"></span>

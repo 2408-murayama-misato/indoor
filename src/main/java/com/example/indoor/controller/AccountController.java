@@ -67,21 +67,24 @@ public class AccountController {
             for (ObjectError error : result.getAllErrors()) {
                 accountErrorList.add(error.getDefaultMessage());
             }
+        }
 
-            //アカウント重複バリデーション
-            Account account = new Account();
-            account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
-            if (account != null) {
-                accountErrorList.add("アカウントが重複しています");
-            }
+        //アカウント重複バリデーション
+        Account account = new Account();
+        account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
+        if (account.getAccount() != null) {
+            accountErrorList.add("アカウントが重複しています");
+        }
 
-//            redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
+        if (accountErrorList.size() > 0) {
+//          redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
             mav.addObject("accountErrorList", accountErrorList);
             //エラーの際に入力情報が保持されるように
-//            mav.addObject("accountForm", accountForm);
+//          mav.addObject("accountForm", accountForm);
             mav.setViewName("/accountNew");
             return mav;
-        }
+            }
+
 
         accountService.saveAccount(accountForm);
         // ログイン画面へリダイレクト
