@@ -56,10 +56,7 @@ public class PurchaseService {
         if (!StringUtils.isBlank(end)) {
             end += " 23:59:59.999";
         } else {
-//            Date date = new Date();
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-//            end = dateFormat.format(timestamp).toString();
             end = String.valueOf(timestamp);
         }
 

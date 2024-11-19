@@ -2,7 +2,6 @@ package com.example.indoor.controller;
 
 import com.example.indoor.controller.form.*;
 import com.example.indoor.entity.Account;
-import com.example.indoor.entity.Purchase;
 import com.example.indoor.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -69,7 +70,8 @@ public class PurchaseController {
                                         @RequestParam(value = "address", required = false) String address,
                                         @RequestParam(value = "credit", required = false) String credit,
                                         @AuthenticationPrincipal Account loginAccount,
-                                        RedirectAttributes redirectAttributes) {
+                                        RedirectAttributes redirectAttributes,
+                                        @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
 
         List<String> purchaseErrorMessages = new ArrayList<>();
@@ -93,8 +95,13 @@ public class PurchaseController {
         }
 
         if (!purchaseErrorMessages.isEmpty()) {
-//            redirectAttributes.addFlashAttribute("purchaseErrorMessages", purchaseErrorMessages);
             mav.addObject("purchaseErrorMessages", purchaseErrorMessages);
+            mav.addObject("searchForm", searchForm);
+            mav.addObject("name", name);
+            mav.addObject("address", address);
+            mav.addObject("credit", credit);
+            List<CartForm> cartForms = cartService.findCart(loginAccount.getId());
+            mav.addObject("cartForms", cartForms);
             mav.setViewName("/purchase");
             return mav;
         }
@@ -131,8 +138,32 @@ public class PurchaseController {
                              @RequestParam(value = "start", required = false) String start,
                              @RequestParam(value = "end", required = false) String end,
                              @ModelAttribute("searchForm") SearchForm searchForm
-    ) {
+    ) throws ParseException {
         ModelAndView mav = new ModelAndView();
+
+        //日付のバリデーション
+        if (start != null && !start.isBlank() && end != null && !end.isBlank()) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date startDate = dateFormat.parse(start);
+            Date endDate = dateFormat.parse(end);
+            List<String> dateErrorMessages = new ArrayList<>();
+
+            if (startDate.after(endDate)) {
+                dateErrorMessages.add("開始日は終了日よりも前に設定してください");
+                mav.addObject("searchForm", searchForm);
+                mav.addObject("dateErrorMessages", dateErrorMessages);
+                int sum = 0;
+                mav.addObject("sum", sum);
+                mav.addObject("start", startDate);
+                mav.addObject("end", endDate);
+                mav.setViewName("/sale");
+                return mav;
+            } else {
+                start = dateFormat.format(startDate);
+                end = dateFormat.format(endDate);
+            }
+        }
+
         List<PurchaseForm> purchaseForms = purchaseService.findPurchases(loginAccount.getId(), start, end);
         mav.addObject("start", start);
         mav.addObject("end", end);
@@ -162,5 +193,4 @@ public class PurchaseController {
         mav.setViewName("/orderHistory");
         return mav;
     }
-    
 }

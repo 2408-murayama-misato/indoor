@@ -75,8 +75,10 @@ public class AccountService implements UserDetailsService {
      */
     public void updateAccount(AccountForm reqAccount) {
         // パスワード暗号化処理
-        String hashingPassword = passwordEncoder.encode(reqAccount.getPassword());
-        reqAccount.setPassword(hashingPassword);
+        if (!reqAccount.getPassword().isBlank()) {
+            String hashingPassword = passwordEncoder.encode(reqAccount.getPassword());
+            reqAccount.setPassword(hashingPassword);
+        }
 
         Account updateAccount = setAccountEntity(reqAccount);
         accountMapper.update(updateAccount);

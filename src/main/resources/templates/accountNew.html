@@ -8,6 +8,7 @@
     <title>新規会員登録画面</title>
 </head>
 <body>
+<div th:include="header"></div>
 <div class="container mt-5">
   <div class="row justify-content-center">
     <div class="col-md-4">
@@ -46,10 +47,9 @@
             <input type="text" th:name="credit" th:value="*{credit}" class="form-control"/><br/>
           </div>
           <div class="mb-3">
-            <label class="form-label">種類</label>
-            <select th:name="role" th:value="*{role}" class="form-control">
-              <option value="user">利用者</option>
-              <option value="seller">販売者</option>
+            <label class="form-label">種類</label><br/>
+            <select th:name="role">
+              <option th:each="item : *{roleMap}" th:value="${item.value}" th:text="${item.key}" th:selected="${item.value} == *{role}" class="form-control"></option>
             </select>
           </div>
           <br/>

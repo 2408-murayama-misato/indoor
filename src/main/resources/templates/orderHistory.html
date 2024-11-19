@@ -8,6 +8,7 @@
     <title>注文履歴</title>
 </head>
 <body>
+<div th:include="header"></div>
 <div class="container mt-5">
     <div class="row justify-content-center h-100">
         <div class="col-12 col-md-8">
@@ -16,18 +17,18 @@
     </div>
 </div>
 <table class="table">
-    <thead>
+    <thead class="table-light">
     <tr>
-        <th scope="col">写真</th>
-        <th scope="col">商品名</th>
-        <th scope="col">金額</th>
-        <th scope="col">個数</th>
-        <th scope="col">購入日時</th>
+        <th style="width: 10%">写真</th>
+        <th>商品名</th>
+        <th>金額</th>
+        <th>個数</th>
+        <th>購入日時</th>
         <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="purchase : ${purchaseForms}" scope="row">
+    <tr th:each="purchase : ${purchaseForms}">
         <td>
             <span><img th:src="@{'/img/product/' + ${purchase.product.imagePass}}" class="rounded mx-auto d-block img-fluid"/></span>
         </td>

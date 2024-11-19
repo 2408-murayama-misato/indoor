@@ -59,7 +59,12 @@ public class AccountController {
      * 会員登録処理
      */
     @PostMapping("/signup")
-    public ModelAndView signup(@Validated(AccountForm.CreateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, RedirectAttributes redirectAttributes) {
+    public ModelAndView signup(@Validated(AccountForm.CreateGroup.class)
+                               @ModelAttribute("accountForm") AccountForm accountForm,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes,
+                               @AuthenticationPrincipal Account loginAccount,
+                               @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         // バリデーション
         List<String> accountErrorList = new ArrayList<String>();
@@ -72,19 +77,19 @@ public class AccountController {
         //アカウント重複バリデーション
         Account account = new Account();
         account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
-        if (account.getAccount() != null) {
+        if (account != null && account.getAccount() != null && !(accountForm.getAccount().isBlank())) {
             accountErrorList.add("アカウントが重複しています");
         }
 
         if (accountErrorList.size() > 0) {
-//          redirectAttributes.addFlashAttribute("accountErrorList", accountErrorList);
+            accountForm.setPassword("");
+            accountForm.setPasswordRetype("");
             mav.addObject("accountErrorList", accountErrorList);
+            mav.addObject("searchForm", searchForm);
             //エラーの際に入力情報が保持されるように
-//          mav.addObject("accountForm", accountForm);
             mav.setViewName("/accountNew");
             return mav;
             }
-
 
         accountService.saveAccount(accountForm);
         // ログイン画面へリダイレクト
@@ -113,7 +118,12 @@ public class AccountController {
      * アカウント編集処理
      */
     @PutMapping("/edit")
-    public ModelAndView accountEdit(@Validated(AccountForm.UpdateGroup.class) @ModelAttribute("accountForm") AccountForm accountForm, BindingResult result, @AuthenticationPrincipal Account loginAccount, RedirectAttributes redirectAttributes) {
+    public ModelAndView accountEdit(@Validated(AccountForm.UpdateGroup.class)
+                                    @ModelAttribute("accountForm") AccountForm accountForm,
+                                    BindingResult result,
+                                    @AuthenticationPrincipal Account loginAccount,
+                                    RedirectAttributes redirectAttributes,
+                                    @ModelAttribute("searchForm") SearchForm searchForm) {
         ModelAndView mav = new ModelAndView();
         // バリデーション
         List<String> accountEditErrorList = new ArrayList<String>();
@@ -121,16 +131,20 @@ public class AccountController {
             for (ObjectError error : result.getAllErrors()) {
                 accountEditErrorList.add(error.getDefaultMessage());
             }
+        }
 
-            Account account = new Account();
-            account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
-            if (account != null) {
-                accountEditErrorList.add("アカウントが重複しています");
-            }
+        Account account = new Account();
+        account = (Account) accountService.loadUserByUsername(accountForm.getAccount());
+        if (account != null && account.getAccount() != null && account.getId() != loginAccount.getId() && !(accountForm.getAccount().isBlank())) {
+            accountEditErrorList.add("アカウントが重複しています");
+        }
 
-//            redirectAttributes.addFlashAttribute("accountEditErrorList", accountEditErrorList);
+        if (accountEditErrorList.size() > 0) {
+            accountForm.setPassword("");
+            accountForm.setPasswordRetype("");
             //エラーの際に入力情報が保持されるように
             mav.addObject("accountEditErrorList", accountEditErrorList);
+            mav.addObject("searchForm", searchForm);
             mav.setViewName("/accountEdit");
             return mav;
         }

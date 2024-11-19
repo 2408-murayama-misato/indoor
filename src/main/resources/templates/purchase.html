@@ -9,21 +9,22 @@
     <title>購入画面</title>
 </head>
 <body>
-<h1>購入画面</h1>
+<div th:include="header"></div>
+<h1 class="text-center mb-4">購入画面</h1><br/>
 <form th:action="@{/purchaseProduct}" method="post" th:object="${formPurchase}" onSubmit="return CheckPurchase()">
     <table class="table">
-        <thead>
-        <tr>
-            <th scope="col">写真</th>
-            <th scope="col">商品名</th>
-            <th scope="col">価格</th>
-            <th scope="col">個数</th>
+        <thead class="table-light">
+        <tr class="TableTitle">
+            <th style="width: 10%">写真</th>
+            <th>商品名</th>
+            <th>価格</th>
+            <th>個数</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="cart : ${cartForms}" scope="row">
+        <tr th:each="cart : ${cartForms}">
             <td>
-                <span><img th:src="@{'/img/product/' + ${cart.product.imagePass}}" class="rounded mx-auto d-block img-fluid"/></span>
+                <span><img th:src="${cart.product.imagePass}" class="rounded mx-auto d-block img-fluid"/></span>
             </td>
             <td>
                 <span th:text="${cart.product.name}"></span>
@@ -36,7 +37,7 @@
                 <input type="hidden" name="number" th:value="${cart.number}" readonly/>
                 <span th:text="${cart.number}"></span>
                 <input type="hidden" name="productId" th:value="${cart.productId}"/>
-                <input type="hidden" name="accountId" th:value="${cart.accountId}"/>
+                <input type="hidden" name="accountId" th:value="${cart.product.accountId}"/>
             </td>
         </tr>
         </tbody>

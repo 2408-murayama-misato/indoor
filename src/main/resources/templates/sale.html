@@ -8,11 +8,20 @@
     <title>売上集計</title>
 </head>
 <body>
+<div th:include="header"></div>
 <div class="container mt-5">
     <div class="row justify-content-center h-100">
         <div class="col-12 col-md-8">
             <h1 class="text-center mb-4">売上集計</h1><br/>
             <h2 class="text-center mb-4">絞り込みフォーム</h2><br/>
+            <!-- エラーメッセージの表示 -->
+            <div class="text-danger">
+                <ul>
+                    <div th:if="${dateErrorMessages}" th:each="error : ${dateErrorMessages}">
+                        <li><div th:text="${error}"></div></li>
+                    </div>
+                </ul>
+            </div>
             <form th:action="@{/sale}" method="get">
                     売上期間<input type="date" name="start" th:value="*{start}" class="form-control"> - <input type="date" name="end" th:value="*{end}" class="form-control">
                 <div class="cal-12 text-center">
@@ -26,18 +35,17 @@
     <table class="table">
         <thead>
         <tr>
-            <th scope="col">写真</th>
-            <th scope="col">商品名</th>
-            <th scope="col">金額</th>
-            <th scope="col">個数</th>
-            <th scope="col">売上
-                日時</th>
+            <th style="width: 10%">写真</th>
+            <th>商品名</th>
+            <th>金額</th>
+            <th>個数</th>
+            <th>売上日時</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="purchase : ${purchaseForms}" scope="row">
+        <tr th:each="purchase : ${purchaseForms}">
             <td>
-                <span><img th:src="@{'/img/product/' + ${purchase.product.imagePass}}"/></span>
+                <span><img th:src="@{'/img/product/' + ${purchase.product.imagePass}}" class="rounded mx-auto d-block img-fluid"/></span>
             </td>
             <td>
                 <span th:text="${purchase.product.name}"></span>
@@ -57,7 +65,7 @@
     <br/>
 <label class="fs-2 justify-content-center text-danger">合計売上金額</label>
 <label th:text="'￥' + ${sum}" class="fs-2 justify-content-center text-danger"></label>
-<br/>
+<br/><br/>
 <a th:href="@{/productDisplay}">
     <input type="button" value="戻る" class="btn btn-outline-secondary">
 </a>

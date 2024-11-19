@@ -47,6 +47,7 @@
         where purchases.account_id = ${id}
         and purchases.created_date
         between CAST(#{start} AS TIMESTAMP) and CAST(#{end} AS TIMESTAMP)
+        ORDER BY purchases.created_date DESC
     </select>
 
 </mapper>
